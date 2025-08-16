@@ -1,19 +1,33 @@
 <h1 class="text-3xl font-bold underline">{{ title }} !!</h1>
 
-<div id="siteHealthCheck">
-  <table>
-    <thead>
-      <tr>
-        <th>Service</th>
-        <th>Status</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>API</td>
-        <td>{{ apiHealthCheck() ? 'Healthy' : apiHealthCheckMessage }}</td>
-      </tr>
-    </tbody>
-  </table>
+<div id="siteHealthCheck" class="card bg-base-100 w-1/2 mx-auto p-10 mt-10 shadow-xl">
+  <div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
+    <table class="table w-full">
+      <thead>
+        <tr>
+          <th>Service</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>API</td>
+          <td *ngIf="apiHealthCheck()">
+            <div class="inline-grid *:[grid-area:1/1]">
+              <div class="status status-success animate-ping"></div>
+              <div class="status status-success"></div>
+            </div> Server is OK            
+          </td>
+          <td *ngIf="!apiHealthCheck()">
+            <div class="inline-grid *:[grid-area:1/1]">
+              <div class="status status-error animate-ping"></div>
+              <div class="status status-error"></div>
+            </div> {{ apiHealthCheckMessage }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
   <button class="btn btn-primary">Button</button>
+
 </div>
