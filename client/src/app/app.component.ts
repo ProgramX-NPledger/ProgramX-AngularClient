@@ -3,10 +3,11 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NgIf } from '@angular/common';
 import { NavComponent } from "./layout/nav/nav.component";
+import { LoginComponent } from "./login/login.component";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, NgIf, NavComponent],
+  imports: [RouterOutlet, NgIf, NavComponent, LoginComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
