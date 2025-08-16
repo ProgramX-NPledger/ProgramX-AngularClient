@@ -1,1 +1,18 @@
 <h1>{{ title }} !!</h1>
+
+<div id="siteHealthCheck">
+  <table>
+    <thead>
+      <tr>
+        <th>Service</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>API</td>
+        <td>{{ apiHealthCheck ? 'Healthy' : apiHealthCheckMessage }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
