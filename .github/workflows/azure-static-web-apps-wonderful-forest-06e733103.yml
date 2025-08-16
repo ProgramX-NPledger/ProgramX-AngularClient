@@ -23,7 +23,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18' # Use your project's Node version
+          node-version: '24.6.0' # Use your project's Node version
 
       - name: Install dependencies
         run: npm install
@@ -53,6 +53,8 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_WONDERFUL_FOREST_06E733103 }}
           action: "close"
+
+
 
 
 
