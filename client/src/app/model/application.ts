@@ -5,4 +5,6 @@ export interface Application {
     targetUrl: string;
     type: string; 
     versionNumber: number;
+    IsDefaultApplicationOnLogin: boolean;
+    ordinal: number;
 }
