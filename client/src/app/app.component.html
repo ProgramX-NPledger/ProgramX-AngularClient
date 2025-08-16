@@ -11,7 +11,7 @@
     <tbody>
       <tr>
         <td>API</td>
-        <td>{{ apiHealthCheck ? 'Healthy' : apiHealthCheckMessage }}</td>
+        <td>{{ apiHealthCheck() ? 'Healthy' : apiHealthCheckMessage }}</td>
       </tr>
     </tbody>
   </table>

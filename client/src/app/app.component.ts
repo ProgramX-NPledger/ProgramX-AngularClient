@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
@@ -10,8 +10,8 @@ import { RouterOutlet } from '@angular/router';
 })
 export class AppComponent implements OnInit {
   private httpClient = inject(HttpClient);
-  
-  protected apiHealthCheck: boolean = false;
+
+  protected apiHealthCheck = signal<boolean>(false);
   protected apiHealthCheckMessage: string = '';
 
   title = 'client';
@@ -29,11 +29,11 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.httpClient.get('http://localhost:7276/api/v1/healthcheck').subscribe({
       next: response => {
-        this.apiHealthCheck = true;
+        this.apiHealthCheck.set(true);
         this.apiHealthCheckMessage = 'API is healthy';
       },
       error: error => {
-        this.apiHealthCheck = false;
+        this.apiHealthCheck.set(false);
         this.apiHealthCheckMessage = error ? error.message : 'API is not healthy';
       }
     });
