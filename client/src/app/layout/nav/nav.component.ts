@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { LoginService } from '../../core/services/login-service.service';
 
 @Component({
   selector: 'app-nav',
@@ -6,6 +7,9 @@ import { Component } from '@angular/core';
   templateUrl: './nav.component.html',
   styleUrl: './nav.component.css'
 })
-export class NavComponent {
+export class NavComponent  {
+  loginService = inject(LoginService);
+
+ 
 
 }

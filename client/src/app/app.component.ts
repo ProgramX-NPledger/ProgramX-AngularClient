@@ -4,6 +4,7 @@ import { RouterOutlet } from '@angular/router';
 import { NgIf } from '@angular/common';
 import { NavComponent } from "./layout/nav/nav.component";
 import { LoginComponent } from "./login/login.component";
+import { LoginService } from './core/services/login-service.service';
 
 @Component({
   selector: 'app-root',
@@ -13,6 +14,7 @@ import { LoginComponent } from "./login/login.component";
 })
 export class AppComponent implements OnInit {
   private httpClient = inject(HttpClient);
+  private loginService = inject(LoginService);
 
   protected apiHealthCheck = signal<boolean>(false);
   protected apiHealthCheckMessage: string = '';
@@ -43,7 +45,16 @@ export class AppComponent implements OnInit {
         this.isReady.set(true);
       }
     });
+
+    this.setCurrentUser();
   }
-    
+
+  setCurrentUser() {
+    const user = localStorage.getItem('currentUser');
+    if (user) {
+      const userObject = JSON.parse(user);
+      this.loginService.currentUser.set(userObject);
+      }
   
+  }
 }
