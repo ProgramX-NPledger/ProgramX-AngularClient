@@ -1,11 +1,11 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LoginService } from '../core/services/login-service.service';
-import { NgIf } from '@angular/common';
+
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule,NgIf],
+  imports: [FormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -22,17 +22,11 @@ export class LoginComponent {
     this.loginService.login(this.username, this.password).subscribe({
       next: (response) => {
         this.isLoading.set(false);
-
-        console.log('Login successful:', response);
-
+        this.loginError.set(false);
       },
       error: (error) => {
         this.isLoading.set(false);
         this.loginError.set(true);
-      },
-      complete: () => {
-        alert('Login process completed');
-        
       }
     });
   }
