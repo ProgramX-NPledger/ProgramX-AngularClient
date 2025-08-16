@@ -14,6 +14,7 @@ export class AppComponent implements OnInit {
 
   protected apiHealthCheck = signal<boolean>(false);
   protected apiHealthCheckMessage: string = '';
+  protected isReady = signal<boolean>(false);
 
   title = 'client';
 
@@ -32,10 +33,12 @@ export class AppComponent implements OnInit {
       next: response => {
         this.apiHealthCheck.set(true);
         this.apiHealthCheckMessage = 'API is healthy';
+        this.isReady.set(true);
       },
       error: error => {
         this.apiHealthCheck.set(false);
         this.apiHealthCheckMessage = error ? error.message : 'API is not healthy';
+        this.isReady.set(true);
       }
     });
   }

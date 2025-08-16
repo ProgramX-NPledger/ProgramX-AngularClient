@@ -12,6 +12,11 @@
       <tbody>
         <tr>
           <td>API</td>
+          <td *ngIf="!isReady()">
+            <div class="inline-grid *:[grid-area:1/1]">
+              <div class="status"></div>
+            </div>           
+          </td>
           <td *ngIf="apiHealthCheck()">
             <div class="inline-grid *:[grid-area:1/1]">
               <div class="status status-success animate-ping"></div>
