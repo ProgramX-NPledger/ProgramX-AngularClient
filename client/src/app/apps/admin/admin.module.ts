@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ManagementComponent } from './management/management.component';
 import { RouterModule, Routes } from '@angular/router';
+import { UsersComponent } from "./users/users.component";
 
 const routes: Routes = [
   {
@@ -17,8 +18,9 @@ const routes: Routes = [
   ],
   imports: [
     CommonModule,
-    RouterModule.forChild(routes)
-  ],
+    RouterModule.forChild(routes),
+    UsersComponent
+],
   providers: [],
   exports: [
     
