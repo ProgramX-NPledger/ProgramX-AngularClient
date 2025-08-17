@@ -9,14 +9,11 @@
     <div role="tablist" class="tabs tabs-border">
         @if(loginService.currentUser()) {
             @for (application of loginService.currentUser()?.applications; track $index) {
-                <a role="tab" class="tab">{{ application.name}}</a>
+                <a role="tab" class="tab" routerLink="{{ '/'+application.targetUrl }}" routerLinkActive="tab-active">{{ application.name}}</a>
             }
         } @else {
          
         }
-    <a role="tab" class="tab">Tab 1</a>
-    <a role="tab" class="tab tab-active">Tab 2</a>
-    <a role="tab" class="tab">Tab 3</a>
     </div>
 
   </div>
