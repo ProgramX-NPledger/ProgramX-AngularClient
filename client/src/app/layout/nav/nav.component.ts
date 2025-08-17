@@ -9,6 +9,7 @@ import { RouterLinkActive } from '@angular/router';
   templateUrl: './nav.component.html',
   styleUrl: './nav.component.css'
 })
+
 export class NavComponent  {
   loginService = inject(LoginService);
 
