@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { LoginService } from '../../core/services/login-service.service';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { RouterLinkActive } from '@angular/router';
 
 @Component({
@@ -12,7 +12,11 @@ import { RouterLinkActive } from '@angular/router';
 
 export class NavComponent  {
   loginService = inject(LoginService);
-
- 
+  router = inject(Router);
+  
+  logout() {
+    this.loginService.logout();
+    this.router.navigateByUrl('/login');
+  }
 
 }
