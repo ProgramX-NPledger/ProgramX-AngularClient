@@ -5,10 +5,12 @@ import { NgIf } from '@angular/common';
 import { NavComponent } from "./layout/nav/nav.component";
 import { LoginComponent } from "./login/login.component";
 import { LoginService } from './core/services/login-service.service';
+import { ManagementComponent } from './apps/admin/management/management.component';
+import { AdminModule } from './apps/admin/admin.module';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, NgIf, NavComponent, LoginComponent],
+  imports: [RouterOutlet, NgIf, NavComponent, LoginComponent, AdminModule ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
