@@ -25,7 +25,7 @@ export class LoginComponent {
       next: (response) => {
         this.isLoading.set(false);
         this.loginError.set(false);
-        // get the default aqpplication
+        // get the default application
         const defaultApplication = response.applications.find(app => app.IsDefaultApplicationOnLogin);
         if (defaultApplication) {
           this.router.navigate([`/${defaultApplication.targetUrl}`]);
