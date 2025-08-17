@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { User } from '../../model/user';
 import { tap } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ export class LoginService {
   private httpClient: HttpClient = inject(HttpClient)
   currentUser = signal<User | null>(null);
   
-  baseUrl = 'http://localhost:7276/api/v1';
+  baseUrl = environment.baseUrl;
 
   login(username: string, password: string) {
     const url = `${this.baseUrl}/login`;
