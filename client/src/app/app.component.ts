@@ -15,13 +15,10 @@ import { AdminModule } from './apps/admin/admin.module';
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit {
-  private httpClient = inject(HttpClient);
+  
   private loginService = inject(LoginService);
 
-  protected apiHealthCheck = signal<boolean>(false);
-  protected apiHealthCheckMessage: string = '';
-  protected isReady = signal<boolean>(false);
-
+  
   title = 'client';
 
 
@@ -35,18 +32,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.httpClient.get('http://localhost:7276/api/v1/healthcheck').subscribe({
-      next: response => {
-        this.apiHealthCheck.set(true);
-        this.apiHealthCheckMessage = 'API is healthy';
-        this.isReady.set(true);
-      },
-      error: error => {
-        this.apiHealthCheck.set(false);
-        this.apiHealthCheckMessage = error ? error.message : 'API is not healthy';
-        this.isReady.set(true);
-      }
-    });
+   
 
     this.setCurrentUser();
   }

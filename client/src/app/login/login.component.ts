@@ -2,11 +2,12 @@ import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LoginService } from '../core/services/login-service.service';
 import { Router } from '@angular/router';
+import { SiteHealthComponent } from "../site-health/site-health.component";
 
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule],
+  imports: [FormsModule, SiteHealthComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
