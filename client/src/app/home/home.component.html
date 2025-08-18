@@ -1,1 +1,9 @@
-<p>home works!</p>
+
+
+@if(loginService.currentUser()==null) {
+  <p>Welcome to Program.X! Please log in to access your applications.</p>
+  <p><button class="btn btn-primary" (click)="login()">Login</button></p> 
+} @else {
+  <p>Welcome back, {{ loginService.currentUser()?.userName }}!</p>
+}
+
