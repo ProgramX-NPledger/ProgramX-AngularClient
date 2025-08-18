@@ -1,5 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit, signal } from '@angular/core';
+import { HealthCheckService } from '../core/services/health-check-service.service';
+import { HealthCheck } from '../model/health-check';
 
 @Component({
   selector: 'app-site-health',
@@ -8,22 +10,26 @@ import { Component, inject, OnInit, signal } from '@angular/core';
   styleUrl: './site-health.component.css'
 })
 export class SiteHealthComponent implements OnInit {
-  protected apiHealthCheck = signal<boolean>(false);
-  protected apiHealthCheckMessage: string = '';
-  protected isReady = signal<boolean>(false);
-  private httpClient = inject(HttpClient);
+  private healthCheckService = inject(HealthCheckService);
+  healthCheckStatus = signal<HealthCheck | null>(null);
 
   ngOnInit() {
-   this.httpClient.get('http://localhost:7276/api/v1/healthcheck').subscribe({
+    this.getHealth();
+  }
+
+  getHealth() {
+    this.healthCheckService.getHealth().subscribe({
       next: response => {
-        this.apiHealthCheck.set(true);
-        this.apiHealthCheckMessage = 'API is healthy';
-        this.isReady.set(true);
+        this.healthCheckStatus.set(response);
+        console.log('Health Check Response:', response);
       },
       error: error => {
-        this.apiHealthCheck.set(false);
-        this.apiHealthCheckMessage = error ? error.message : 'API is not healthy';
-        this.isReady.set(true);
+        this.healthCheckStatus.set({
+          status: error.message,
+          azureFunctions: false,
+          azureCosmosDb: false,
+          azureStorage: false
+        } as HealthCheck);
       }
     });
   }

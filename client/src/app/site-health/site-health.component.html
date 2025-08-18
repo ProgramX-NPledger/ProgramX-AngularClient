@@ -10,30 +10,58 @@
       </thead>
       <tbody>
         <tr>
-          <td>API</td>
-          @if (!isReady()) {
+            <td>Azure Functions</td>
             <td>
-                <div class="inline-grid *:[grid-area:1/1]">
-                <div class="status"></div>
-                </div>           
+                @if(healthCheckStatus() === null) {
+                    <div class="skeleton h-2 w-32"></div>
+                } @else if(healthCheckStatus()?.azureFunctions) {
+                    <div class="inline-grid *:[grid-area:1/1]">
+                        <div class="status status-success animate-ping"></div>
+                        <div class="status status-success"></div>
+                    </div> 
+                } @else if(!healthCheckStatus()?.azureFunctions) {
+                    <div class="inline-grid *:[grid-area:1/1]">
+                        <div class="status status-error animate-ping"></div>
+                        <div class="status status-error"></div>
+                    </div> 
+                }
             </td>
-          }
-          @if (apiHealthCheck()) {
-          <td>
-            <div class="inline-grid *:[grid-area:1/1]">
-              <div class="status status-success animate-ping"></div>
-              <div class="status status-success"></div>
-            </div> Server is OK            
-          </td>
-          }
-          @if (!apiHealthCheck()) {
-          <td>
-            <div class="inline-grid *:[grid-area:1/1]">
-              <div class="status status-error animate-ping"></div>
-              <div class="status status-error"></div>
-            </div> {{ apiHealthCheckMessage }}
-          </td>
-          }
+        </tr>
+        <tr>
+            <td>Azure Cosmos DB</td>
+            <td>
+                @if(healthCheckStatus() === null) {
+                    <div class="skeleton h-2 w-32"></div>
+                } @else if(healthCheckStatus()?.azureCosmosDb) {
+                    <div class="inline-grid *:[grid-area:1/1]">
+                        <div class="status status-success animate-ping"></div>
+                        <div class="status status-success"></div>
+                    </div> 
+                } @else if(!healthCheckStatus()?.azureCosmosDb) {
+                    <div class="inline-grid *:[grid-area:1/1]">
+                        <div class="status status-error animate-ping"></div>
+                        <div class="status status-error"></div>
+                    </div> 
+                }
+            </td>
+        </tr>
+        <tr>
+            <td>Azure Storage</td>
+            <td>
+                @if(healthCheckStatus() === null) {
+                    <div class="skeleton h-2 w-32"></div>
+                } @else if(healthCheckStatus()?.azureStorage) {
+                    <div class="inline-grid *:[grid-area:1/1]">
+                        <div class="status status-success animate-ping"></div>
+                        <div class="status status-success"></div>
+                    </div> 
+                } @else if(!healthCheckStatus()?.azureStorage) {
+                    <div class="inline-grid *:[grid-area:1/1]">
+                        <div class="status status-error animate-ping"></div>
+                        <div class="status status-error"></div>
+                    </div> 
+                }
+            </td>
         </tr>
       </tbody>
     </table>
