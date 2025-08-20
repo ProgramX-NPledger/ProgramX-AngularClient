@@ -31,7 +31,7 @@ jobs:
 
       - name: Replace secrets
         run: |
-          sed -i 's|  azureFunctionsKey: null|azureFunctionsKey: "${{ secrets.AZURE_FUNCTIONS_SECRET }}"|g' client/src/environments/environment.prod.ts
+          sed -i 's|  azureFunctionsKey: null|  azureFunctionsKey: "${{ secrets.AZURE_FUNCTIONS_SECRET }}"|g' client/src/environments/environment.prod.ts
           cat client/src/environments/environment.prod.ts
 
       - name: Build And Deploy

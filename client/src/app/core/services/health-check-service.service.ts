@@ -13,7 +13,7 @@ export class HealthCheckService {
   baseUrl = environment.baseUrl;
 
   getHealth(): Observable<HealthCheck> {
-    const url = `${this.baseUrl}/healthcheck`;
+    const url = `${this.baseUrl}/healthcheck${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
 
     return this.httpClient.get<HealthCheck>(url).pipe(
       catchError(error => of({
