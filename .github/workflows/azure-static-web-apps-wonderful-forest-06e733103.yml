@@ -47,6 +47,8 @@ jobs:
           api_location: "" # Api source code path - optional
           output_location: "dist/client/browser" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
+          app_build_command: "npm run build -- --configuration production"
+
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     runs-on: ubuntu-latest
