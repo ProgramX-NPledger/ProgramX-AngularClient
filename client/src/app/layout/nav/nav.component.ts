@@ -19,4 +19,8 @@ export class NavComponent  {
     this.router.navigateByUrl('/login');
   }
 
+  login() {
+    this.router.navigate(['/login']); 
+  }
+
 }

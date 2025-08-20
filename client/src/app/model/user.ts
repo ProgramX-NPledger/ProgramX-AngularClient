@@ -6,4 +6,7 @@ export interface User {
   roles: string[];
   token: string;
   applications: Application[];
+  firstName: string;
+  lastName: string;
+  initials: string;
 }
