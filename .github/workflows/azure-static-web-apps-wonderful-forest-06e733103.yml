@@ -29,6 +29,10 @@ jobs:
         run: npm install
         working-directory: client
 
+      - name: Replace secrets
+        run: |
+          sed -i 's|  azureFunctionsKey: null|azureFunctionsKey: '${{ secrets.AZURE_FUNCTIONS_SECRET }}'|g' client/src/environments/environment.prod.ts
+
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1

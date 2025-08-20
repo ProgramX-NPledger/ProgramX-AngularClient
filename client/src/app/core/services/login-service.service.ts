@@ -14,7 +14,8 @@ export class LoginService {
   baseUrl = environment.baseUrl;
 
   login(username: string, password: string) {
-    const url = `${this.baseUrl}/login`;
+    const url = `${this.baseUrl}/login${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
+    console.log(url);
     const body = { 
       userName: username, 
       password 
