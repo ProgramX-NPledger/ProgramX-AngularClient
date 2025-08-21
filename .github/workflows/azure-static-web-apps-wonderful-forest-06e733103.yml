@@ -37,6 +37,7 @@ jobs:
       - name: Overwrite environment configuration
         run: |
           cp client/src/environments/environment.prod.ts client/src/environments/environment.ts
+          cat client/src/environments/environment.ts
 
       - name: Build And Deploy
         id: builddeploy
