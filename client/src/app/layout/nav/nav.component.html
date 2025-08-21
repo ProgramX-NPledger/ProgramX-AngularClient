@@ -22,11 +22,19 @@
         @if(loginService.currentUser()) {
         <div class="dropdown dropdown-end">
             <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+              @if (loginService.currentUser()?.profilePhotographSmall) {
+                <div class="avatar">
+                  <div class="w-8 rounded-full">
+                    <img src="{{ loginService.currentUser()?.profilePhotographSmall }}" />
+                  </div>
+                </div>
+              } @else if (loginService.currentUser()?.initials) {
               <div class="avatar avatar-placeholder">
                 <div class="bg-neutral text-neutral-content w-9 rounded-full">
                   <span class="text-l">{{ loginService.currentUser()?.initials }}</span>
                 </div>
               </div>
+              }
             </div>
             <ul
               tabindex="0"
