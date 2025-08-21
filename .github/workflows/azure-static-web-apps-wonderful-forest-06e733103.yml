@@ -34,7 +34,11 @@ jobs:
           sed -i 's|  azureFunctionsKey: null|  azureFunctionsKey: "${{ secrets.AZURE_FUNCTIONS_SECRET }}"|g' client/src/environments/environment.prod.ts
           cat client/src/environments/environment.prod.ts
 
-      - name: Build And Deploy
+      - name: Overwrite environment configuration
+        run: |
+          cp client/src/environments/environment.prod.ts client/src/environments/environment.ts
+
+          - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
         with:
