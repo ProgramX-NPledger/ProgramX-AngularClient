@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { AuthGuard } from './core/guards/auth.guard';
 import { LoginComponent } from './login/login.component';
+import { UpdateProfileComponent } from './update-profile/update-profile.component';
 
 export const routes: Routes = [
     {
@@ -16,6 +17,10 @@ export const routes: Routes = [
     {
         path: 'login',
         component: LoginComponent
+    },
+    {
+        path: 'update-profile',
+        component: UpdateProfileComponent
     },
     {
         path: 'admin',
