@@ -1,21 +1,21 @@
 
 <div class="flex align-middle ml-auto w-screen">
-    <form #loginForm="ngForm" (ngSubmit)="updateProfile()" class="flex items-center gap-3 mr-auto ml-auto">
+    <form #userProfileForm="ngForm" (ngSubmit)="updateProfile()" class="flex items-center gap-3 mr-auto ml-auto">
 
         <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4">
             <legend class="fieldset-legend">Profile</legend>
 
             <label class="label">Username</label>
-            <input type="text" class="input w-full" placeholder="My awesome page" />
+            <input [(ngModel)]="userName" name="userName" type="text" class="input w-full" placeholder="Username" />
 
             <label class="label">First name</label>
-            <input type="text" class="input w-full" placeholder="my-awesome-page" />
+            <input [(ngModel)]="firstName" name="firstName" type="text" class="input w-full" placeholder="First name" />
 
             <label class="label">Last name</label>
-            <input type="text" class="input w-full" placeholder="Name" />
+            <input [(ngModel)]="lastName" name="lastName" type="text" class="input w-full" placeholder="Last name" />
 
             <label class="label">Email address</label>
-            <input class="input validator w-full" type="email" required placeholder="mail@site.com" />
+            <input [(ngModel)]="emailAddress" name="emailAddress" class="input validator w-full" type="email" required placeholder="mail@site.com" />
             <div class="validator-hint">Enter valid email address</div>
 
             <label class="label">Profile image</label>

@@ -19,7 +19,7 @@ export const routes: Routes = [
         component: LoginComponent
     },
     {
-        path: 'update-profile',
+        path: 'update-profile/:id',
         component: UpdateProfileComponent
     },
     {

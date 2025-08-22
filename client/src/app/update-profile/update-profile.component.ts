@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { UsersService } from '../apps/admin/services/users-service.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-update-profile',
@@ -7,9 +9,30 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './update-profile.component.html',
   styleUrl: './update-profile.component.css'
 })
-export class UpdateProfileComponent {
+export class UpdateProfileComponent implements OnInit {
+  activatedRoute = inject(ActivatedRoute);
+
+  ngOnInit(): void {
+    console.log('UpdateProfileComponent initialized');
+    const userName: string = this.activatedRoute!.snapshot.paramMap.get('id')?.toString() ?? '';
+    this.usersService.getUser(userName).subscribe(user => {
+      console.log('Fetched user:', user);
+      this.userName = user.user.userName;
+      this.firstName = user.user.firstName;
+      this.lastName = user.user.lastName;
+      this.emailAddress = user.user.emailAddress;
+    });
+  }
+
+  private usersService = inject(UsersService);
+
+  protected userName: string = '';
+  protected firstName: string = '';
+  protected lastName: string = '';
+  protected emailAddress: string = '';
+
   updateProfile() {
-  throw new Error('Method not implemented.');
+    throw new Error('Method not implemented.');
   }
 
 }
