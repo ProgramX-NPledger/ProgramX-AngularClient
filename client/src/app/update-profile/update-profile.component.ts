@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UsersService } from '../apps/admin/services/users-service.service';
 import { ActivatedRoute } from '@angular/router';
@@ -11,16 +11,21 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class UpdateProfileComponent implements OnInit {
   activatedRoute = inject(ActivatedRoute);
-
+  isUnauthorised = signal<boolean>(false);
+  
   ngOnInit(): void {
     console.log('UpdateProfileComponent initialized');
     const userName: string = this.activatedRoute!.snapshot.paramMap.get('id')?.toString() ?? '';
     this.usersService.getUser(userName).subscribe(user => {
-      console.log('Fetched user:', user);
-      this.userName = user.user.userName;
-      this.firstName = user.user.firstName;
-      this.lastName = user.user.lastName;
-      this.emailAddress = user.user.emailAddress;
+      if (!user || !user.user) {
+        this.isUnauthorised.set(true);
+      } else {
+        this.userName = user.user.userName;
+        this.firstName = user.user.firstName;
+        this.lastName = user.user.lastName;
+        this.emailAddress = user.user.emailAddress;
+
+      }
     });
   }
 

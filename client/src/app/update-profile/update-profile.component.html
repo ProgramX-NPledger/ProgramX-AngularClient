@@ -1,35 +1,46 @@
 
 <div class="flex align-middle ml-auto w-screen">
-    <form #userProfileForm="ngForm" (ngSubmit)="updateProfile()" class="flex items-center gap-3 mr-auto ml-auto">
 
-        <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4">
-            <legend class="fieldset-legend">Profile</legend>
+    @if(isUnauthorised()) {
+        <div role="alert" class="flex items-center gap-3 mr-auto ml-auto alert alert-error">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>You are not permitted to modify these properties</span>
+        </div>
+    } @else {
+        <form #userProfileForm="ngForm" (ngSubmit)="updateProfile()" class="flex items-center gap-3 mr-auto ml-auto">
 
-            <label class="label">Username</label>
-            <input [(ngModel)]="userName" name="userName" type="text" class="input w-full" placeholder="Username" />
+            <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4">
+                <legend class="fieldset-legend">Profile</legend>
 
-            <label class="label">First name</label>
-            <input [(ngModel)]="firstName" name="firstName" type="text" class="input w-full" placeholder="First name" />
+                <label class="label">Username</label>
+                <input [(ngModel)]="userName" name="userName" type="text" class="input w-full" placeholder="Username" />
 
-            <label class="label">Last name</label>
-            <input [(ngModel)]="lastName" name="lastName" type="text" class="input w-full" placeholder="Last name" />
+                <label class="label">First name</label>
+                <input [(ngModel)]="firstName" name="firstName" type="text" class="input w-full" placeholder="First name" />
 
-            <label class="label">Email address</label>
-            <input [(ngModel)]="emailAddress" name="emailAddress" class="input validator w-full" type="email" required placeholder="mail@site.com" />
-            <div class="validator-hint">Enter valid email address</div>
+                <label class="label">Last name</label>
+                <input [(ngModel)]="lastName" name="lastName" type="text" class="input w-full" placeholder="Last name" />
 
-            <label class="label">Profile image</label>
-            <div class="join">
-                <input type="file" class="file-input" />
-                <button class="btn">Remove</button>
+                <label class="label">Email address</label>
+                <input [(ngModel)]="emailAddress" name="emailAddress" class="input validator w-full" type="email" required placeholder="mail@site.com" />
+                <div class="validator-hint">Enter valid email address</div>
 
-            </div>
-            <div class="join">
-                <button class="btn btn-link">Cancel</button>
-                <button class="btn btn-primary w-min">Update</button>
+                <label class="label">Profile image</label>
+                <div class="join">
+                    <input type="file" class="file-input" />
+                    <button class="btn">Remove</button>
 
-            </div>
+                </div>
+                <div class="join">
+                    <button class="btn btn-link">Cancel</button>
+                    <button class="btn btn-primary w-min">Update</button>
 
-        </fieldset>
-    </form>
+                </div>
+
+            </fieldset>
+        </form>
+
+    }
 </div>
