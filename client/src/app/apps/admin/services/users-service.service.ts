@@ -5,6 +5,8 @@ import { catchError, Observable, of } from 'rxjs';
 import { UsersResponse } from '../model/users-response';
 import { UserResponse } from '../model/user-response';
 import { GetUserResponse } from '../model/get-user-response';
+import { UpdateUserRequest } from '../model/update-user-request';
+import { UpdateResponse } from '../model/update-response';
 
 @Injectable({
   providedIn: 'root'
@@ -37,6 +39,15 @@ export class UsersService {
     );
   }
 
+  updateUser(updateUserRequest: UpdateUserRequest): Observable<UpdateResponse> {
+    const url = `${this.baseUrl}/user${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
+    return this.httpClient.put<UpdateResponse>(url, updateUserRequest).pipe(
+      catchError(error => of({
+        errorMessage: error.message,
+        isOk: false
+      } as UpdateResponse))
+    );
+  }
 
 }
 

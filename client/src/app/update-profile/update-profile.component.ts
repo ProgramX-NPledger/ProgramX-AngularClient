@@ -12,19 +12,22 @@ import { ActivatedRoute } from '@angular/router';
 export class UpdateProfileComponent implements OnInit {
   activatedRoute = inject(ActivatedRoute);
   isUnauthorised = signal<boolean>(false);
+  isBusy = signal<boolean>(false);
   
   ngOnInit(): void {
     console.log('UpdateProfileComponent initialized');
     const userName: string = this.activatedRoute!.snapshot.paramMap.get('id')?.toString() ?? '';
+    this.isBusy.set(true);
     this.usersService.getUser(userName).subscribe(user => {
       if (!user || !user.user) {
         this.isUnauthorised.set(true);
+        this.isBusy.set(false);
       } else {
         this.userName = user.user.userName;
         this.firstName = user.user.firstName;
         this.lastName = user.user.lastName;
         this.emailAddress = user.user.emailAddress;
-
+        this.isBusy.set(false);
       }
     });
   }
@@ -37,7 +40,22 @@ export class UpdateProfileComponent implements OnInit {
   protected emailAddress: string = '';
 
   updateProfile() {
-    throw new Error('Method not implemented.');
+    const updateUserRequest = {
+      firstName: this.firstName,
+      lastName: this.lastName,
+      emailAddress: this.emailAddress,
+      userName: this.userName
+    };
+
+    this.isBusy.set(true);
+    this.usersService.updateUser(updateUserRequest).subscribe(response => {
+      this.isBusy.set(false);
+      console.log('Profile updated successfully', response);
+      alert('Profile updated successfully');
+    }, error => {
+      console.error('Error updating profile', error);
+      alert('Error updating profile: ' + (error.error?.message || error.message || 'Unknown error'));
+    });
   }
 
 }

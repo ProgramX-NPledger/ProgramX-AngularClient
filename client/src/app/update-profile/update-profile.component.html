@@ -15,22 +15,77 @@
                 <legend class="fieldset-legend">Profile</legend>
 
                 <label class="label">Username</label>
-                <input [(ngModel)]="userName" name="userName" type="text" class="input w-full" placeholder="Username" />
+                <input [(ngModel)]="userName" name="userName" type="text" class="input w-full" [disabled]="isBusy()" placeholder="Username" />
 
                 <label class="label">First name</label>
-                <input [(ngModel)]="firstName" name="firstName" type="text" class="input w-full" placeholder="First name" />
+                <input [(ngModel)]="firstName" name="firstName" type="text" class="input w-full" [disabled]="isBusy()" placeholder="First name" />
 
                 <label class="label">Last name</label>
-                <input [(ngModel)]="lastName" name="lastName" type="text" class="input w-full" placeholder="Last name" />
+                <input [(ngModel)]="lastName" name="lastName" type="text" class="input w-full" [disabled]="isBusy()" placeholder="Last name" />
+
+                <label class="input validator">Username
+                <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <g
+                    stroke-linejoin="round"
+                    stroke-linecap="round"
+                    stroke-width="2.5"
+                    fill="none"
+                    stroke="currentColor"
+                    >
+                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                    </g>
+                </svg>
+                <input
+                    type="text"
+                    required
+                    placeholder="Username"
+                    pattern="[A-Za-z][A-Za-z0-9\-]*"
+                    minlength="3"
+                    maxlength="30"
+                    title="Only letters, numbers or dash"
+                />
+                </label>
+                <p class="validator-hint">
+                Must be 3 to 30 characters
+                <br />containing only letters, numbers or dash
+                </p>
 
                 <label class="label">Email address</label>
-                <input [(ngModel)]="emailAddress" name="emailAddress" class="input validator w-full" type="email" required placeholder="mail@site.com" />
+                <input [(ngModel)]="emailAddress" name="emailAddress" class="input validator w-full" [disabled]="isBusy()" type="email" required placeholder="mail@site.com" />
                 <div class="validator-hint">Enter valid email address</div>
+
+                <label class="input validator">Email address
+                <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <g
+                    stroke-linejoin="round"
+                    stroke-linecap="round"
+                    stroke-width="2.5"
+                    fill="none"
+                    stroke="currentColor"
+                    >
+                    <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+                    </g>
+                </svg>
+                <input [(ngModel)]="emailAddress" 
+                    name="emailAddress" 
+                    type="email" 
+                    placeholder="mail@site.com" 
+                    required 
+                    class="input validator w-full" 
+                    [disabled]="isBusy()" 
+                    />
+                </label>
+                <div class="validator-hint hidden">Enter valid email address</div>
 
                 <div class="join">
                     <button class="btn btn-link">Cancel</button>
-                    <button class="btn btn-primary w-min">Update</button>
-
+                    <button class="btn btn-primary w-min" [class.]>Update</button>
+                    <button class="btn">
+                        <span [class.loading]="" [class.loading-spinner]=""></span>
+                        Update
+                    </button>
                 </div>
 
             </fieldset>
