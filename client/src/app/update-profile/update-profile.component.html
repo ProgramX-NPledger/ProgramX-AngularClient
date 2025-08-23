@@ -9,13 +9,37 @@
             <span>You are not permitted to modify these properties</span>
         </div>
     } @else {
-        <form #userProfileForm="ngForm" (ngSubmit)="updateProfile()" class="flex items-center gap-3 mr-auto ml-auto">
+       
+
+        <form #userProfileForm="ngForm" (ngSubmit)="updateProfile(userProfileForm)" novalidate class="flex items-center gap-3 mr-auto ml-auto">
 
             <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4">
+                
                 <legend class="fieldset-legend">Profile</legend>
 
+                @if (isProfileUpdated())
+                {
+                    <div role="alert" class="alert alert-success">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>Profile updated successfully</span>
+                    </div>
+                }
+
+                @if (isProfileUpdateFailed())
+                {
+                    <div role="alert" class="flex items-center gap-3 mr-auto ml-auto alert alert-error">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>Updating the profile failed: {{ profileUpdateFailedErrorMessage() }}</span>
+                    </div>
+                }
+
                 <label class="label">Username</label>
-                <input [(ngModel)]="userName" name="userName" type="text" class="input w-full" [disabled]="isBusy()" placeholder="Username" />
+                <input [(ngModel)]="userName" name="userName" type="text" class="input w-full" disabled placeholder="Username" />
+                <p class="label">It is not possible to change your username</p>
 
                 <label class="label">First name</label>
                 <input [(ngModel)]="firstName" name="firstName" type="text" class="input w-full" [disabled]="isBusy()" placeholder="First name" />
@@ -23,74 +47,34 @@
                 <label class="label">Last name</label>
                 <input [(ngModel)]="lastName" name="lastName" type="text" class="input w-full" [disabled]="isBusy()" placeholder="Last name" />
 
-                <label class="input validator">Username
-                <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                    <g
-                    stroke-linejoin="round"
-                    stroke-linecap="round"
-                    stroke-width="2.5"
-                    fill="none"
-                    stroke="currentColor"
-                    >
-                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="12" cy="7" r="4"></circle>
-                    </g>
-                </svg>
-                <input
-                    type="text"
-                    required
-                    placeholder="Username"
-                    pattern="[A-Za-z][A-Za-z0-9\-]*"
-                    minlength="3"
-                    maxlength="30"
-                    title="Only letters, numbers or dash"
-                />
-                </label>
-                <p class="validator-hint">
-                Must be 3 to 30 characters
-                <br />containing only letters, numbers or dash
-                </p>
-
                 <label class="label">Email address</label>
-                <input [(ngModel)]="emailAddress" name="emailAddress" class="input validator w-full" [disabled]="isBusy()" type="email" required placeholder="mail@site.com" />
-                <div class="validator-hint">Enter valid email address</div>
-
-                <label class="input validator">Email address
-                <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                    <g
-                    stroke-linejoin="round"
-                    stroke-linecap="round"
-                    stroke-width="2.5"
-                    fill="none"
-                    stroke="currentColor"
-                    >
-                    <rect width="20" height="16" x="2" y="4" rx="2"></rect>
-                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
-                    </g>
-                </svg>
                 <input [(ngModel)]="emailAddress" 
                     name="emailAddress" 
                     type="email" 
                     placeholder="mail@site.com" 
                     required 
+                    email
                     class="input validator w-full" 
                     [disabled]="isBusy()" 
+                    #emailAddressControl="ngModel"
                     />
-                </label>
-                <div class="validator-hint hidden">Enter valid email address</div>
+                @if(emailAddressControl.errors?.['email']) {
+                    <div class="validator-hint">Enter valid email address</div>
+                }
+                
 
                 <div class="join">
-                    <button class="btn btn-link">Cancel</button>
-                    <button class="btn btn-primary w-min" [class.]>Update</button>
-                    <button class="btn">
-                        <span [class.loading]="" [class.loading-spinner]=""></span>
+                    <button class="btn btn-link" (click)="cancel()">Cancel</button>
+                    
+                    <button class="btn btn-primary" type="submit" [disabled]="isBusy() || (userProfileForm.invalid ?? false)">
+                        <span [class.loading]="isBusy()" [class.loading-spinner]="isBusy()"></span>
                         Update
                     </button>
                 </div>
 
             </fieldset>
         </form>
-        <form #profileImageForm="ngForm" (ngSubmit)="updateProfile()" class="flex items-center gap-3 mr-auto ml-auto">
+        <form #profileImageForm="ngForm" (ngSubmit)="updateProfile(profileImageForm)" class="flex items-center gap-3 mr-auto ml-auto">
 
             <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4">
                 <legend class="fieldset-legend">Profile image</legend>

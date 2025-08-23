@@ -40,13 +40,16 @@ export class UsersService {
   }
 
   updateUser(updateUserRequest: UpdateUserRequest): Observable<UpdateResponse> {
-    const url = `${this.baseUrl}/user${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
+    const url = `${this.baseUrl}/user/${updateUserRequest.userName}${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
     return this.httpClient.put<UpdateResponse>(url, updateUserRequest).pipe(
-      catchError(error => of({
-        errorMessage: error.message,
-        isOk: false
-      } as UpdateResponse))
-    );
+      catchError(error => {
+        console.error(error); 
+        return of({
+          errorMessage: error.error,
+          isOk: false
+        } as UpdateResponse)
+      }
+      ))
   }
 
 }

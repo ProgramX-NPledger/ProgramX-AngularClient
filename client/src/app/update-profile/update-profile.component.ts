@@ -1,7 +1,8 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { UsersService } from '../apps/admin/services/users-service.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { UpdateResponse } from '../apps/admin/model/update-response';
 
 @Component({
   selector: 'app-update-profile',
@@ -11,9 +12,14 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class UpdateProfileComponent implements OnInit {
   activatedRoute = inject(ActivatedRoute);
+  router = inject(Router);
+
   isUnauthorised = signal<boolean>(false);
   isBusy = signal<boolean>(false);
-  
+  isProfileUpdated = signal<boolean>(false);
+  isProfileUpdateFailed = signal<boolean>(false);
+  profileUpdateFailedErrorMessage = signal<string | undefined>('');
+
   ngOnInit(): void {
     console.log('UpdateProfileComponent initialized');
     const userName: string = this.activatedRoute!.snapshot.paramMap.get('id')?.toString() ?? '';
@@ -39,23 +45,40 @@ export class UpdateProfileComponent implements OnInit {
   protected lastName: string = '';
   protected emailAddress: string = '';
 
-  updateProfile() {
+  updateProfile(form: NgForm) {
+    if (form.invalid) {
+      form.control.markAllAsTouched();
+      return;
+    }
+
     const updateUserRequest = {
       firstName: this.firstName,
       lastName: this.lastName,
       emailAddress: this.emailAddress,
-      userName: this.userName
+      userName: this.userName,
+      updateProfileScope: true
     };
 
     this.isBusy.set(true);
-    this.usersService.updateUser(updateUserRequest).subscribe(response => {
-      this.isBusy.set(false);
-      console.log('Profile updated successfully', response);
-      alert('Profile updated successfully');
-    }, error => {
-      console.error('Error updating profile', error);
-      alert('Error updating profile: ' + (error.error?.message || error.message || 'Unknown error'));
+    this.usersService.updateUser(updateUserRequest).subscribe({
+      next: (response: UpdateResponse) => {
+        console.log(response);
+        if (response.isOk) {
+          this.isBusy.set(false);
+          this.isProfileUpdated.set(true);
+        } else {
+          this.isBusy.set(false);
+          this.isProfileUpdated.set(false);
+          this.isProfileUpdateFailed.set(true);
+          this.profileUpdateFailedErrorMessage.set(response.errorMessage);
+        }
+      },
+      error: (error: any) => { console.log(error); }
     });
+  }
+
+  cancel() {
+    this.router.navigate(['/home']);
   }
 
 }
