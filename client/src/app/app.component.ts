@@ -10,7 +10,7 @@ import { AdminModule } from './apps/admin/admin.module';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, NgIf, NavComponent, LoginComponent, AdminModule ],
+  imports: [RouterOutlet, NavComponent, LoginComponent, AdminModule ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
