@@ -52,5 +52,21 @@ export class UsersService {
       ))
   }
 
+  updateUserProfilePhoto(userName: string, photoFile: File): Observable<UpdateResponse> {
+    const url = `${this.baseUrl}/user/${userName}/photo${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
+    const formData = new FormData();
+    formData.append('photo', photoFile);
+
+    return this.httpClient.put<UpdateResponse>(url, formData).pipe(
+      catchError(error => {
+        console.error(error);
+        return of({
+          errorMessage: error.error,
+          isOk: false
+        } as UpdateResponse)
+      })
+    );
+  }
+
 }
 

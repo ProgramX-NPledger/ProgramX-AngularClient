@@ -1,22 +1,61 @@
-<div class="flex align-middle ml-auto w-screen">
+<div class="flex flex-col align-middle ml-auto w-screen">
 
     <form #profilePhotoForm="ngForm" (ngSubmit)="updateProfilePhoto(profilePhotoForm)" class="flex items-center gap-3 mr-auto ml-auto">
 
             <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4">
                 <legend class="fieldset-legend">Profile image</legend>
 
+                            
+                @if (status=='done') {
+                    <div role="alert" class="alert alert-success">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>Profile photograph uploaded successfully</span>
+                    </div>
+                }
+
+                @if (status=='error') {
+                    <div role="alert" class="flex items-center gap-3 mr-auto ml-auto alert alert-error">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>Uploading of profile photograph failed: {{ errorMessage }}</span>
+                    </div>
+                }
+
                 <label class="label">Profile image</label>
                 <div class="join">
-                    <input type="file" class="file-input" />
+                    <input
+                        type="file"
+                        (change)="onFileSelected($event)"
+                        multiple
+                        accept=".png,.jpg,.jpeg,.pdf"
+                        class="file-input"
+                    />
+
                     <button class="btn">Remove</button>
 
                 </div>
                 <div class="join">
                     <button class="btn btn-link">Cancel</button>
-                    <button class="btn btn-primary w-min">Update</button>
-
+                    <button class="btn btn-primary w-min" type="submit" [disabled]="isBusy() || (profilePhotoForm.invalid ?? false)">
+                        <span [class.loading]="isBusy()" [class.loading-spinner]="isBusy()"></span>
+                        Upload
+                    </button>
                 </div>
+
+                @if (status=='uploading') {
+                    <div class="flex flex-col items-center gap-3 mr-auto ml-auto">
+                        <p>Uploading: {{ progress }}%</p>
+                        <progress class="progress progress-primary w-56" [value]="progress" max="100"></progress>
+                    </div>
+                }
 
         </fieldset>
     </form>
+
+
+
+
 </div>
