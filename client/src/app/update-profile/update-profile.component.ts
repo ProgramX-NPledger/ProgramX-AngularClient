@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { UsersService } from '../apps/admin/services/users-service.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { UpdateResponse } from '../apps/admin/model/update-response';
 import { LoginService } from '../core/services/login-service.service';
 
@@ -12,7 +12,6 @@ import { LoginService } from '../core/services/login-service.service';
   styleUrl: './update-profile.component.css'
 })
 export class UpdateProfileComponent implements OnInit {
-  activatedRoute = inject(ActivatedRoute);
   loginService = inject(LoginService);
   router = inject(Router);
 

@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { NgIf } from '@angular/common';
 import { NavComponent } from "./layout/nav/nav.component";
 import { LoginComponent } from "./login/login.component";
 import { LoginService } from './core/services/login-service.service';
@@ -10,7 +9,7 @@ import { AdminModule } from './apps/admin/admin.module';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, NavComponent, LoginComponent, AdminModule ],
+  imports: [RouterOutlet, NavComponent, AdminModule ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
