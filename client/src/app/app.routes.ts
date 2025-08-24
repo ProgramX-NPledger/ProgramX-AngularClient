@@ -3,6 +3,7 @@ import { HomeComponent } from './home/home.component';
 import { AuthGuard } from './core/guards/auth.guard';
 import { LoginComponent } from './login/login.component';
 import { UpdateProfileComponent } from './update-profile/update-profile.component';
+import { ProfileComponent } from './profile/profile.component';
 
 export const routes: Routes = [
     {
@@ -17,6 +18,10 @@ export const routes: Routes = [
     {
         path: 'login',
         component: LoginComponent
+    },
+    {
+        path: 'profile',
+        component: ProfileComponent
     },
     {
         path: 'update-profile/:id',

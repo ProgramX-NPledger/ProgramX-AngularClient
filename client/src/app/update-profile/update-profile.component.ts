@@ -3,6 +3,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { UsersService } from '../apps/admin/services/users-service.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UpdateResponse } from '../apps/admin/model/update-response';
+import { LoginService } from '../core/services/login-service.service';
 
 @Component({
   selector: 'app-update-profile',
@@ -12,30 +13,32 @@ import { UpdateResponse } from '../apps/admin/model/update-response';
 })
 export class UpdateProfileComponent implements OnInit {
   activatedRoute = inject(ActivatedRoute);
+  loginService = inject(LoginService);
   router = inject(Router);
 
-  isUnauthorised = signal<boolean>(false);
+  isError = signal<boolean>(false);
   isBusy = signal<boolean>(false);
   isProfileUpdated = signal<boolean>(false);
   isProfileUpdateFailed = signal<boolean>(false);
   profileUpdateFailedErrorMessage = signal<string | undefined>('');
 
   ngOnInit(): void {
-    console.log('UpdateProfileComponent initialized');
-    const userName: string = this.activatedRoute!.snapshot.paramMap.get('id')?.toString() ?? '';
-    this.isBusy.set(true);
-    this.usersService.getUser(userName).subscribe(user => {
-      if (!user || !user.user) {
-        this.isUnauthorised.set(true);
-        this.isBusy.set(false);
-      } else {
-        this.userName = user.user.userName;
-        this.firstName = user.user.firstName;
-        this.lastName = user.user.lastName;
-        this.emailAddress = user.user.emailAddress;
-        this.isBusy.set(false);
-      }
-    });
+    if (this.loginService.currentUser()) {      
+      const userName: string = this.loginService.currentUser()!.userName; 
+      this.isBusy.set(true);
+      this.usersService.getUser(userName).subscribe(user => {
+        if (!user || !user.user) {
+          this.isError.set(true);
+          this.isBusy.set(false);
+        } else {
+          this.userName = user.user.userName;
+          this.firstName = user.user.firstName;
+          this.lastName = user.user.lastName;
+          this.emailAddress = user.user.emailAddress;
+          this.isBusy.set(false);
+        }
+      });
+    }
   }
 
   private usersService = inject(UsersService);
