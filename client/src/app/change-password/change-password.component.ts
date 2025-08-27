@@ -36,8 +36,10 @@ export class ChangePasswordComponent {
     }
 
     const updateUserRequest = {
+      userName: this.loginService.currentUser()!.userName,
       newPassword: this.newPassword,
-      confirmNewPassword: this.confirmPassword
+      confirmPassword: this.confirmPassword,
+      updatePasswordScope: true
     };
 
     this.isBusy.set(true);
@@ -48,7 +50,13 @@ export class ChangePasswordComponent {
           this.isBusy.set(false);
           this.isPasswordChanged.set(true);
           this.loginService.logout();
-          this.router.navigate(['login'])
+          this.router.navigate(['login'],
+            {
+              queryParams: {
+                changedPassword: true
+              }
+            }
+          )
         } else {
           this.isBusy.set(false);
           this.isPasswordChanged.set(false);

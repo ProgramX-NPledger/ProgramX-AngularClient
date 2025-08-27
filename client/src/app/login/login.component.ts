@@ -1,7 +1,7 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LoginService } from '../core/services/login-service.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SiteHealthComponent } from "../site-health/site-health.component";
 
 
@@ -11,7 +11,15 @@ import { SiteHealthComponent } from "../site-health/site-health.component";
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit  {
+  private activatedRoute = inject(ActivatedRoute);
+  
+  ngOnInit(): void {
+    const changed = this.activatedRoute.snapshot.queryParamMap.get('changedPassword');
+    // treat presence or truthy value as true
+    this.isPasswordChanged.set(changed === '' || changed === 'true' || changed === '1');
+  }
+  
   private loginService: LoginService = inject(LoginService);
   private router = inject(Router);
   
@@ -19,6 +27,7 @@ export class LoginComponent {
   protected password: string = '';
   protected isLoading = signal(false);
   protected loginError = signal(false);
+  protected isPasswordChanged = signal(false);
 
   login() {
     this.isLoading.set(true);

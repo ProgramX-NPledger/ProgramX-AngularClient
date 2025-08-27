@@ -5,5 +5,7 @@ export interface UpdateUserRequest {
   userName?: string;
   newPassword?: string;
   confirmNewPassword?: string;
+  updateProfileScope?: boolean;
+  updatePasswordScope?: boolean;
 }
 
