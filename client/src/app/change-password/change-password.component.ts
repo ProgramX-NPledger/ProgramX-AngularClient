@@ -4,10 +4,11 @@ import { Router } from '@angular/router';
 import { UsersService } from '../apps/admin/services/users-service.service';
 import { UpdateResponse } from '../apps/admin/model/update-response';
 import { LoginService } from '../core/services/login-service.service';
+import { MatchValidatorDirective } from '../directives/match-validator';
 
 @Component({
   selector: 'app-change-password',
-  imports: [FormsModule],
+  imports: [FormsModule,MatchValidatorDirective],
   templateUrl: './change-password.component.html',
   styleUrl: './change-password.component.css'
 })
@@ -70,6 +71,11 @@ export class ChangePasswordComponent {
 
   cancel() {
     this.router.navigate(['/home']);
+  }
+
+  isConfirmPasswordMatching() {    
+    console.log(`New: ${this.newPassword}, Confirm: ${this.confirmPassword}`);
+    return this.newPassword === this.confirmPassword;
   }
 
 }
