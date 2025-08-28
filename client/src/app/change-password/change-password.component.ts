@@ -5,6 +5,7 @@ import { UsersService } from '../apps/admin/services/users-service.service';
 import { UpdateResponse } from '../apps/admin/model/update-response';
 import { LoginService } from '../core/services/login-service.service';
 import { MatchValidatorDirective } from '../directives/match-validator';
+import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-change-password',
@@ -14,6 +15,7 @@ import { MatchValidatorDirective } from '../directives/match-validator';
 })
 
 export class ChangePasswordComponent {
+
   usersService = inject(UsersService);
   loginService = inject(LoginService);
   router = inject(Router);
