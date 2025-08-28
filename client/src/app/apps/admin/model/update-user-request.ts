@@ -7,5 +7,7 @@ export interface UpdateUserRequest {
   confirmNewPassword?: string;
   updateProfileScope?: boolean;
   updatePasswordScope?: boolean;
+  updateSettingsScope?: boolean;
+  theme?: string;
 }
 

@@ -13,6 +13,7 @@ import { UpdateProfilePhotoResponse } from '../model/update-profile-photo-respon
   providedIn: 'root'
 })
 export class UsersService {
+
    private httpClient: HttpClient = inject(HttpClient)
   
   baseUrl = environment.baseUrl;
@@ -83,6 +84,18 @@ export class UsersService {
     );
   }
 
+  updateSettings(updateUserRequest: UpdateUserRequest): Observable<UpdateResponse> {
+    const url = `${this.baseUrl}/user/${updateUserRequest.userName}${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
+    return this.httpClient.put<UpdateResponse>(url, updateUserRequest).pipe(
+      catchError(error => {
+        console.error(error);
+        return of({
+          errorMessage: error.error,
+          isOk: false
+        } as UpdateResponse)
+      })
+    );
+  }
 
 }
 

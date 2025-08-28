@@ -41,11 +41,10 @@
               class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
               <li>
                 <a class="justify-between" [routerLink]="['/profile' ]">
-                  Profile
-                  <span class="badge">New</span>
+                  Profile                  
                 </a>
               </li>
-              <li><a>Settings</a></li>
+              <li><a [routerLink]="['/settings']">Settings</a></li>
               <li><a (click)="logout()">Logout</a></li>
             </ul>
           </div>

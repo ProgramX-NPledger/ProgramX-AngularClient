@@ -5,5 +5,6 @@ export interface UserResponse {
     lastName: string;
     emailAddress: string;
     profilePhotographSmall?: string;
+    theme: string;
 }
     
