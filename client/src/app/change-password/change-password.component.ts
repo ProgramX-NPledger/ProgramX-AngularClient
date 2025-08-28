@@ -48,7 +48,6 @@ export class ChangePasswordComponent {
     this.isBusy.set(true);
     this.usersService.updateUser(updateUserRequest).subscribe({
       next: (response: UpdateResponse) => {
-        console.log(response);
         if (response.isOk) {
           this.isBusy.set(false);
           this.isPasswordChanged.set(true);
@@ -67,7 +66,7 @@ export class ChangePasswordComponent {
           this.passwordChangedFailedErrorMessage.set(response.errorMessage);
         }
       },
-      error: (error: any) => { console.log(error); }
+      error: (error: any) => { console.error(error); }
     });
   }
 
@@ -76,7 +75,6 @@ export class ChangePasswordComponent {
   }
 
   isConfirmPasswordMatching() {    
-    console.log(`New: ${this.newPassword}, Confirm: ${this.confirmPassword}`);
     return this.newPassword === this.confirmPassword;
   }
 

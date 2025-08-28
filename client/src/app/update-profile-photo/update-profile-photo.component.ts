@@ -26,7 +26,7 @@ export class UpdateProfilePhotoComponent {
   messageBus = inject(MessageBusService);
   
   isBusy = signal<boolean>(false);
-
+  isProfilePhotoRemoved = signal<boolean>(false);
   
   onFileSelected(event: Event) {
       const input = event.target as HTMLInputElement;
@@ -60,7 +60,8 @@ export class UpdateProfilePhotoComponent {
     this.progress = 0;
     this.errorMessage = '';
     this.isBusy.set(true);
-
+    this.isProfilePhotoRemoved.set(false);
+    
     this.userService.updateUserProfilePhoto(this.loginService.currentUser()!.userName, this.selectedFile).subscribe({
       next: event => {
         if (event.httpEventType === HttpEventType.UploadProgress && event.totalBytesToTransfer && event.bytesTransferred) {
@@ -80,8 +81,22 @@ export class UpdateProfilePhotoComponent {
     });
   }
 
+  
   removeProfilePhoto() {
-
+    this.isBusy.set(true);
+    this.userService.removeUserProfilePhoto(this.loginService.currentUser()!.userName).subscribe({
+      next: () => {
+        this.isBusy.set(false);
+        this.messageBus.notifyProfilePhotoChanged(null);
+        this.isProfilePhotoRemoved.set(true);
+      },
+      error: err => {
+        this.isBusy.set(false);
+        this.status = 'error';
+        this.errorMessage = 'Removal failed.';
+        console.error(err);
+      }
+    });
   }
 
 }

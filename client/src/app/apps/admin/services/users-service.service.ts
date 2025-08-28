@@ -57,7 +57,6 @@ export class UsersService {
     const url = `${this.baseUrl}/user/${userName}/photo${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
     const formData = new FormData();
     formData.append('photo', photoFile);
-
     return this.httpClient.put<UpdateProfilePhotoResponse>(url, formData).pipe(
       catchError(error => {
         console.error(error);
@@ -68,6 +67,22 @@ export class UsersService {
       })
     );
   }
+
+  
+  removeUserProfilePhoto(userName: string): Observable<UpdateResponse> {
+    const url = `${this.baseUrl}/user/${userName}/photo${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
+
+    return this.httpClient.delete<UpdateResponse>(url).pipe(
+      catchError(error => {
+        console.error(error);
+        return of({
+          errorMessage: error.error,
+          isOk: false
+        } as UpdateResponse)
+      })
+    );
+  }
+
 
 }
 

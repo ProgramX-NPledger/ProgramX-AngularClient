@@ -64,7 +64,6 @@ export class UpdateProfileComponent implements OnInit {
     this.isBusy.set(true);
     this.usersService.updateUser(updateUserRequest).subscribe({
       next: (response: UpdateResponse) => {
-        console.log(response);
         if (response.isOk) {
           this.isBusy.set(false);
           this.isProfileUpdated.set(true);

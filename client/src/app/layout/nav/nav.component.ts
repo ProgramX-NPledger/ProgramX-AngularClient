@@ -21,7 +21,7 @@ export class NavComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
 
-  protected profilePhotoUrl = signal<string | undefined>(undefined);
+  protected profilePhotoUrl = signal<string | null>(null);
 
   environment = environment;
 
@@ -33,7 +33,9 @@ export class NavComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.messageBusService.onProfilePhotoChanged()
       .pipe(takeUntil(this.destroy$))
-      .subscribe(newUrl => this.profilePhotoUrl.set(newUrl));
+      .subscribe(newUrl => {
+        this.profilePhotoUrl.set(newUrl);
+      });   
   }
 
 

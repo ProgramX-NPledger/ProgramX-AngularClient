@@ -22,7 +22,7 @@
         @if(loginService.currentUser()) {
         <div class="dropdown dropdown-end">
             <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar bg-primary">
-              @if (loginService.currentUser()?.profilePhotographSmall) {
+              @if (loginService.currentUser()?.profilePhotographSmall && profilePhotoUrl()) {
                 <div class="avatar">
                   <div class="w-8 rounded-full">
                     <img src="{{ profilePhotoUrl() }}" />
