@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { LoginService } from '../../core/services/login-service.service';
 import { Router, RouterLink } from '@angular/router';
 import { RouterLinkActive } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-nav',
@@ -13,6 +14,7 @@ import { RouterLinkActive } from '@angular/router';
 export class NavComponent  {
   loginService = inject(LoginService);
   router = inject(Router);
+  environment = environment;
   
   logout() {
     this.loginService.logout();
