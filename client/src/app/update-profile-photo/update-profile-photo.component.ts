@@ -1,8 +1,9 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, output, signal } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { UsersService } from '../apps/admin/services/users-service.service';
 import { LoginService } from '../core/services/login-service.service';
 import { HttpEventType } from '@angular/common/http';
+import { MessageBusService } from '../core/services/message-bus.service';
 
 @Component({
   selector: 'app-update-profile-photo',
@@ -22,7 +23,8 @@ export class UpdateProfilePhotoComponent {
 
   userService = inject(UsersService);
   loginService = inject(LoginService);
-
+  messageBus = inject(MessageBusService);
+  
   isBusy = signal<boolean>(false);
 
   
@@ -66,6 +68,7 @@ export class UpdateProfilePhotoComponent {
         } else if (event.httpEventType === HttpEventType.Response) {
           this.isBusy.set(false);
           this.status = 'done';
+          this.messageBus.notifyProfilePhotoChanged(event.photoUrl);
         }
       },
       error: err => {

@@ -7,6 +7,7 @@ import { UserResponse } from '../model/user-response';
 import { GetUserResponse } from '../model/get-user-response';
 import { UpdateUserRequest } from '../model/update-user-request';
 import { UpdateResponse } from '../model/update-response';
+import { UpdateProfilePhotoResponse } from '../model/update-profile-photo-response';
 
 @Injectable({
   providedIn: 'root'
@@ -52,18 +53,18 @@ export class UsersService {
       ))
   }
 
-  updateUserProfilePhoto(userName: string, photoFile: File): Observable<UpdateResponse> {
+  updateUserProfilePhoto(userName: string, photoFile: File): Observable<UpdateProfilePhotoResponse> {
     const url = `${this.baseUrl}/user/${userName}/photo${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
     const formData = new FormData();
     formData.append('photo', photoFile);
 
-    return this.httpClient.put<UpdateResponse>(url, formData).pipe(
+    return this.httpClient.put<UpdateProfilePhotoResponse>(url, formData).pipe(
       catchError(error => {
         console.error(error);
         return of({
           errorMessage: error.error,
           isOk: false
-        } as UpdateResponse)
+        } as UpdateProfilePhotoResponse)
       })
     );
   }

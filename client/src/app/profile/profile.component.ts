@@ -10,5 +10,8 @@ import { ChangePasswordComponent } from "../change-password/change-password.comp
   styleUrl: './profile.component.css'
 })
 export class ProfileComponent {
+onProfilePhotoChanged() {
+  window.location.reload();
+}
 
 }

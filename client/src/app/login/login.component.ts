@@ -3,6 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { LoginService } from '../core/services/login-service.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SiteHealthComponent } from "../site-health/site-health.component";
+import { MessageBusService } from '../core/services/message-bus.service';
+import { environment } from '../../environments/environment';
 
 
 @Component({
@@ -22,7 +24,8 @@ export class LoginComponent implements OnInit  {
   
   private loginService: LoginService = inject(LoginService);
   private router = inject(Router);
-  
+  private messageBus = inject(MessageBusService);
+
   protected username: string = '';
   protected password: string = '';
   protected isLoading = signal(false);
@@ -35,6 +38,9 @@ export class LoginComponent implements OnInit  {
       next: (response) => {
         this.isLoading.set(false);
         this.loginError.set(false);
+
+        this.messageBus.notifyProfilePhotoChanged(`${environment.azureAvatarImagesStorageAccountUrl}/${this.loginService.currentUser()?.userName}/${response.profilePhotographSmall}`);
+
         // get the default application
         const defaultApplication = response.applications.find(app => app.IsDefaultApplicationOnLogin);
         if (defaultApplication) {

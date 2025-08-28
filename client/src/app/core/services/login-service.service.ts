@@ -10,12 +10,21 @@ import { environment } from '../../../environments/environment';
 export class LoginService {
   private httpClient: HttpClient = inject(HttpClient)
   currentUser = signal<User | null>(null);
+
+  refreshUserData() {
+    if (this.currentUser()) {
+        const url = `${this.baseUrl}/user/${this.currentUser()!.userName}${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
+
+        this.httpClient.get<User>(url).subscribe(user => {
+          this.currentUser.set(user);          
+        });
+    }
+  }
   
   baseUrl = environment.baseUrl;
 
   login(username: string, password: string) {
     const url = `${this.baseUrl}/login${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
-    console.log(url);
     const body = { 
       userName: username, 
       password 

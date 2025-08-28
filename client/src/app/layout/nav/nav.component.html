@@ -25,7 +25,7 @@
               @if (loginService.currentUser()?.profilePhotographSmall) {
                 <div class="avatar">
                   <div class="w-8 rounded-full">
-                    <img src="{{ environment.azureAvatarImagesStorageAccountUrl }}/{{ loginService.currentUser()?.userName }}/{{ loginService.currentUser()?.profilePhotographSmall }}" />
+                    <img src="{{ profilePhotoUrl() }}" />
                   </div>
                 </div>
               } @else if (loginService.currentUser()?.initials) {

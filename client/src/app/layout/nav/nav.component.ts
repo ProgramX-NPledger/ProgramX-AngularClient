@@ -1,8 +1,11 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { LoginService } from '../../core/services/login-service.service';
 import { Router, RouterLink } from '@angular/router';
 import { RouterLinkActive } from '@angular/router';
 import { environment } from '../../../environments/environment';
+import { MessageBusService } from '../../core/services/message-bus.service';
+import { takeUntil } from 'rxjs/internal/operators/takeUntil';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-nav',
@@ -11,11 +14,29 @@ import { environment } from '../../../environments/environment';
   styleUrl: './nav.component.css'
 })
 
-export class NavComponent  {
+export class NavComponent implements OnInit, OnDestroy {
   loginService = inject(LoginService);
   router = inject(Router);
+  messageBusService = inject(MessageBusService);
+
+  private destroy$ = new Subject<void>();
+
+  protected profilePhotoUrl = signal<string | undefined>(undefined);
+
   environment = environment;
-  
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  ngOnInit(): void {
+    this.messageBusService.onProfilePhotoChanged()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(newUrl => this.profilePhotoUrl.set(newUrl));
+  }
+
+
   logout() {
     this.loginService.logout();
     this.router.navigateByUrl('/login');
@@ -23,6 +44,10 @@ export class NavComponent  {
 
   login() {
     this.router.navigate(['/login']); 
+  }
+
+  refreshLogin() {
+    this.loginService.refreshUserData();
   }
 
 }
