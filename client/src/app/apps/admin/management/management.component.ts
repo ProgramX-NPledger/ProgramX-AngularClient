@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit } from '@angular/core';
+
 
 @Component({
   selector: 'app-management',
@@ -7,16 +8,17 @@ import { Component, OnInit } from '@angular/core';
   standalone: false
 })
 export class ManagementComponent implements OnInit {
-  
-  constructor() { 
+
+  constructor() {
     console.log('Management Component Initialized');
   }
 
   ngOnInit(): void {
     // Initialization logic can go here
-    
+
   }
 
-  // Additional methods for management functionality can be added here
+
+
 
 }

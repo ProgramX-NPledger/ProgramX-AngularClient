@@ -6,5 +6,9 @@ export interface UserResponse {
     emailAddress: string;
     profilePhotographSmall?: string;
     theme: string;
+    createdAt: Date;
+    updatedAt: Date;
+    lastLoginAt: Date;
+    lastPasswordChangedAt: Date;
+    passwordLinkExpiresAt: Date;
 }
-    

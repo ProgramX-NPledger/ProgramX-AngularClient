@@ -3,10 +3,11 @@ import { CommonModule } from '@angular/common';
 import { ManagementComponent } from './management/management.component';
 import { RouterModule, Routes } from '@angular/router';
 import { UsersComponent } from "./users/users.component";
+import {CreateUserDialogComponent} from './create-user-dialog/create-user-dialog.component';
 
 const routes: Routes = [
   {
-    path: '', 
+    path: '',
     component: ManagementComponent
   }
 ]
@@ -19,11 +20,12 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    UsersComponent
+    UsersComponent,
+    CreateUserDialogComponent,
 ],
   providers: [],
   exports: [
-    
+
   ]
 })
 

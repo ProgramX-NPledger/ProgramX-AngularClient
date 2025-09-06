@@ -36,7 +36,6 @@ export const routes: Routes = [
         path: 'admin',
         loadChildren: () => import('./apps/admin/admin.module').then(m => m.AdminModule),
         canActivate: [AuthGuard], // Ensure this route is protected
-    
     },
     {
         path: '**',
