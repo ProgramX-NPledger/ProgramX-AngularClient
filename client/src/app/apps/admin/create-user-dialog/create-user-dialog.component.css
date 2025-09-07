@@ -3,3 +3,27 @@
   margin-top: -15px;
   margin-left: 5px;
 }
+
+.validator-error {
+  color: #f30;
+  visibility: visible;
+}
+
+input:has(+ .validator-error) {
+  border: 1px solid #f30;
+}
+
+input:has(+ .validator-touched-ok) {
+  border: 1px solid #6c6;
+}
+
+.validator-touched-ok {
+  visibility: hidden;
+}
+
+.validator-untouched {
+  visibility: hidden;
+}
+
+
+

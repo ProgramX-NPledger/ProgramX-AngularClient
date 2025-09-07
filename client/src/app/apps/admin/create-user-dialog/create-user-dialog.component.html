@@ -9,8 +9,28 @@
         <legend class="fieldset-legend">Profile</legend>
 
         <label class="label">Username</label>
-        <input formControlName="userName"   type="text" class="input w-full" placeholder="Username" [disabled]="isBusy()" />
-        <div class="validator-hint">Username is required</div>
+        <input formControlName="userName" type="text" class="input w-full" placeholder="Username" [disabled]="isBusy()" />
+
+        @if (formControls.userName.errors?.['required'] && formControls.userName.touched) {
+          <div class="validator-error">Username is required</div>
+        }
+        @if (form.controls.userName.errors?.['minlength'] && formControls.userName.touched) {
+          <div class="validator-error">Username must be at least 8 characters</div>
+        }
+        @if (form.controls.userName.errors?.['maxlength'] && formControls.userName.touched) {
+          <div class="validator-error">Username cannot be longer than 50 characters</div>
+        }
+        @if (!(formControls.userName.errors?.['required'] ||
+              formControls.userName.errors?.['minlength'] ||
+              formControls.userName.errors?.['maxlength'])
+            && formControls.userName.touched)
+        {
+          <div class="validator-touched-ok">&nbsp;</div>
+        }
+        @if (!formControls.userName.touched)
+        {
+          <div class="validator-untouched">&nbsp;</div>
+        }
 
         <label class="label">Email address</label>
         <input formControlName="emailAddress"   type="email" email class="input w-full" placeholder="Email address" [disabled]="isBusy()" />
@@ -83,11 +103,20 @@
 
       </fieldset>
 
+      <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4">
+        <legend class="fieldset-legend">Confirmation expiry</legend>
+
+        <label class="label">Confirm before end of</label>
+        <input formControlName="confirmationExpiry" type="datetime-local" class="input w-full" placeholder="Select a date and time" [disabled]="isBusy()" />
+        <div class="validator-hint">Confirmation expiry is required</div>
+      </fieldset>
+
+
       <div role="alert" class="alert">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-info h-6 w-6 shrink-0">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
         </svg>
-        <span>Clicking 'Create' will send an email requesting the user to complete their registration by entering their password. This must be confirmed before <strong>XXXXX</strong>.</span>
+        <span>Clicking 'Create' will send an email requesting the user to complete their registration by entering their password.</span>
       </div>
 
       <div class="modal-action">

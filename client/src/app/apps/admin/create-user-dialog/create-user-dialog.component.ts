@@ -31,6 +31,18 @@ export class CreateUserDialogComponent implements OnInit {
   isErrorLoadingRoles = signal(false);
   errorMessageLoadingRoles = signal<string | undefined>(undefined);
 
+  form = this.formBuilder.nonNullable.group({
+    userName: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(50)]],
+    firstName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
+    lastName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
+    emailAddress: ['', [Validators.required, Validators.email]],
+    confirmationExpiry: ['', [Validators.required]],
+  });
+
+  get formControls() {
+    return this.form.controls;
+  }
+
   loadRoles() {
     console.log('loadRoles');
     this.isLoadingRoles.set(true);
@@ -53,12 +65,6 @@ export class CreateUserDialogComponent implements OnInit {
     );
   }
 
-  form = this.formBuilder.group({
-    userName: ['', Validators.required, Validators.maxLength(50)],
-    firstName: ['', Validators.required, Validators.maxLength(50)],
-    lastName: ['', Validators.required, Validators.maxLength(150)],
-    emailAddress: ['', Validators.required, Validators.email],
-  });
 
   open(): void {
     this.form.reset(); // optional: reset when opened
