@@ -8,6 +8,8 @@ import { GetUserResponse } from '../model/get-user-response';
 import { UpdateUserRequest } from '../model/update-user-request';
 import { UpdateResponse } from '../model/update-response';
 import { UpdateProfilePhotoResponse } from '../model/update-profile-photo-response';
+import {CreateUserRequest} from '../model/create-user-request';
+import {CreateUserResponse} from '../model/create-user-response';
 
 @Injectable({
   providedIn: 'root'
@@ -43,6 +45,18 @@ export class UsersService {
         return of({} as GetUserResponse);
       }
     ));
+  }
+
+  createUser(createUserRequest: CreateUserRequest): Observable<CreateUserResponse> {
+    const url = `${this.baseUrl}/user${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
+    return this.httpClient.post<CreateUserResponse>(url, createUserRequest).pipe(
+      catchError(error => {
+          return of({
+            errorMessage: error.error,
+            isOk: false
+          } as unknown as CreateUserResponse)
+        }
+      ))
   }
 
   updateUser(updateUserRequest: UpdateUserRequest): Observable<UpdateResponse> {

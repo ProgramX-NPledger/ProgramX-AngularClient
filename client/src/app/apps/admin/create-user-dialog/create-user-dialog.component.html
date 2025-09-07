@@ -38,19 +38,48 @@
 
         <label class="label">Email address</label>
         <input formControlName="emailAddress"   type="email" email class="input w-full" placeholder="Email address" [disabled]="isBusy()" />
-        <div class="validator-hint">Email address is required</div>
+        @if (form.controls.emailAddress.errors?.['required'] && formControls.emailAddress.touched) {
+          <div class="validator-error">Email address is required</div>
+        }
+        @if (!(formControls.emailAddress.errors?.['required'])
+        && formControls.emailAddress.touched)
+        {
+          <div class="validator-touched-ok">&nbsp;</div>
+        }
+        @if (!formControls.emailAddress.touched)
+        {
+          <div class="validator-untouched">&nbsp;</div>
+        }
 
         <label class="label">First name</label>
         <input formControlName="firstName" type="text" class="input w-full" placeholder="First name" [disabled]="isBusy()" />
-        <div class="validator-hint">First name is required</div>
+        @if (form.controls.firstName.errors?.['required'] && formControls.firstName.touched) {
+          <div class="validator-error">First name is required</div>
+        }
+        @if (!(formControls.firstName.errors?.['required'])
+        && formControls.firstName.touched)
+        {
+          <div class="validator-touched-ok">&nbsp;</div>
+        }
+        @if (!formControls.firstName.touched)
+        {
+          <div class="validator-untouched">&nbsp;</div>
+        }
 
         <label class="label">Last name</label>
         <input formControlName="lastName" type="text" class="input w-full" placeholder="Last name" [disabled]="isBusy()" />
-        <div class="validator-hint">Last name is required</div>
-
-<!--        @if(emailAddressControl.errors?.['email']) {-->
-<!--          <div class="validator-hint">Enter valid email address</div>-->
-<!--        }-->
+        @if (form.controls.lastName.errors?.['required'] && formControls.lastName.touched) {
+          <div class="validator-error">Last name is required</div>
+        }
+        @if (!(formControls.lastName.errors?.['required'])
+        && formControls.lastName.touched)
+        {
+          <div class="validator-touched-ok">&nbsp;</div>
+        }
+        @if (!formControls.lastName.touched)
+        {
+          <div class="validator-untouched">&nbsp;</div>
+        }
 
 
       </fieldset>
@@ -112,7 +141,18 @@
 
         <label class="label">Confirm before end of</label>
         <input formControlName="confirmationExpiry" type="datetime-local" class="input w-full" placeholder="Select a date and time" [disabled]="isBusy()" />
-        <div class="validator-hint">Confirmation expiry is required</div>
+        @if (!(formControls.lastName.errors?.['required'])
+        && formControls.lastName.touched)
+        {
+          <div class="validator-touched-ok">&nbsp;</div>
+        }
+        @if (!formControls.lastName.touched)
+        {
+          <div class="validator-untouched">&nbsp;</div>
+        }
+        @if (formControls.confirmationExpiry.errors?.['required'] && formControls.confirmationExpiry.touched) {
+          <div class="validator-error">Confirmation expiry is required</div>
+        }
       </fieldset>
 
 
@@ -125,8 +165,12 @@
 
       <div class="modal-action">
         <button type="submit" class="btn btn-primary"
-                [disabled]="form.invalid || isBusy() || isErrorLoadingRoles()">
-          {{ isBusy() ? 'Creating…' : 'Create' }}
+                [disabled]="form.invalid || isBusy() || isErrorLoadingRoles() || isCreating()">
+          @if (isCreating()) {
+            <span class="loading loading-spinner loading-md"></span>
+          } @else {
+            Create
+          }
         </button>
         <button type="button" class="btn" (click)="close()">Cancel</button>
       </div>

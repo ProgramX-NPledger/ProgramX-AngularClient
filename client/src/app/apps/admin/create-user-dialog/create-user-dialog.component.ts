@@ -3,6 +3,9 @@ import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Role} from '../model/role';
 import {RolesService} from '../services/roles-service.service';
 import {userNameExistsValidator} from '../validators/username-exists.validator';
+import {UsersService} from '../services/users-service.service';
+import {Router} from '@angular/router';
+import {CreateUserResponse} from '../model/create-user-response';
 
 @Component({
   selector: 'app-create-user-dialog',
@@ -21,12 +24,15 @@ export class CreateUserDialogComponent implements OnInit {
 
 
   @ViewChild('modal', { static: true }) modalRef!: ElementRef<HTMLDialogElement>;
-  @Output() created = new EventEmitter<{ name: string; description?: string }>();
+  @Output() created = new EventEmitter<CreateUserResponse>();
 
   private formBuilder = inject(FormBuilder);
   private rolesService = inject(RolesService);
+  private usersService = inject(UsersService);
+  private router = inject(Router);
 
   isBusy = signal(false);
+  isCreating = signal(false);
   roles : Role[] = [];
   isLoadingRoles = signal(false);
   isErrorLoadingRoles = signal(false);
@@ -79,12 +85,31 @@ export class CreateUserDialogComponent implements OnInit {
   async submit(): Promise<void> {
     if (this.form.invalid) return;
     this.isBusy.set(true);
+    this.isCreating.set(true);
     try {
+      this.usersService.createUser({
+        userName: this.formControls.userName.value,
+        addToRoles: [],
+        emailAddress: this.formControls.emailAddress.value,
+        firstName: this.formControls.firstName.value,
+        lastName: this.formControls.lastName.value,
+        passwordConfirmationLinkExpiryDate: new Date(this.formControls.confirmationExpiry.value)
+      }).subscribe({
+        next: (response) => {
+          this.isBusy.set(false);
+          this.isCreating.set(false);
+          this.created.emit(response as any);
+          this.close('created');
+        },
+        error: (error) => {
+          this.isBusy.set(false);
+          this.isCreating.set(false);
+          console.error('Error creating user:', error);
+        }
+      })
       // TODO: call your service to create entity
       // await this.entityService.create(this.form.value).toPromise();
 
-      this.created.emit(this.form.value as any);
-      this.close('created');
     } finally {
       this.isBusy.set(false);
     }

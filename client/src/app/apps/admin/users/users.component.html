@@ -1,13 +1,13 @@
 <div class="overflow-x-auto">
     <ul class="menu bg-base-200 lg:menu-horizontal rounded-box">
-  <li class="divider-right">
-    <a (click)="openCreateUserDialog()">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-      </svg>
-      Create
-    </a>
-  </li>
+    <li class="divider-right">
+      <a (click)="openCreateUserDialog()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+        </svg>
+        Create
+      </a>
+    </li>
 
 
       <li>
@@ -125,4 +125,12 @@
 </div>
 
 
-<app-create-user-dialog></app-create-user-dialog>
+<app-create-user-dialog (created)="onUserCreated($event)"></app-create-user-dialog>
+
+@if (isUserCreated()) {
+  <div class="toast toast-end">
+    <div class="alert alert-success">
+      <span>User {{ isUserCreated()!.userName }} created successfully</span>
+    </div>
+  </div>
+}
