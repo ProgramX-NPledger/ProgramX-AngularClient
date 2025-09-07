@@ -2,6 +2,7 @@ import {Component, ElementRef, EventEmitter, inject, OnInit, Output, signal, Vie
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Role} from '../model/role';
 import {RolesService} from '../services/roles-service.service';
+import {userNameExistsValidator} from '../validators/username-exists.validator';
 
 @Component({
   selector: 'app-create-user-dialog',
@@ -32,7 +33,7 @@ export class CreateUserDialogComponent implements OnInit {
   errorMessageLoadingRoles = signal<string | undefined>(undefined);
 
   form = this.formBuilder.nonNullable.group({
-    userName: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(50)]],
+    userName: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(50)],[userNameExistsValidator(300)]],
     firstName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
     lastName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
     emailAddress: ['', [Validators.required, Validators.email]],

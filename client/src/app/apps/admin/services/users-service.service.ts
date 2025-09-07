@@ -15,10 +15,10 @@ import { UpdateProfilePhotoResponse } from '../model/update-profile-photo-respon
 export class UsersService {
 
    private httpClient: HttpClient = inject(HttpClient)
-  
+
   baseUrl = environment.baseUrl;
 
-   
+
   getUsers(): Observable<UsersResponse> {
     const url = `${this.baseUrl}/user`;
     return this.httpClient.get<UsersResponse>(url).pipe(
@@ -32,20 +32,23 @@ export class UsersService {
 
   }
 
-  getUser(userId: string): Observable<GetUserResponse> {
+  getUser(userId: string): Observable<GetUserResponse | null> {
     const url = `${this.baseUrl}/user/${userId}${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
-    return this.httpClient.get<GetUserResponse>(url).pipe(
-      catchError(error => of({
-        
-      } as GetUserResponse))
-    );
+    return this.httpClient.get<GetUserResponse | null>(url).pipe(
+      catchError(error =>
+      {
+        if (error.status === 404) {
+          return of(null)
+        }
+        return of({} as GetUserResponse);
+      }
+    ));
   }
 
   updateUser(updateUserRequest: UpdateUserRequest): Observable<UpdateResponse> {
     const url = `${this.baseUrl}/user/${updateUserRequest.userName}${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
     return this.httpClient.put<UpdateResponse>(url, updateUserRequest).pipe(
       catchError(error => {
-        console.error(error); 
         return of({
           errorMessage: error.error,
           isOk: false
@@ -69,7 +72,7 @@ export class UsersService {
     );
   }
 
-  
+
   removeUserProfilePhoto(userName: string): Observable<UpdateResponse> {
     const url = `${this.baseUrl}/user/${userName}/photo${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
 

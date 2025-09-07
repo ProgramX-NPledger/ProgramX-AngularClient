@@ -20,9 +20,13 @@
         @if (form.controls.userName.errors?.['maxlength'] && formControls.userName.touched) {
           <div class="validator-error">Username cannot be longer than 50 characters</div>
         }
+        @if (formControls.userName.errors?.['userNameTaken'] && formControls.userName.touched) {
+          <div class="validator-error">Username is already taken</div>
+        }
         @if (!(formControls.userName.errors?.['required'] ||
               formControls.userName.errors?.['minlength'] ||
-              formControls.userName.errors?.['maxlength'])
+              formControls.userName.errors?.['maxlength'] ||
+              formControls.userName.errors?.['userNameTaken'])
             && formControls.userName.touched)
         {
           <div class="validator-touched-ok">&nbsp;</div>
