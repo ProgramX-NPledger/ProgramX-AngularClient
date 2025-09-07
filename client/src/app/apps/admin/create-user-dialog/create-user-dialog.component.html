@@ -141,12 +141,12 @@
 
         <label class="label">Confirm before end of</label>
         <input formControlName="confirmationExpiry" type="datetime-local" class="input w-full" placeholder="Select a date and time" [disabled]="isBusy()" />
-        @if (!(formControls.lastName.errors?.['required'])
-        && formControls.lastName.touched)
+        @if (!(formControls.confirmationExpiry.errors?.['required'])
+        && formControls.confirmationExpiry.touched)
         {
           <div class="validator-touched-ok">&nbsp;</div>
         }
-        @if (!formControls.lastName.touched)
+        @if (!formControls.confirmationExpiry.touched)
         {
           <div class="validator-untouched">&nbsp;</div>
         }
