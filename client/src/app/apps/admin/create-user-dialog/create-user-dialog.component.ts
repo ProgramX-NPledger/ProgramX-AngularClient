@@ -1,11 +1,22 @@
-import {Component, ElementRef, EventEmitter, inject, OnInit, Output, signal, ViewChild} from '@angular/core';
-import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  inject,
+  NO_ERRORS_SCHEMA,
+  OnInit,
+  Output,
+  signal,
+  ViewChild
+} from '@angular/core';
+import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Role} from '../model/role';
 import {RolesService} from '../services/roles-service.service';
 import {userNameExistsValidator} from '../validators/username-exists.validator';
 import {UsersService} from '../services/users-service.service';
 import {Router} from '@angular/router';
 import {CreateUserResponse} from '../model/create-user-response';
+import {SelectableRole} from '../model/selectable-role';
 
 @Component({
   selector: 'app-create-user-dialog',
@@ -17,7 +28,6 @@ import {CreateUserResponse} from '../model/create-user-response';
 })
 export class CreateUserDialogComponent implements OnInit {
   ngOnInit(): void {
-    console.log('CreateUserDialogComponent.ngOnInit');
     // get all roles
     this.loadRoles();
   }
@@ -29,11 +39,9 @@ export class CreateUserDialogComponent implements OnInit {
   private formBuilder = inject(FormBuilder);
   private rolesService = inject(RolesService);
   private usersService = inject(UsersService);
-  private router = inject(Router);
 
   isBusy = signal(false);
   isCreating = signal(false);
-  roles : Role[] = [];
   isLoadingRoles = signal(false);
   isErrorLoadingRoles = signal(false);
   errorMessageLoadingRoles = signal<string | undefined>(undefined);
@@ -44,14 +52,26 @@ export class CreateUserDialogComponent implements OnInit {
     lastName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
     emailAddress: ['', [Validators.required, Validators.email]],
     confirmationExpiry: ['', [Validators.required]],
+    roles: this.formBuilder.array<FormGroup>([])
   });
 
   get formControls() {
     return this.form.controls;
   }
 
+  createRoleFormsGroup(role: Role) {
+    return this.formBuilder.nonNullable.group({
+      isSelected: false,
+      name: role.name,
+      description: role.description,
+      applications: this.formBuilder.nonNullable.array<FormGroup>(
+        role.applications.map(app => this.formBuilder.nonNullable.group(
+          {
+            name: app.name
+          })))
+    })
+  }
   loadRoles() {
-    console.log('loadRoles');
     this.isLoadingRoles.set(true);
     this.isBusy.set(true);
     this.isErrorLoadingRoles.set(false);
@@ -60,7 +80,15 @@ export class CreateUserDialogComponent implements OnInit {
         next: roles => {
           this.isLoadingRoles.set(false);
           this.isBusy.set(false);
-          this.roles=roles.items;
+          for (const role of roles.items) {
+            this.form.controls.roles.push(this.createRoleFormsGroup({
+              name:role.name,
+              description:role.description,
+              applications:role.applications,
+              versionNumber:role.versionNumber,
+              type:role.type
+            }));
+          }
         },
         error: error => {
           this.isLoadingRoles.set(false);
@@ -74,7 +102,7 @@ export class CreateUserDialogComponent implements OnInit {
 
 
   open(): void {
-    this.form.reset(); // optional: reset when opened
+    this.form.reset();
     this.modalRef.nativeElement.showModal();
   }
 
@@ -107,9 +135,6 @@ export class CreateUserDialogComponent implements OnInit {
           console.error('Error creating user:', error);
         }
       })
-      // TODO: call your service to create entity
-      // await this.entityService.create(this.form.value).toPromise();
-
     } finally {
       this.isBusy.set(false);
     }
@@ -119,12 +144,10 @@ export class CreateUserDialogComponent implements OnInit {
 
   onClosed(): void {
     const result = this.modalRef.nativeElement.returnValue; // e.g., 'created'
-    // You can use this if needed
   }
 
 
-
-
-
-
+  protected readonly JSON = JSON;
+  protected readonly String = String;
+  protected readonly Object = Object;
 }

@@ -110,21 +110,21 @@
           }
           @else
           {
-            <ul class="list bg-base-100 rounded-box shadow-md">
-            @for (role of roles; track role.name) {
-                <li class="list-row">
+            <ul class="list bg-base-100 rounded-box shadow-md" formArrayName="roles">
+              @for (role of formControls.roles.controls; track $index; let i = $index) {
+                <li class="list-row" [formGroupName]="i">
                   <div>
                     <label class="label">
-                      <input type="checkbox" class="checkbox" />
-                      {{  role.name }}
+                      <input type="checkbox" class="checkbox" formControlName="isSelected" [disabled]="isBusy()" />
+                      {{ role.get('name')!.value}}
                     </label>
-                    @for (application of role.applications; track application.name) {
+                    @for (application of role.get('applications')!.value; track $index; let j = $index)  {
                       <span class="badge badge-neutral badge-sm application-badge">{{ application.name }}</span>
                     }
-                    <div class="text-xs uppercase font-semibold opacity-60">{{ role.description }}</div>
+                    <div class="text-xs uppercase font-semibold opacity-60">{{ role.get('description')!.value}}</div>
                   </div>
                 </li>
-            }
+              }
             </ul>
 
 
