@@ -117,7 +117,7 @@ export class CreateUserDialogComponent implements OnInit {
     try {
       this.usersService.createUser({
         userName: this.formControls.userName.value,
-        addToRoles: [],
+        addToRoles: this.formControls.roles.controls.map(m=>m.value).filter(m=>m.isSelected).map(m=>m.name),
         emailAddress: this.formControls.emailAddress.value,
         firstName: this.formControls.firstName.value,
         lastName: this.formControls.lastName.value,
