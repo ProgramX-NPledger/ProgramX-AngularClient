@@ -1,0 +1,125 @@
+<div class="overflow-x-auto">
+  <ul class="menu bg-base-200 lg:menu-horizontal rounded-box">
+    <li class="divider-right">
+      <a (click)="openCreateRoleDialog()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+        </svg>
+        Create
+      </a>
+    </li>
+
+
+    <li>
+      <a>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        Updates
+        <span class="badge badge-xs badge-warning">NEW</span>
+      </a>
+    </li>
+    <li>
+      <a>
+        Stats
+        <span class="badge badge-xs badge-info"></span>
+      </a>
+    </li>
+  </ul>
+  <table class="table">
+    <!-- head -->
+    <thead>
+    <tr>
+      <th>
+        <label>
+          <input type="checkbox" class="checkbox" />
+        </label>
+      </th>
+      <th>Name</th>
+      <th>Email address</th>
+      <th>Roles</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+      @if(roles==null) {
+        <tr>
+          <td class="text-center">
+            <div class="skeleton h-2 w-32"></div>
+          </td>
+          <td  class="text-center">
+            <div class="skeleton h-2 w-32"></div>
+          </td>
+          <td class="text-center">
+            <div class="skeleton h-2 w-32"></div>
+          </td>
+        </tr>
+      } @else if(roles.length === 0) {
+        <tr>
+          <td colspan="5" class="text-center">No users found</td>
+        </tr>
+      } @else {
+        @for (role of roles; track role.id) {
+          <tr>
+            <th>
+              <label>
+                <input type="checkbox" class="checkbox" />
+              </label>
+            </th>
+            <td>
+              <div class="flex items-center gap-3">
+                <div>
+                  <div>
+                    <span class="font-bold">
+                      {{ role.name }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td>
+              {{ role.description }}
+              <br />
+              <span class="badge badge-ghost badge-sm">Description</span>
+            </td>
+            <td>
+              Applications
+            </td>
+            <th>
+              <button class="btn btn-ghost btn-xs">details</button>
+            </th>
+          </tr>
+        }
+      }
+    </tbody>
+  </table>
+</div>
+
+
+<div class="join">
+  <button class="join-item btn">1</button>
+  <button class="join-item btn">2</button>
+  <button class="join-item btn btn-disabled">...</button>
+  <button class="join-item btn">99</button>
+  <button class="join-item btn">100</button>
+</div>
+
+
+<app-create-role-dialog (created)="onRoleCreated($event)"></app-create-role-dialog>
+
+@if (isRoleCreated()) {
+  <div class="toast toast-end">
+    <div class="alert alert-success">
+      <span>User {{ isRoleCreated()!.name }} created successfully</span>
+    </div>
+  </div>
+}

@@ -12,4 +12,6 @@ export interface SecureUser {
     lastLoginAt: Date;
     lastPasswordChangedAt: Date;
     passwordLinkExpiresAt: Date;
+    firstName: string;
+    lastName: string;
 }

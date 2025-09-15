@@ -11,7 +11,7 @@
         <label class="label">Username</label>
         <input formControlName="userName" type="text" class="input w-full" placeholder="Username" [disabled]="isBusy()" />
 
-        @if (formControls.userName.errors?.['required'] && formControls.userName.touched) {
+        @if (form.controls.userName.errors?.['required'] && formControls.userName.touched) {
           <div class="validator-error">Username is required</div>
         }
         @if (form.controls.userName.errors?.['minlength'] && formControls.userName.touched) {

@@ -9,5 +9,6 @@ export interface UpdateUserRequest {
   updatePasswordScope?: boolean;
   updateSettingsScope?: boolean;
   theme?: string;
+  confirmPasswordNonce?: string;
 }
 

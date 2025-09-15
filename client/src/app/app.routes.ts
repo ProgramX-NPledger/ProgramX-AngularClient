@@ -5,6 +5,7 @@ import { LoginComponent } from './login/login.component';
 import { UpdateProfileComponent } from './update-profile/update-profile.component';
 import { ProfileComponent } from './profile/profile.component';
 import { SettingsComponent } from './settings/settings.component';
+import {ConfirmPasswordComponent} from './confirm-password/confirm-password.component';
 
 export const routes: Routes = [
     {
@@ -19,6 +20,10 @@ export const routes: Routes = [
     {
         path: 'login',
         component: LoginComponent
+    },
+    {
+      path: 'confirm-password',
+      component: ConfirmPasswordComponent
     },
     {
         path: 'profile',

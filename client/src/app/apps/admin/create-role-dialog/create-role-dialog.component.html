@@ -1,0 +1,158 @@
+<dialog #modal class="modal">
+  <div class="modal-box w-11/12 max-w-5xl">
+    <h3 class="font-bold text-lg">Create entity</h3>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4 mt-4">
+
+      <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4">
+
+        <legend class="fieldset-legend">Role</legend>
+
+        <label class="label">Name</label>
+        <input formControlName="name" type="text" class="input w-full" placeholder="Name" [disabled]="isBusy()" />
+
+        @if (form.name.errors?.['required'] && formControls.name.touched) {
+          <div class="validator-error">Name is required</div>
+        }
+        @if (formControls.name.errors?.['minlength'] && formControls.name.touched) {
+          <div class="validator-error">Name must be at least 8 characters</div>
+        }
+        @if (formControls.name.errors?.['maxlength'] && formControls.name.touched) {
+          <div class="validator-error">Name cannot be longer than 50 characters</div>
+        }
+        @if (formControls.userName.errors?.['nameTaken'] && formControls.userName.touched) {
+          <div class="validator-error">Name is already taken</div>
+        }
+        @if (!(formControls.userName.errors?.['required'] ||
+          formControls.userName.errors?.['minlength'] ||
+          formControls.userName.errors?.['maxlength'] ||
+          formControls.userName.errors?.['nameTaken'])
+        && formControls.userName.touched)
+        {
+          <div class="validator-touched-ok">&nbsp;</div>
+        }
+        @if (!formControls.userName.touched)
+        {
+          <div class="validator-untouched">&nbsp;</div>
+        }
+
+        <label class="label">Description</label>
+        <input formControlName="description" type="text" class="input w-full" placeholder="Description" [disabled]="isBusy()" />
+
+
+      </fieldset>
+
+      <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4">
+
+        <legend class="fieldset-legend">Users</legend>
+
+
+        @if (isLoadingUsers())
+        {
+          <div class="flex w-52 flex-col gap-4">
+            <div class="skeleton h-4 w-full"></div>
+            <div class="skeleton h-4 w-full"></div>
+            <div class="skeleton h-4 w-full"></div>
+            <div class="skeleton h-4 w-full"></div>
+          </div>
+        }
+        @else {
+          @if (isErrorLoadingUsers())
+          {
+            <div role="alert" class="flex items-center gap-3 mr-auto ml-auto alert alert-error">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>Retrieving Users failed: {{ errorMessageLoadingUsers() }}</span>
+            </div>
+          }
+          @else
+          {
+            <ul class="list bg-base-100 rounded-box shadow-md" formArrayName="roles">
+              @for (user of formControls.users.controls; track $index; let i = $index) {
+                <li class="list-row" [formGroupName]="i">
+                  <div>
+                    <label class="label">
+                      <input type="checkbox" class="checkbox" formControlName="isSelected" [disabled]="isBusy()" />
+                      {{ user.get('userName')!.value}}
+                    </label>
+                    <div class="text-xs uppercase font-semibold opacity-60">{{ user.get('firstName')!.value}} {{ user.get('lastName')!.value}}</div>
+                  </div>
+                </li>
+              }
+            </ul>
+
+
+          }
+
+        }
+
+      </fieldset>
+
+
+      <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4">
+
+        <legend class="fieldset-legend">Applications</legend>
+
+
+        @if (isLoadingApplications())
+        {
+          <div class="flex w-52 flex-col gap-4">
+            <div class="skeleton h-4 w-full"></div>
+            <div class="skeleton h-4 w-full"></div>
+            <div class="skeleton h-4 w-full"></div>
+            <div class="skeleton h-4 w-full"></div>
+          </div>
+        }
+        @else {
+          @if (isErrorLoadingApplications())
+          {
+            <div role="alert" class="flex items-center gap-3 mr-auto ml-auto alert alert-error">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>Retrieving Applications failed: {{ errorMessageLoadingApplications() }}</span>
+            </div>
+          }
+          @else
+          {
+            <ul class="list bg-base-100 rounded-box shadow-md" formArrayName="roles">
+              @for (application of formControls.applications.controls; track $index; let i = $index) {
+                <li class="list-row" [formGroupName]="i">
+                  <div>
+                    <label class="label">
+                      <input type="checkbox" class="checkbox" formControlName="isSelected" [disabled]="isBusy()" />
+                      {{ application.get('name')!.value}}
+                    </label>
+                    <div class="text-xs uppercase font-semibold opacity-60">{{ application.get('description')!.value}}</div>
+                  </div>
+                </li>
+              }
+            </ul>
+
+
+          }
+
+        }
+
+      </fieldset>
+
+
+      <div class="modal-action">
+        <button type="submit" class="btn btn-primary"
+                [disabled]="form.invalid || isBusy() || isErrorLoadingUsers()  || isErrorLoadingApplications()|| isCreating()">
+          @if (isCreating()) {
+            <span class="loading loading-spinner loading-md"></span>
+          } @else {
+            Create
+          }
+        </button>
+        <button type="button" class="btn" (click)="close()">Cancel</button>
+      </div>
+    </form>
+
+
+  </div>
+
+
+</dialog>

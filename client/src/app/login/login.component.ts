@@ -15,13 +15,16 @@ import { environment } from '../../environments/environment';
 })
 export class LoginComponent implements OnInit  {
   private activatedRoute = inject(ActivatedRoute);
-  
+
   ngOnInit(): void {
     const changed = this.activatedRoute.snapshot.queryParamMap.get('changedPassword');
-    // treat presence or truthy value as true
     this.isPasswordChanged.set(changed === '' || changed === 'true' || changed === '1');
+
+    const accountConfirmed = this.activatedRoute.snapshot.queryParamMap.get('accountConfirmed');
+    this.isAccountConfirmed.set(accountConfirmed === '' || accountConfirmed === 'true' || accountConfirmed === '1');
+
   }
-  
+
   private loginService: LoginService = inject(LoginService);
   private router = inject(Router);
   private messageBus = inject(MessageBusService);
@@ -31,6 +34,7 @@ export class LoginComponent implements OnInit  {
   protected isLoading = signal(false);
   protected loginError = signal(false);
   protected isPasswordChanged = signal(false);
+  protected isAccountConfirmed = signal(false);
 
   login() {
     this.isLoading.set(true);

@@ -1,28 +1,29 @@
-import { Component, inject, signal } from '@angular/core';
-import { FormsModule, NgForm } from '@angular/forms';
-import { Router } from '@angular/router';
-import { UsersService } from '../apps/admin/services/users-service.service';
-import { UpdateResponse } from '../apps/admin/model/update-response';
-import { LoginService } from '../core/services/login-service.service';
-import { MatchValidatorDirective } from '../directives/match-validator';
-import { JsonPipe } from '@angular/common';
+import {Component, inject, signal} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {FormsModule, NgForm} from '@angular/forms';
+import {UsersService} from '../apps/admin/services/users-service.service';
+import {LoginService} from '../core/services/login-service.service';
+import {UpdateResponse} from '../apps/admin/model/update-response';
+import {MatchValidatorDirective} from '../directives/match-validator';
 
 @Component({
-  selector: 'app-change-password',
-  imports: [FormsModule,MatchValidatorDirective],
-  templateUrl: './change-password.component.html',
-  styleUrl: './change-password.component.css'
+  selector: 'app-confirm-password',
+  imports: [
+    FormsModule,
+    MatchValidatorDirective
+  ],
+  templateUrl: './confirm-password.component.html',
+  styleUrl: './confirm-password.component.css'
 })
+export class ConfirmPasswordComponent {
 
-export class ChangePasswordComponent {
-
+  activatedRoute = inject(ActivatedRoute);
   usersService = inject(UsersService);
-  loginService = inject(LoginService);
   router = inject(Router);
+  loginService = inject(LoginService);
 
   isError = signal<boolean>(false);
   isBusy = signal<boolean>(false);
-  isPasswordChanged = signal<boolean>(false);
   isPasswordChangedFailed = signal<boolean>(false);
   passwordChangedFailedErrorMessage = signal<string | undefined>('');
 
@@ -30,35 +31,39 @@ export class ChangePasswordComponent {
   protected confirmPassword: string='';
 
   changePassword(form: NgForm) {
+    console.log("change password", form);
     if (form.invalid) {
       form.control.markAllAsTouched();
       return;
     }
 
+    const nonce: string = this.activatedRoute.snapshot.params['n'];
+    const userName: string = this.activatedRoute.snapshot.params['username'];
+
     const updateUserRequest = {
-      userName: this.loginService.currentUser()!.userName,
+      userName: userName,
       newPassword: this.newPassword,
       confirmPassword: this.confirmPassword,
-      updatePasswordScope: true
+      updatePasswordScope: true,
+      confirmPasswordNonce: nonce
     };
 
+    console.log("updateUserRequest",updateUserRequest);
     this.isBusy.set(true);
     this.usersService.updateUser(updateUserRequest).subscribe({
       next: (response: UpdateResponse) => {
         if (response.isOk) {
           this.isBusy.set(false);
-          this.isPasswordChanged.set(true);
           this.loginService.logout();
           this.router.navigate(['login'],
             {
               queryParams: {
-                changedPassword: true
+                accountConfirmed: true
               }
             }
           )
         } else {
           this.isBusy.set(false);
-          this.isPasswordChanged.set(false);
           this.isPasswordChangedFailed.set(true);
           this.passwordChangedFailedErrorMessage.set(response.errorMessage);
         }
@@ -74,5 +79,6 @@ export class ChangePasswordComponent {
   isConfirmPasswordMatching() {
     return this.newPassword === this.confirmPassword;
   }
+
 
 }
