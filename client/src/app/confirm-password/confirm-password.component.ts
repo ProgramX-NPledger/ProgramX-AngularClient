@@ -1,4 +1,4 @@
-import {Component, inject, signal} from '@angular/core';
+import {Component, inject, isStandalone, OnInit, signal} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormsModule, NgForm} from '@angular/forms';
 import {UsersService} from '../apps/admin/services/users-service.service';
@@ -10,12 +10,14 @@ import {MatchValidatorDirective} from '../directives/match-validator';
   selector: 'app-confirm-password',
   imports: [
     FormsModule,
-    MatchValidatorDirective
+    MatchValidatorDirective,
   ],
+  standalone: true,
   templateUrl: './confirm-password.component.html',
   styleUrl: './confirm-password.component.css'
 })
-export class ConfirmPasswordComponent {
+export class ConfirmPasswordComponent implements OnInit {
+
 
   activatedRoute = inject(ActivatedRoute);
   usersService = inject(UsersService);
@@ -26,9 +28,17 @@ export class ConfirmPasswordComponent {
   isBusy = signal<boolean>(false);
   isPasswordChangedFailed = signal<boolean>(false);
   passwordChangedFailedErrorMessage = signal<string | undefined>('');
+  isNewUser = signal<boolean>(false);
+  isPasswordChanging = signal<boolean>(false);
 
   protected newPassword: string='';
   protected confirmPassword: string='';
+
+  ngOnInit(): void {
+    if (this.activatedRoute.snapshot.queryParams['t']==='new-user') {
+      this.isNewUser.set(true);
+    }
+  }
 
   changePassword(form: NgForm) {
     console.log("change password", form);
@@ -38,7 +48,8 @@ export class ConfirmPasswordComponent {
     }
 
     const nonce: string = this.activatedRoute.snapshot.params['n'];
-    const userName: string = this.activatedRoute.snapshot.params['username'];
+    const userName: string = this.activatedRoute.snapshot.params['u'];
+
 
     const updateUserRequest = {
       userName: userName,
