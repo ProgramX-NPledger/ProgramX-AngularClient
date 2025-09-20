@@ -4,11 +4,10 @@ export interface UpdateUserRequest {
   emailAddress?: string;
   userName?: string;
   newPassword?: string;
-  confirmNewPassword?: string;
   updateProfileScope?: boolean;
   updatePasswordScope?: boolean;
   updateSettingsScope?: boolean;
   theme?: string;
-  confirmPasswordNonce?: string;
+  passwordConfirmationNonce?: string;
 }
 

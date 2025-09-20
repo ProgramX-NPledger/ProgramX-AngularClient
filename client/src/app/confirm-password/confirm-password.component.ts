@@ -41,25 +41,22 @@ export class ConfirmPasswordComponent implements OnInit {
   }
 
   changePassword(form: NgForm) {
-    console.log("change password", form);
+
     if (form.invalid) {
       form.control.markAllAsTouched();
       return;
     }
 
-    const nonce: string = this.activatedRoute.snapshot.params['n'];
-    const userName: string = this.activatedRoute.snapshot.params['u'];
-
+    const nonce: string = this.activatedRoute.snapshot.queryParams['n'];
+    const userName: string = this.activatedRoute.snapshot.queryParams['u'];
 
     const updateUserRequest = {
       userName: userName,
       newPassword: this.newPassword,
-      confirmPassword: this.confirmPassword,
       updatePasswordScope: true,
-      confirmPasswordNonce: nonce
+      passwordConfirmationNonce: nonce
     };
 
-    console.log("updateUserRequest",updateUserRequest);
     this.isBusy.set(true);
     this.usersService.updateUser(updateUserRequest).subscribe({
       next: (response: UpdateResponse) => {
