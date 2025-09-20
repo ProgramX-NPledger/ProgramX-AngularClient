@@ -11,6 +11,7 @@ import { AbstractControl, NG_VALIDATORS, ValidationErrors, Validator } from '@an
       multi: true,
     },
   ],
+  standalone: true,
 })
 export class MatchValidatorDirective implements Validator {
   @Input('matchValidator') matchTo?: string; // value to match (passed from template)
