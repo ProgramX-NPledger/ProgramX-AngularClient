@@ -2,8 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { catchError, Observable, of } from 'rxjs';
-import { UsersResponse } from '../model/users-response';
-import { UserResponse } from '../model/user-response';
+import { GetUsersResponse } from '../model/get-users-response';
 import { GetUserResponse } from '../model/get-user-response';
 import { UpdateUserRequest } from '../model/update-user-request';
 import { UpdateResponse } from '../model/update-response';
@@ -21,7 +20,7 @@ export class UsersService {
 
   baseUrl = environment.baseUrl;
 
-  getUsers(criteria: Partial<GetUsersCriteria> | null): Observable<UsersResponse> {
+  getUsers(criteria: Partial<GetUsersCriteria> | null): Observable<GetUsersResponse> {
     const url = `${this.baseUrl}/user`;
     let queryString='';
     if (criteria) {
@@ -32,13 +31,16 @@ export class UsersService {
       if (criteria.continuationToken) queryString+='continuationToken='+encodeURIComponent(criteria.continuationToken)+'&';
     }
     console.log('criteria',criteria);
-    return this.httpClient.get<UsersResponse>(`${url}${queryString}`).pipe(
+    return this.httpClient.get<GetUsersResponse>(`${url}${queryString}`).pipe(
       catchError(error => of({
         isLastPage: true,
         itemsPerPage: 0,
         items: [],
-        continuationToken: undefined
-      } as UsersResponse))
+        continuationToken: undefined,
+        estimatedTotalPageCount: 0,
+        nextPageUrl: undefined,
+        requestCharge: undefined
+      } as GetUsersResponse))
     );
 
   }

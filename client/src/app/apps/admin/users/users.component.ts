@@ -9,6 +9,7 @@ import {RolesService} from '../services/roles-service.service';
 import {ApplicationsService} from '../services/applications-service.service';
 import {Role} from '../model/role';
 import {Application} from '../model/application';
+import {PaginatorComponent} from '../../../paginator/paginator.component';
 
 
 @Component({
@@ -17,6 +18,7 @@ import {Application} from '../model/application';
     CreateUserDialogComponent,
     DatePipe,
     ReactiveFormsModule,
+    PaginatorComponent,
   ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css',
@@ -34,6 +36,7 @@ export class UsersComponent implements OnInit {
   isUserCreated : WritableSignal<CreateUserResponse | null>= signal(null);
 
   users: SecureUser[] | null = null;
+  estimatedTotalPageCount: number | null = null;
   roles: Role[] | null = null;
   applications: Application[] | null = null;
 
@@ -62,7 +65,8 @@ export class UsersComponent implements OnInit {
       continuationToken: this.pagingForm.controls.continuationToken.value,
     }).subscribe(users => {
       this.users = users.items;
-      this.pagingForm.controls.continuationToken.setValue(users.continuationToken ?? null)
+      this.pagingForm.controls.continuationToken.setValue(users.continuationToken ?? null);
+      this.estimatedTotalPageCount = users.estimatedTotalPageCount;
       console.log('Users fetched:', users);
       console.log(this.filterForm.controls.containingText.value);
     });
@@ -104,4 +108,14 @@ export class UsersComponent implements OnInit {
     },5000)
   }
 
+  protected readonly Array = Array;
+
+  onPageChange($event: number) {
+
+  }
+
+  clearFilters() {
+    this.filterForm.reset();
+    this.refreshUsersList();
+  }
 }
