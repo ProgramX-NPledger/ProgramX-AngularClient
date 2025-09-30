@@ -17,7 +17,8 @@ import {SecureUser} from '../model/secure-user';
         ReactiveFormsModule
     ],
   templateUrl: './create-role-dialog.component.html',
-  styleUrl: './create-role-dialog.component.css'
+  styleUrl: './create-role-dialog.component.css',
+  standalone: true,
 })
 export class CreateRoleDialogComponent implements OnInit {
   ngOnInit(): void {

@@ -14,7 +14,8 @@ import {CreateRoleDialogComponent} from '../create-role-dialog/create-role-dialo
         CreateRoleDialogComponent
     ],
   templateUrl: './roles.component.html',
-  styleUrl: './roles.component.css'
+  styleUrl: './roles.component.css',
+  standalone: true,
 })
 export class RolesComponent  implements OnInit {
   @ViewChild(CreateRoleDialogComponent) createRoleDialog!: CreateRoleDialogComponent;
@@ -37,7 +38,7 @@ export class RolesComponent  implements OnInit {
     });
   }
 
-  openCreateUserDialog() {
+  openCreateRoleDialog() {
     this.createRoleDialog.open();
   }
 

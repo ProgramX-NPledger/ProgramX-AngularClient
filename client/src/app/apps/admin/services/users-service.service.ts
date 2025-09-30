@@ -10,6 +10,7 @@ import { UpdateResponse } from '../model/update-response';
 import { UpdateProfilePhotoResponse } from '../model/update-profile-photo-response';
 import {CreateUserRequest} from '../model/create-user-request';
 import {CreateUserResponse} from '../model/create-user-response';
+import {GetUsersCriteria} from '../model/get-users-criteria';
 
 @Injectable({
   providedIn: 'root'
@@ -20,10 +21,18 @@ export class UsersService {
 
   baseUrl = environment.baseUrl;
 
-
-  getUsers(): Observable<UsersResponse> {
+  getUsers(criteria: Partial<GetUsersCriteria> | null): Observable<UsersResponse> {
     const url = `${this.baseUrl}/user`;
-    return this.httpClient.get<UsersResponse>(url).pipe(
+    let queryString='';
+    if (criteria) {
+      queryString = '?';
+      if (criteria.containingText) queryString+='containingText='+encodeURIComponent(criteria.containingText)+'&';
+      if (criteria.hasRole) queryString+='withRoles='+encodeURIComponent(criteria.hasRole)+'&';
+      if (criteria.hasApplication) queryString+='hasAccessToApplications='+encodeURIComponent(criteria.hasApplication)+'&';
+      if (criteria.continuationToken) queryString+='continuationToken='+encodeURIComponent(criteria.continuationToken)+'&';
+    }
+    console.log('criteria',criteria);
+    return this.httpClient.get<UsersResponse>(`${url}${queryString}`).pipe(
       catchError(error => of({
         isLastPage: true,
         itemsPerPage: 0,

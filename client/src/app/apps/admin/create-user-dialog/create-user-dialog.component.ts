@@ -24,7 +24,8 @@ import {SelectableRole} from '../model/selectable-role';
     ReactiveFormsModule
   ],
   templateUrl: './create-user-dialog.component.html',
-  styleUrl: './create-user-dialog.component.css'
+  styleUrl: './create-user-dialog.component.css',
+  standalone: true,
 })
 export class CreateUserDialogComponent implements OnInit {
   ngOnInit(): void {
