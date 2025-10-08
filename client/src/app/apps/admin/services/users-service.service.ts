@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { catchError, Observable, of } from 'rxjs';
-import { GetUsersResponse } from '../model/get-users-response';
 import { GetUserResponse } from '../model/get-user-response';
 import { UpdateUserRequest } from '../model/update-user-request';
 import { UpdateResponse } from '../model/update-response';
@@ -10,6 +9,9 @@ import { UpdateProfilePhotoResponse } from '../model/update-profile-photo-respon
 import {CreateUserRequest} from '../model/create-user-request';
 import {CreateUserResponse} from '../model/create-user-response';
 import {GetUsersCriteria} from '../model/get-users-criteria';
+import {SecureUser} from '../model/secure-user';
+import { Paging } from '../../../model/paging';
+import { PagedData } from '../../../model/paged-data';
 
 @Injectable({
   providedIn: 'root'
@@ -20,27 +22,28 @@ export class UsersService {
 
   baseUrl = environment.baseUrl;
 
-  getUsers(criteria: Partial<GetUsersCriteria> | null): Observable<GetUsersResponse> {
+  getUsers(criteria: Partial<GetUsersCriteria> | null, page: Paging | null): Observable<PagedData<SecureUser>> {
     const url = `${this.baseUrl}/user`;
     let queryString='';
+    queryString = '?';
     if (criteria) {
-      queryString = '?';
       if (criteria.containingText) queryString+='containingText='+encodeURIComponent(criteria.containingText)+'&';
       if (criteria.hasRole) queryString+='withRoles='+encodeURIComponent(criteria.hasRole)+'&';
       if (criteria.hasApplication) queryString+='hasAccessToApplications='+encodeURIComponent(criteria.hasApplication)+'&';
-      if (criteria.continuationToken) queryString+='continuationToken='+encodeURIComponent(criteria.continuationToken)+'&';
     }
-    console.log('criteria',criteria);
-    return this.httpClient.get<GetUsersResponse>(`${url}${queryString}`).pipe(
+    if (page) {
+      if (page.offset) queryString+='offset='+page.offset+'&';
+      if (page.itemsPerPage) queryString+='itemsPerPage='+page.itemsPerPage+'&';
+    }
+
+    return this.httpClient.get<PagedData<SecureUser>>(`${url}${queryString}`).pipe(
       catchError(error => of({
-        isLastPage: true,
-        itemsPerPage: 0,
         items: [],
-        continuationToken: undefined,
-        estimatedTotalPageCount: 0,
-        nextPageUrl: undefined,
-        requestCharge: undefined
-      } as GetUsersResponse))
+        itemsPerPage: 0,
+        pagesWithUrls: [],
+        totalItems: 0,
+        timeDeltaMs: 0
+      } as PagedData<SecureUser>))
     );
 
   }

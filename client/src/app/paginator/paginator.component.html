@@ -1,4 +1,4 @@
-@if (items != null && estimatedTotalPageCount > 0) {
+@if (pagedData && totalPagesCount > 0) {
   <div class="join" role="navigation" aria-label="Pagination">
     <!-- Previous button -->
     <button
@@ -26,31 +26,31 @@
     @for (pageNum of visiblePages; track pageNum) {
       <button
         class="join-item btn"
-        [class.btn-active]="pageNum === currentPageNumber"
-        (click)="goToPage(pageNum)"
-        [attr.aria-current]="pageNum === currentPageNumber ? 'page' : null"
+        [class.btn-active]="pageNum.pageNumber === currentPageNumber"
+        (click)="goToPage(pageNum.pageNumber)"
+        [attr.aria-current]="pageNum.pageNumber === currentPageNumber ? 'page' : null"
         [attr.aria-label]="'Go to page ' + pageNum">
         {{ pageNum }}
       </button>
     }
 
     <!-- Show last page if not in visible range -->
-    @if (endPage < estimatedTotalPageCount) {
-      @if (endPage < estimatedTotalPageCount - 1) {
+    @if (endPage < totalPagesCount) {
+      @if (endPage < totalPagesCount - 1) {
         <span class="join-item btn btn-disabled">...</span>
       }
       <button
         class="join-item btn"
-        (click)="goToPage(estimatedTotalPageCount)"
-        [attr.aria-label]="'Go to page ' + estimatedTotalPageCount">
-        {{ estimatedTotalPageCount }}
+        (click)="goToPage(totalPagesCount)"
+        [attr.aria-label]="'Go to page ' + totalPagesCount">
+        {{ totalPagesCount }}
       </button>
     }
 
     <!-- Next button -->
     <button
       class="join-item btn"
-      [disabled]="currentPageNumber >= estimatedTotalPageCount"
+      [disabled]="currentPageNumber >= totalPagesCount"
       (click)="goToPage(currentPageNumber + 1)"
       aria-label="Go to next page">
       Next

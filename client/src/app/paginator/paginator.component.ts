@@ -1,4 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {PageWithUrl} from '../model/page-with-url';
+import {PagedData} from '../model/paged-data';
 
 @Component({
   selector: 'app-paginator',
@@ -7,23 +9,31 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
   styleUrl: './paginator.component.css',
   standalone: true,
 })
-export class PaginatorComponent {
-  @Input() items: any[] | null = null;
-  @Input() estimatedTotalPageCount: number = 0;
+export class PaginatorComponent<T> {
+  @Input() pagedData: PagedData<T> | undefined;
   @Input() currentPageNumber: number = 1;
-  @Input() maxVisiblePages: number = 5;
   @Output() pageChange = new EventEmitter<number>();
+  @Input() maxVisiblePages: number = 5;
 
-
-  get visiblePages(): number[] {
-    const pages: number[] = [];
-    const start = Math.max(1, this.startPage);
-    const end = Math.min(this.estimatedTotalPageCount, this.endPage);
-
-    for (let i = start; i <= end; i++) {
-      pages.push(i);
+  get totalPagesCount(): number {
+    if (this.pagedData) {
+      Math.ceil(this.pagedData.totalItems / this.pagedData.itemsPerPage)
     }
-    return pages;
+    return 0;
+  }
+
+  get visiblePages(): PageWithUrl[] {
+    if (this.pagedData) {
+      const pages: PageWithUrl[] = [];
+      const start = Math.max(1, this.startPage);
+      const end = Math.min(this.totalPagesCount, this.endPage);
+
+      for (let i = start; i <= end; i++) {
+        pages.push(this.pagedData.pagesWithUrls[i]);
+      }
+      return pages;
+    }
+    return [];
   }
 
   get startPage(): number {
@@ -32,14 +42,16 @@ export class PaginatorComponent {
 
   get endPage(): number {
     return Math.min(
-      this.estimatedTotalPageCount,
+      this.totalPagesCount,
       this.startPage + this.maxVisiblePages - 1
     );
   }
 
   goToPage(page: number): void {
-    if (page >= 1 && page <= this.estimatedTotalPageCount && page !== this.currentPageNumber) {
-      this.pageChange.emit(page);
+    if (this.pagedData) {
+      if (page >= 1 && page <= Math.ceil(this.pagedData.totalItems / this.pagedData.itemsPerPage) && page !== this.currentPageNumber) {
+        this.pageChange.emit(page);
+      }
     }
   }
 

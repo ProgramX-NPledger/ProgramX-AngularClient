@@ -154,7 +154,7 @@
   </table>
 </div>
 
-<app-paginator [currentPageNumber]="1" [estimatedTotalPageCount]="this.estimatedTotalPageCount ?? 1" [items]="this.users" [maxVisiblePages]="6" (pageChange)="onPageChange($event)"></app-paginator>
+<app-paginator [currentPageNumber]="1" [pagedData]="this.pagedUsers" [maxVisiblePages]="6" (pageChange)="onPageChange($event)"></app-paginator>
 
 <app-create-user-dialog (created)="onUserCreated($event)"></app-create-user-dialog>
 

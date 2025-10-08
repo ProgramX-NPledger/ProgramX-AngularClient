@@ -10,6 +10,8 @@ import {ApplicationsService} from '../services/applications-service.service';
 import {Role} from '../model/role';
 import {Application} from '../model/application';
 import {PaginatorComponent} from '../../../paginator/paginator.component';
+import {ActivatedRoute} from '@angular/router';
+import {PagedData} from '../../../model/paged-data';
 
 
 @Component({
@@ -32,11 +34,13 @@ export class UsersComponent implements OnInit {
   private rolesService = inject(RolesService);
   private applicationsService = inject(ApplicationsService);
   private formBuilder = inject(FormBuilder);
+  private activatedRoute = inject(ActivatedRoute);
 
   isUserCreated : WritableSignal<CreateUserResponse | null>= signal(null);
 
+  pagedUsers: PagedData<SecureUser> | null = null;
+
   users: SecureUser[] | null = null;
-  estimatedTotalPageCount: number | null = null;
   roles: Role[] | null = null;
   applications: Application[] | null = null;
 
@@ -44,10 +48,6 @@ export class UsersComponent implements OnInit {
     containingText: <string | null> null,
     hasRole:  <string | null> null,
     hasApplication:  <string | null> null,
-  })
-
-  pagingForm = this.formBuilder.group({
-    continuationToken:  <string | null> null,
   })
 
   ngOnInit(): void {
@@ -62,13 +62,11 @@ export class UsersComponent implements OnInit {
       containingText: this.filterForm.controls.containingText.value,
       hasRole: this.filterForm.controls.hasRole.value,
       hasApplication: this.filterForm.controls.hasApplication.value,
-      continuationToken: this.pagingForm.controls.continuationToken.value,
-    }).subscribe(users => {
-      this.users = users.items;
-      this.pagingForm.controls.continuationToken.setValue(users.continuationToken ?? null);
-      this.estimatedTotalPageCount = users.estimatedTotalPageCount;
-      console.log('Users fetched:', users);
-      console.log(this.filterForm.controls.containingText.value);
+    },{
+      offset: this.activatedRoute.snapshot.queryParams['offset'] ? parseInt(this.activatedRoute.snapshot.queryParams['offset']) : 0,
+      itemsPerPage: this.activatedRoute.snapshot.queryParams['itemsPerPage'] ? parseInt(this.activatedRoute.snapshot.queryParams['itemsPerPage']) : 10,
+    }).subscribe(pagedData => {
+      this.pagedUsers = pagedData;
     });
   }
 
