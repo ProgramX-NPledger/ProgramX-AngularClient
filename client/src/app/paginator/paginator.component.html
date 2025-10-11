@@ -1,0 +1,59 @@
+@if (pagedData && totalPagesCount > 0) {
+  <div class="join" role="navigation" aria-label="Pagination">
+    <!-- Previous button -->
+    <button
+      class="join-item btn"
+      [disabled]="currentPageNumber <= 1"
+      (click)="goToPage(currentPageNumber - 1)"
+      aria-label="Go to previous page">
+      Previous
+    </button>
+
+    <!-- Show first page if not in visible range -->
+    @if (startPage > 1) {
+      <button
+        class="join-item btn"
+        (click)="goToPage(1)"
+        aria-label="Go to page 1">
+        1
+      </button>
+      @if (startPage > 2) {
+        <span class="join-item btn btn-disabled">...</span>
+      }
+    }
+
+    <!-- Visible page range -->
+    @for (pageWithUrl of visiblePages; track $index) {
+      <button
+        class="join-item btn"
+        [class.btn-active]="pageWithUrl.pageNumber === currentPageNumber"
+        (click)="goToPage(pageWithUrl.pageNumber)"
+        [attr.aria-current]="pageWithUrl.pageNumber === currentPageNumber ? 'page' : null"
+        [attr.aria-label]="'Go to page ' + pageWithUrl">
+        {{ pageWithUrl.pageNumber }}
+      </button>
+    }
+
+    <!-- Show last page if not in visible range -->
+    @if (endPage < totalPagesCount) {
+      @if (endPage < totalPagesCount - 1) {
+        <span class="join-item btn btn-disabled">...</span>
+      }
+      <button
+        class="join-item btn"
+        (click)="goToPage(totalPagesCount)"
+        [attr.aria-label]="'Go to page ' + totalPagesCount">
+        {{ totalPagesCount }}
+      </button>
+    }
+
+    <!-- Next button -->
+    <button
+      class="join-item btn"
+      [disabled]="currentPageNumber >= totalPagesCount"
+      (click)="goToPage(currentPageNumber + 1)"
+      aria-label="Go to next page">
+      Next
+    </button>
+  </div>
+}

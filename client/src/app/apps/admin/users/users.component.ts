@@ -9,6 +9,9 @@ import {RolesService} from '../services/roles-service.service';
 import {ApplicationsService} from '../services/applications-service.service';
 import {Role} from '../model/role';
 import {Application} from '../model/application';
+import {PaginatorComponent} from '../../../paginator/paginator.component';
+import {ActivatedRoute, Router} from '@angular/router';
+import {PagedData} from '../../../model/paged-data';
 
 
 @Component({
@@ -17,6 +20,7 @@ import {Application} from '../model/application';
     CreateUserDialogComponent,
     DatePipe,
     ReactiveFormsModule,
+    PaginatorComponent,
   ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css',
@@ -30,10 +34,23 @@ export class UsersComponent implements OnInit {
   private rolesService = inject(RolesService);
   private applicationsService = inject(ApplicationsService);
   private formBuilder = inject(FormBuilder);
+  private activatedRoute = inject(ActivatedRoute);
+  private router = inject(Router);
 
   isUserCreated : WritableSignal<CreateUserResponse | null>= signal(null);
 
-  users: SecureUser[] | null = null;
+  pagedUsers: PagedData<SecureUser> | undefined = {
+    items : [],
+    totalItems : 0,
+    pagesWithUrls : [],
+    itemsPerPage : 0,
+    timeDeltaMs : 0,
+    continuationToken : undefined,
+    isLastPage : false,
+    requestCharge : 0
+  };
+
+  //users: SecureUser[] | null = null;
   roles: Role[] | null = null;
   applications: Application[] | null = null;
 
@@ -43,28 +60,25 @@ export class UsersComponent implements OnInit {
     hasApplication:  <string | null> null,
   })
 
-  pagingForm = this.formBuilder.group({
-    continuationToken:  <string | null> null,
-  })
-
   ngOnInit(): void {
-    this.refreshUsersList();
     this.refreshRolesFilter();
     this.refreshApplicationsFilter();
+
+    this.onPageChange(1);
   }
 
   refreshUsersList() {
-    this.users=null;
+    //this.users=null;
+    console.log('refreshUsersList');
     this.usersService.getUsers({
       containingText: this.filterForm.controls.containingText.value,
       hasRole: this.filterForm.controls.hasRole.value,
       hasApplication: this.filterForm.controls.hasApplication.value,
-      continuationToken: this.pagingForm.controls.continuationToken.value,
-    }).subscribe(users => {
-      this.users = users.items;
-      this.pagingForm.controls.continuationToken.setValue(users.continuationToken ?? null)
-      console.log('Users fetched:', users);
-      console.log(this.filterForm.controls.containingText.value);
+    },{
+      offset: this.activatedRoute.snapshot.queryParams['offset'] ? parseInt(this.activatedRoute.snapshot.queryParams['offset']) : 0,
+      itemsPerPage: this.activatedRoute.snapshot.queryParams['itemsPerPage'] ? parseInt(this.activatedRoute.snapshot.queryParams['itemsPerPage']) : 10,
+    }).subscribe(pagedData => {
+      this.pagedUsers = pagedData;
     });
   }
 
@@ -92,8 +106,6 @@ export class UsersComponent implements OnInit {
     return user?.roles?.flatMap(role => role?.applications || []) || [];
   }
 
-
-
   onUserCreated(createUserResponse: CreateUserResponse): void {
     // Refresh list, toast, etc.
     // this.entities = await this.service.fetch();
@@ -104,4 +116,23 @@ export class UsersComponent implements OnInit {
     },5000)
   }
 
+  protected readonly Array = Array;
+
+  onPageChange($event: number) {
+    if (this.pagedUsers) {
+      this.router.navigate([], {
+        relativeTo: this.activatedRoute,
+        queryParams: {
+          offset: ($event * this.pagedUsers.itemsPerPage) - this.pagedUsers.itemsPerPage,
+          itemsPerPage: this.pagedUsers.itemsPerPage
+        },
+        queryParamsHandling: 'merge' // Keep existing params
+      }).then(r => this.refreshUsersList());
+    }
+  }
+
+  clearFilters() {
+    this.filterForm.reset();
+    this.refreshUsersList();
+  }
 }

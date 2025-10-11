@@ -32,7 +32,7 @@
           }
         </select>
       </li>
-      <li class="divider-right">
+      <li>
         <select formControlName="hasApplication" class="select" (change)="refreshUsersList()">
           <option disabled selected>Has Application</option>
           @if (applications==null) {
@@ -43,6 +43,13 @@
             }
           }
         </select>
+      </li>
+      <li class="divider-right">
+        <a (click)="clearFilters()">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+          </svg>
+        </a>
       </li>
       <li>
         <a (click)="openCreateUserDialog()">
@@ -74,7 +81,7 @@
       </tr>
     </thead>
     <tbody>
-        @if(users==null) {
+        @if(!pagedUsers) {
             <tr>
                 <td class="text-center">
                     <div class="skeleton h-2 w-32"></div>
@@ -86,12 +93,12 @@
                     <div class="skeleton h-2 w-32"></div>
                 </td>
             </tr>
-        } @else if(users.length === 0) {
+        } @else if(pagedUsers.totalItems === 0) {
             <tr>
                 <td colspan="5" class="text-center">No users found</td>
             </tr>
         } @else {
-        @for (user of users; track user.id) {
+        @for (user of pagedUsers.items; track user.id) {
             <tr>
                 <th>
                     <label>
@@ -147,17 +154,9 @@
   </table>
 </div>
 
+<app-paginator [currentPageNumber]="1" [pagedData]="this.pagedUsers" [maxVisiblePages]="6" (pageChange)="onPageChange($event)"></app-paginator>
 
-<div class="join">
-    <button class="join-item btn">1</button>
-    <button class="join-item btn">2</button>
-    <button class="join-item btn btn-disabled">...</button>
-    <button class="join-item btn">99</button>
-    <button class="join-item btn">100</button>
-</div>
-
-
-<app-create-user-dialog (created)="onUserCreated($event)"></app-create-user-dialog>
+<!-- app-create-user-dialog (created)="onUserCreated($event)"></app-create-user-dialog -->
 
 @if (isUserCreated()) {
   <div class="toast toast-end">

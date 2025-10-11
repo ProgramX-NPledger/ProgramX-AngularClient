@@ -1,9 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { catchError, Observable, of } from 'rxjs';
-import { UsersResponse } from '../model/users-response';
-import { UserResponse } from '../model/user-response';
 import { GetUserResponse } from '../model/get-user-response';
 import { UpdateUserRequest } from '../model/update-user-request';
 import { UpdateResponse } from '../model/update-response';
@@ -11,6 +9,9 @@ import { UpdateProfilePhotoResponse } from '../model/update-profile-photo-respon
 import {CreateUserRequest} from '../model/create-user-request';
 import {CreateUserResponse} from '../model/create-user-response';
 import {GetUsersCriteria} from '../model/get-users-criteria';
+import {SecureUser} from '../model/secure-user';
+import { Paging } from '../../../model/paging';
+import { PagedData } from '../../../model/paged-data';
 
 @Injectable({
   providedIn: 'root'
@@ -21,24 +22,41 @@ export class UsersService {
 
   baseUrl = environment.baseUrl;
 
-  getUsers(criteria: Partial<GetUsersCriteria> | null): Observable<UsersResponse> {
+  getUsers(criteria: Partial<GetUsersCriteria> | null, page: Paging | null): Observable<PagedData<SecureUser>> {
     const url = `${this.baseUrl}/user`;
-    let queryString='';
+    let params = new HttpParams();
+
+    // Add criteria parameters
     if (criteria) {
-      queryString = '?';
-      if (criteria.containingText) queryString+='containingText='+encodeURIComponent(criteria.containingText)+'&';
-      if (criteria.hasRole) queryString+='withRoles='+encodeURIComponent(criteria.hasRole)+'&';
-      if (criteria.hasApplication) queryString+='hasAccessToApplications='+encodeURIComponent(criteria.hasApplication)+'&';
-      if (criteria.continuationToken) queryString+='continuationToken='+encodeURIComponent(criteria.continuationToken)+'&';
+      if (criteria.containingText) {
+        params = params.set('containingText', criteria.containingText);
+      }
+      if (criteria.hasRole) {
+        params = params.set('withRoles', criteria.hasRole);
+      }
+      if (criteria.hasApplication) {
+        params = params.set('hasAccessToApplications', criteria.hasApplication);
+      }
     }
-    console.log('criteria',criteria);
-    return this.httpClient.get<UsersResponse>(`${url}${queryString}`).pipe(
+
+    // Add paging parameters
+    if (page) {
+      if (page.offset) {
+        params = params.set('offset', page.offset.toString());
+      }
+      if (page.itemsPerPage) {
+        params = params.set('itemsPerPage', page.itemsPerPage.toString());
+      }
+    }
+
+    return this.httpClient.get<PagedData<SecureUser>>(url, { params }).pipe(
       catchError(error => of({
-        isLastPage: true,
-        itemsPerPage: 0,
         items: [],
-        continuationToken: undefined
-      } as UsersResponse))
+        itemsPerPage: 0,
+        pagesWithUrls: [],
+        totalItems: 0,
+        timeDeltaMs: 0
+      } as PagedData<SecureUser>))
     );
 
   }
