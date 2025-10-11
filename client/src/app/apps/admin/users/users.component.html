@@ -81,7 +81,7 @@
       </tr>
     </thead>
     <tbody>
-        @if(users==null) {
+        @if(!pagedUsers) {
             <tr>
                 <td class="text-center">
                     <div class="skeleton h-2 w-32"></div>
@@ -93,12 +93,12 @@
                     <div class="skeleton h-2 w-32"></div>
                 </td>
             </tr>
-        } @else if(users.length === 0) {
+        } @else if(pagedUsers.totalItems === 0) {
             <tr>
                 <td colspan="5" class="text-center">No users found</td>
             </tr>
         } @else {
-        @for (user of users; track user.id) {
+        @for (user of pagedUsers.items; track user.id) {
             <tr>
                 <th>
                     <label>
@@ -156,7 +156,7 @@
 
 <app-paginator [currentPageNumber]="1" [pagedData]="this.pagedUsers" [maxVisiblePages]="6" (pageChange)="onPageChange($event)"></app-paginator>
 
-<app-create-user-dialog (created)="onUserCreated($event)"></app-create-user-dialog>
+<!-- app-create-user-dialog (created)="onUserCreated($event)"></app-create-user-dialog -->
 
 @if (isUserCreated()) {
   <div class="toast toast-end">

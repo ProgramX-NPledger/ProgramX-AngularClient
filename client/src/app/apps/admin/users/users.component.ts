@@ -10,7 +10,7 @@ import {ApplicationsService} from '../services/applications-service.service';
 import {Role} from '../model/role';
 import {Application} from '../model/application';
 import {PaginatorComponent} from '../../../paginator/paginator.component';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {PagedData} from '../../../model/paged-data';
 
 
@@ -35,12 +35,22 @@ export class UsersComponent implements OnInit {
   private applicationsService = inject(ApplicationsService);
   private formBuilder = inject(FormBuilder);
   private activatedRoute = inject(ActivatedRoute);
+  private router = inject(Router);
 
   isUserCreated : WritableSignal<CreateUserResponse | null>= signal(null);
 
-  pagedUsers: PagedData<SecureUser> | null = null;
+  pagedUsers: PagedData<SecureUser> | undefined = {
+    items : [],
+    totalItems : 0,
+    pagesWithUrls : [],
+    itemsPerPage : 0,
+    timeDeltaMs : 0,
+    continuationToken : undefined,
+    isLastPage : false,
+    requestCharge : 0
+  };
 
-  users: SecureUser[] | null = null;
+  //users: SecureUser[] | null = null;
   roles: Role[] | null = null;
   applications: Application[] | null = null;
 
@@ -51,13 +61,15 @@ export class UsersComponent implements OnInit {
   })
 
   ngOnInit(): void {
-    this.refreshUsersList();
     this.refreshRolesFilter();
     this.refreshApplicationsFilter();
+
+    this.onPageChange(1);
   }
 
   refreshUsersList() {
-    this.users=null;
+    //this.users=null;
+    console.log('refreshUsersList');
     this.usersService.getUsers({
       containingText: this.filterForm.controls.containingText.value,
       hasRole: this.filterForm.controls.hasRole.value,
@@ -94,8 +106,6 @@ export class UsersComponent implements OnInit {
     return user?.roles?.flatMap(role => role?.applications || []) || [];
   }
 
-
-
   onUserCreated(createUserResponse: CreateUserResponse): void {
     // Refresh list, toast, etc.
     // this.entities = await this.service.fetch();
@@ -109,7 +119,16 @@ export class UsersComponent implements OnInit {
   protected readonly Array = Array;
 
   onPageChange($event: number) {
-
+    if (this.pagedUsers) {
+      this.router.navigate([], {
+        relativeTo: this.activatedRoute,
+        queryParams: {
+          offset: ($event * this.pagedUsers.itemsPerPage) - this.pagedUsers.itemsPerPage,
+          itemsPerPage: this.pagedUsers.itemsPerPage
+        },
+        queryParamsHandling: 'merge' // Keep existing params
+      }).then(r => this.refreshUsersList());
+    }
   }
 
   clearFilters() {

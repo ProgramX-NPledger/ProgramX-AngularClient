@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { catchError, Observable, of } from 'rxjs';
@@ -24,19 +24,32 @@ export class UsersService {
 
   getUsers(criteria: Partial<GetUsersCriteria> | null, page: Paging | null): Observable<PagedData<SecureUser>> {
     const url = `${this.baseUrl}/user`;
-    let queryString='';
-    queryString = '?';
+    let params = new HttpParams();
+
+    // Add criteria parameters
     if (criteria) {
-      if (criteria.containingText) queryString+='containingText='+encodeURIComponent(criteria.containingText)+'&';
-      if (criteria.hasRole) queryString+='withRoles='+encodeURIComponent(criteria.hasRole)+'&';
-      if (criteria.hasApplication) queryString+='hasAccessToApplications='+encodeURIComponent(criteria.hasApplication)+'&';
-    }
-    if (page) {
-      if (page.offset) queryString+='offset='+page.offset+'&';
-      if (page.itemsPerPage) queryString+='itemsPerPage='+page.itemsPerPage+'&';
+      if (criteria.containingText) {
+        params = params.set('containingText', criteria.containingText);
+      }
+      if (criteria.hasRole) {
+        params = params.set('withRoles', criteria.hasRole);
+      }
+      if (criteria.hasApplication) {
+        params = params.set('hasAccessToApplications', criteria.hasApplication);
+      }
     }
 
-    return this.httpClient.get<PagedData<SecureUser>>(`${url}${queryString}`).pipe(
+    // Add paging parameters
+    if (page) {
+      if (page.offset) {
+        params = params.set('offset', page.offset.toString());
+      }
+      if (page.itemsPerPage) {
+        params = params.set('itemsPerPage', page.itemsPerPage.toString());
+      }
+    }
+
+    return this.httpClient.get<PagedData<SecureUser>>(url, { params }).pipe(
       catchError(error => of({
         items: [],
         itemsPerPage: 0,

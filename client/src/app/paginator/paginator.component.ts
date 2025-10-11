@@ -17,7 +17,7 @@ export class PaginatorComponent<T> {
 
   get totalPagesCount(): number {
     if (this.pagedData) {
-      Math.ceil(this.pagedData.totalItems / this.pagedData.itemsPerPage)
+      return Math.ceil(this.pagedData.totalItems / this.pagedData.itemsPerPage)
     }
     return 0;
   }
@@ -28,7 +28,7 @@ export class PaginatorComponent<T> {
       const start = Math.max(1, this.startPage);
       const end = Math.min(this.totalPagesCount, this.endPage);
 
-      for (let i = start; i <= end; i++) {
+      for (let i = start-1; i < end; i++) {
         pages.push(this.pagedData.pagesWithUrls[i]);
       }
       return pages;
@@ -48,8 +48,10 @@ export class PaginatorComponent<T> {
   }
 
   goToPage(page: number): void {
+    console.log('Going to page:', page);
     if (this.pagedData) {
       if (page >= 1 && page <= Math.ceil(this.pagedData.totalItems / this.pagedData.itemsPerPage) && page !== this.currentPageNumber) {
+        this.currentPageNumber = page;
         this.pageChange.emit(page);
       }
     }

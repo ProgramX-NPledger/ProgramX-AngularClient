@@ -23,14 +23,14 @@
     }
 
     <!-- Visible page range -->
-    @for (pageNum of visiblePages; track pageNum) {
+    @for (pageWithUrl of visiblePages; track $index) {
       <button
         class="join-item btn"
-        [class.btn-active]="pageNum.pageNumber === currentPageNumber"
-        (click)="goToPage(pageNum.pageNumber)"
-        [attr.aria-current]="pageNum.pageNumber === currentPageNumber ? 'page' : null"
-        [attr.aria-label]="'Go to page ' + pageNum">
-        {{ pageNum }}
+        [class.btn-active]="pageWithUrl.pageNumber === currentPageNumber"
+        (click)="goToPage(pageWithUrl.pageNumber)"
+        [attr.aria-current]="pageWithUrl.pageNumber === currentPageNumber ? 'page' : null"
+        [attr.aria-label]="'Go to page ' + pageWithUrl">
+        {{ pageWithUrl.pageNumber }}
       </button>
     }
 
