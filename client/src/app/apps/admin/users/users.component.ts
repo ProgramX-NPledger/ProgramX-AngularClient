@@ -141,6 +141,7 @@ export class UsersComponent implements OnInit {
 
   clearFilters() {
     this.filterForm.reset();
+    this.selectedUsers.set([]);
     this.refreshUsersList();
   }
 
