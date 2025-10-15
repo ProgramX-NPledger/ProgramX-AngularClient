@@ -48,7 +48,6 @@ export class PaginatorComponent<T> {
   }
 
   goToPage(page: number): void {
-    console.log('Going to page:', page);
     if (this.pagedData) {
       if (page >= 1 && page <= Math.ceil(this.pagedData.totalItems / this.pagedData.itemsPerPage) && page !== this.currentPageNumber) {
         this.currentPageNumber = page;

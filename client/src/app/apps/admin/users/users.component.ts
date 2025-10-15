@@ -38,6 +38,7 @@ export class UsersComponent implements OnInit {
   private router = inject(Router);
 
   isUserCreated : WritableSignal<CreateUserResponse | null>= signal(null);
+  selectedUsers = signal<string[]>([]);
 
   pagedUsers: PagedData<SecureUser> | undefined = {
     items : [],
@@ -69,14 +70,14 @@ export class UsersComponent implements OnInit {
 
   refreshUsersList() {
     //this.users=null;
-    console.log('refreshUsersList');
     this.usersService.getUsers({
+      // TODO: filtering should be moved to url
       containingText: this.filterForm.controls.containingText.value,
       hasRole: this.filterForm.controls.hasRole.value,
       hasApplication: this.filterForm.controls.hasApplication.value,
     },{
       offset: this.activatedRoute.snapshot.queryParams['offset'] ? parseInt(this.activatedRoute.snapshot.queryParams['offset']) : 0,
-      itemsPerPage: this.activatedRoute.snapshot.queryParams['itemsPerPage'] ? parseInt(this.activatedRoute.snapshot.queryParams['itemsPerPage']) : 10,
+      itemsPerPage: this.activatedRoute.snapshot.queryParams['itemsPerPage'] ? parseInt(this.activatedRoute.snapshot.queryParams['itemsPerPage']) : 5,
     }).subscribe(pagedData => {
       this.pagedUsers = pagedData;
     });
@@ -116,8 +117,6 @@ export class UsersComponent implements OnInit {
     },5000)
   }
 
-  protected readonly Array = Array;
-
   onPageChange($event: number) {
     if (this.pagedUsers) {
       this.router.navigate([], {
@@ -126,13 +125,23 @@ export class UsersComponent implements OnInit {
           offset: ($event * this.pagedUsers.itemsPerPage) - this.pagedUsers.itemsPerPage,
           itemsPerPage: this.pagedUsers.itemsPerPage
         },
-        queryParamsHandling: 'merge' // Keep existing params
+        queryParamsHandling: 'merge'
       }).then(r => this.refreshUsersList());
     }
+  }
+
+  onUserSelected($event: string) {
+    if (this.selectedUsers().includes($event)) {
+      this.selectedUsers.set(this.selectedUsers().filter(x => x !== $event));
+    } else {
+      this.selectedUsers().push($event);
+    }
+
   }
 
   clearFilters() {
     this.filterForm.reset();
     this.refreshUsersList();
   }
+
 }
