@@ -64,9 +64,16 @@
     </ul>
   </form>
 
-  <table class="table">
-    <!-- head -->
-    <thead>
+  @if (errorMessage) {
+    <div class="alert alert-error">
+      <span>{{ errorMessage }}</span>
+    </div>
+  }
+  @else
+  {
+    <table class="table">
+      <!-- head -->
+      <thead>
       <tr>
         <th>
 
@@ -77,82 +84,84 @@
         <th>Applications</th>
         <th></th>
       </tr>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody>
         @if(!pagedUsers) {
-            <tr>
-                <td class="text-center">
-                    <div class="skeleton h-2 w-32"></div>
-                </td>
-                <td  class="text-center">
-                    <div class="skeleton h-2 w-32"></div>
-                </td>
-                <td class="text-center">
-                    <div class="skeleton h-2 w-32"></div>
-                </td>
-            </tr>
+          <tr>
+            <td class="text-center">
+              <div class="skeleton h-2 w-32"></div>
+            </td>
+            <td  class="text-center">
+              <div class="skeleton h-2 w-32"></div>
+            </td>
+            <td class="text-center">
+              <div class="skeleton h-2 w-32"></div>
+            </td>
+          </tr>
         } @else if(pagedUsers.totalItems === 0) {
-            <tr>
-                <td colspan="5" class="text-center">No users found</td>
-            </tr>
+          <tr>
+            <td colspan="5" class="text-center">No users found</td>
+          </tr>
         } @else {
-        @for (user of pagedUsers.items; track user.id) {
+          @for (user of pagedUsers.items; track user.id) {
             <tr>
-                <th>
-                    <label>
-                    <input type="checkbox" class="checkbox" (click)="onUserSelected(user.id)" [checked]="selectedUsers().includes(user.id)" />
-                    </label>
-                </th>
-                <td>
-                    <div class="flex items-center gap-3">
-                        <div class="avatar">
-                            <div class="mask mask-squircle h-12 w-12">
-                                <img src="" alt="Avatar of {{ user.userName }}" />
-                            </div>
-                        </div>
-                        <div>
-                            <div>
+              <th>
+                <label>
+                  <input type="checkbox" class="checkbox" (click)="onUserSelected(user.id)" [checked]="selectedUsers().includes(user.id)" />
+                </label>
+              </th>
+              <td>
+                <div class="flex items-center gap-3">
+                  <div class="avatar">
+                    <div class="mask mask-squircle h-12 w-12">
+                      <img src="" alt="Avatar of {{ user.userName }}" />
+                    </div>
+                  </div>
+                  <div>
+                    <div>
                               <span class="font-bold">
                                 {{ user.userName }}
                               </span>
-                              @if (user.passwordLinkExpiresAt!=null)
-                              {
-                                <span class="badge badge-secondary badge-sm">Awaiting confirmation</span>
-                              }
-                            </div>
-                            <div class="text-sm opacity-50">{{user.firstName}} {{user.lastName}}</div>
-
-                        </div>
+                      @if (user.passwordLinkExpiresAt!=null)
+                      {
+                        <span class="badge badge-secondary badge-sm">Awaiting confirmation</span>
+                      }
                     </div>
-                </td>
-                <td>
-                    {{ user.emailAddress }}
-                    <br />
-                    @if (user.lastLoginAt) {
-                      <span class="badge badge-ghost badge-sm">Last login: {{ user.lastLoginAt | date: 'medium' }}</span>
-                    }
-                </td>
-                <td>
-                    @for (role of user.roles; track $index) {
-                      <span class="badge badge-neutral badge-sm m-1">{{ role.name }}</span>
-                    }
-                </td>
-                <td>
-                    @for (application of getUserApplications(user); track $index) {
-                      <span class="badge badge-neutral badge-sm m-1">{{ application.name }}</span>
-                    }
-                </td>
-                <th>
-                  <button class="btn btn-ghost btn-xs">details</button>
-                </th>
+                    <div class="text-sm opacity-50">{{user.firstName}} {{user.lastName}}</div>
+
+                  </div>
+                </div>
+              </td>
+              <td>
+                {{ user.emailAddress }}
+                <br />
+                @if (user.lastLoginAt) {
+                  <span class="badge badge-ghost badge-sm">Last login: {{ user.lastLoginAt | date: 'medium' }}</span>
+                }
+              </td>
+              <td>
+                @for (role of user.roles; track $index) {
+                  <span class="badge badge-neutral badge-sm m-1">{{ role.name }}</span>
+                }
+              </td>
+              <td>
+                @for (application of getUserApplications(user); track $index) {
+                  <span class="badge badge-neutral badge-sm m-1">{{ application.name }}</span>
+                }
+              </td>
+              <th>
+                <button class="btn btn-ghost btn-xs">details</button>
+              </th>
             </tr>
+          }
         }
-    }
-    </tbody>
-  </table>
+      </tbody>
+    </table>
+    <app-paginator [currentPageNumber]="1" [pagedData]="this.pagedUsers" [maxVisiblePages]="6" (pageChange)="onPageChange($event)"></app-paginator>
+  }
+
 </div>
 
-<app-paginator [currentPageNumber]="1" [pagedData]="this.pagedUsers" [maxVisiblePages]="6" (pageChange)="onPageChange($event)"></app-paginator>
 
 <app-create-user-dialog (created)="onUserCreated($event)"></app-create-user-dialog>
 

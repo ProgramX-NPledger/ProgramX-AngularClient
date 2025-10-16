@@ -12,6 +12,7 @@ import {Application} from '../model/application';
 import {PaginatorComponent} from '../../../paginator/paginator.component';
 import {ActivatedRoute, Router} from '@angular/router';
 import {PagedData} from '../../../model/paged-data';
+import {catchError, EMPTY} from 'rxjs';
 
 
 @Component({
@@ -39,6 +40,7 @@ export class UsersComponent implements OnInit {
 
   isUserCreated : WritableSignal<CreateUserResponse | null>= signal(null);
   selectedUsers = signal<string[]>([]);
+  errorMessage: string | null = null;
 
   pagedUsers: PagedData<SecureUser> | undefined = {
     items : [],
@@ -70,6 +72,7 @@ export class UsersComponent implements OnInit {
 
   refreshUsersList() {
     //this.users=null;
+    this.pagedUsers = undefined;
     this.usersService.getUsers({
       // TODO: filtering should be moved to url
       containingText: this.filterForm.controls.containingText.value,
@@ -78,7 +81,13 @@ export class UsersComponent implements OnInit {
     },{
       offset: this.activatedRoute.snapshot.queryParams['offset'] ? parseInt(this.activatedRoute.snapshot.queryParams['offset']) : 0,
       itemsPerPage: this.activatedRoute.snapshot.queryParams['itemsPerPage'] ? parseInt(this.activatedRoute.snapshot.queryParams['itemsPerPage']) : 5,
-    }).subscribe(pagedData => {
+    }).pipe(
+      catchError(error => {
+        this.errorMessage = error.message;
+        console.error('Error fetching users:', error);
+        return EMPTY;
+      })
+    ).subscribe(pagedData => {
       this.pagedUsers = pagedData;
     });
   }

@@ -1,7 +1,7 @@
 import {HttpClient, HttpParams} from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
-import { catchError, Observable, of } from 'rxjs';
+import {catchError, Observable, of, throwError} from 'rxjs';
 import { GetUserResponse } from '../model/get-user-response';
 import { UpdateUserRequest } from '../model/update-user-request';
 import { UpdateResponse } from '../model/update-response';
@@ -50,13 +50,7 @@ export class UsersService {
     }
 
     return this.httpClient.get<PagedData<SecureUser>>(url, { params }).pipe(
-      catchError(error => of({
-        items: [],
-        itemsPerPage: 0,
-        pagesWithUrls: [],
-        totalItems: 0,
-        timeDeltaMs: 0
-      } as PagedData<SecureUser>))
+      catchError(error => throwError(()=>error))
     );
 
   }
