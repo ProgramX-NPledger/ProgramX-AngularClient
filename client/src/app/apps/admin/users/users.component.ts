@@ -13,6 +13,8 @@ import {PaginatorComponent} from '../../../paginator/paginator.component';
 import {ActivatedRoute, Router} from '@angular/router';
 import {PagedData} from '../../../model/paged-data';
 import {catchError, EMPTY} from 'rxjs';
+import {DeleteUsersDialogComponent} from '../delete-users-dialog/delete-users-dialog.component';
+import {DeletionCompleteEvent} from '../model/deletion-complete-event';
 
 
 @Component({
@@ -22,6 +24,7 @@ import {catchError, EMPTY} from 'rxjs';
     DatePipe,
     ReactiveFormsModule,
     PaginatorComponent,
+    DeleteUsersDialogComponent,
   ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css',
@@ -30,6 +33,7 @@ import {catchError, EMPTY} from 'rxjs';
 
 export class UsersComponent implements OnInit {
   @ViewChild(CreateUserDialogComponent) createUserDialog!: CreateUserDialogComponent;
+  @ViewChild(DeleteUsersDialogComponent) deleteUsersDialog!: DeleteUsersDialogComponent;
 
   private usersService = inject(UsersService);
   private rolesService = inject(RolesService);
@@ -39,6 +43,7 @@ export class UsersComponent implements OnInit {
   private router = inject(Router);
 
   isUserCreated : WritableSignal<CreateUserResponse | null>= signal(null);
+  isUsersDeleted : WritableSignal<DeletionCompleteEvent | null>= signal(null);
   selectedUsers = signal<string[]>([]);
   errorMessage: string | null = null;
 
@@ -154,4 +159,15 @@ export class UsersComponent implements OnInit {
     this.refreshUsersList();
   }
 
+  openDeleteDialog() {
+    this.deleteUsersDialog.open(this.selectedUsers());
+  }
+
+  onUsersDeleted($event: DeletionCompleteEvent) {
+    this.isUsersDeleted.set($event);
+    this.refreshUsersList();
+    setTimeout(() => {
+      this.isUsersDeleted.set(null);
+    },5000)
+  }
 }

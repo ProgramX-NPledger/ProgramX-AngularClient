@@ -135,5 +135,18 @@ export class UsersService {
     );
   }
 
+  deleteUser(id: string) {
+    const url = `${this.baseUrl}/user/${id}${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
+    return this.httpClient.delete(url).pipe(
+      catchError(error => {
+        throw new Error(error.error);
+        console.error(error);
+        return of({
+          errorMessage: error.error,
+          isOk: false
+        })
+      })
+    )
+  }
 }
 
