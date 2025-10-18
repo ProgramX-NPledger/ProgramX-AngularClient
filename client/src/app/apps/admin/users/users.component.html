@@ -107,7 +107,7 @@
             <tr>
               <th>
                 <label>
-                  <input type="checkbox" class="checkbox" (click)="onUserSelected(user.id)" [checked]="selectedUsers().includes(user.id)" />
+                  <input type="checkbox" class="checkbox" (click)="onUserSelected(user.userName)" [checked]="selectedUsers().includes(user.userName)" />
                 </label>
               </th>
               <td>
@@ -176,8 +176,8 @@
 
 
 @if (isUsersDeleted()) {
-  @if (isUsersDeleted()!.usersSuccessfullyDeleted.length > 0) {
-    <div class="toast toast-end">
+  <div class="toast toast-end">
+    @if (isUsersDeleted()!.usersSuccessfullyDeleted.length > 0) {
       <div class="alert alert-success">
         @if (isUsersDeleted()!.usersSuccessfullyDeleted.length === 1) {
           <span><strong>{{ isUsersDeleted()!.usersSuccessfullyDeleted.length }}</strong> User deleted successfully</span>
@@ -186,10 +186,8 @@
           <span><strong>{{ isUsersDeleted()!.usersSuccessfullyDeleted.length }}</strong> Users deleted successfully</span>
         }
       </div>
-    </div>
-  }
-  @if (isUsersDeleted()!.usersFailedToDelete.length > 0) {
-    <div class="toast toast-end">
+    }
+    @if (isUsersDeleted()!.usersFailedToDelete.length > 0) {
       <div class="alert alert-error">
         @if (isUsersDeleted()!.usersFailedToDelete.length === 1) {
           <span><strong>{{ isUsersDeleted()!.usersFailedToDelete.length }}</strong> User deletion failed</span>
@@ -198,6 +196,6 @@
           <span><strong>{{ isUsersDeleted()!.usersFailedToDelete.length }}</strong> Users deletions failed</span>
         }
       </div>
-    </div>
   }
+  </div>
 }
