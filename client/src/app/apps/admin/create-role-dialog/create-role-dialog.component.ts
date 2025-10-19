@@ -78,7 +78,7 @@ export class CreateRoleDialogComponent implements OnInit {
     this.isLoadingApplications.set(true);
     this.isBusy.set(true);
     this.isErrorLoadingUsers.set(false);
-    this.usersService.getUsers().subscribe(
+    this.usersService.getUsers(null,null).subscribe(
       {
         next: users => {
           this.isLoadingUsers.set(false);
