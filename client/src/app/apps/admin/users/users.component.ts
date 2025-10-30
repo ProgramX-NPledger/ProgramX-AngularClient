@@ -15,6 +15,8 @@ import {PagedData} from '../../../model/paged-data';
 import {catchError, EMPTY} from 'rxjs';
 import {DeleteUsersDialogComponent} from '../delete-users-dialog/delete-users-dialog.component';
 import {DeletionCompleteEvent} from '../model/deletion-complete-event';
+import {EditUserDialogComponent} from '../edit-user-dialog/edit-user-dialog.component';
+import {UpdateUserResponse} from '../model/update-user-response';
 
 
 @Component({
@@ -25,6 +27,7 @@ import {DeletionCompleteEvent} from '../model/deletion-complete-event';
     ReactiveFormsModule,
     PaginatorComponent,
     DeleteUsersDialogComponent,
+    EditUserDialogComponent,
   ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css',
@@ -34,6 +37,7 @@ import {DeletionCompleteEvent} from '../model/deletion-complete-event';
 export class UsersComponent implements OnInit {
   @ViewChild(CreateUserDialogComponent) createUserDialog!: CreateUserDialogComponent;
   @ViewChild(DeleteUsersDialogComponent) deleteUsersDialog!: DeleteUsersDialogComponent;
+  @ViewChild(EditUserDialogComponent) editUserDialog!: EditUserDialogComponent;
 
   private usersService = inject(UsersService);
   private rolesService = inject(RolesService);
@@ -44,6 +48,8 @@ export class UsersComponent implements OnInit {
 
   isUserCreated : WritableSignal<CreateUserResponse | null>= signal(null);
   isUsersDeleted : WritableSignal<DeletionCompleteEvent | null>= signal(null);
+  isUserUpdated : WritableSignal<UpdateUserResponse | null>= signal(null);
+
   selectedUsers = signal<string[]>([]);
   errorMessage: string | null = null;
 
@@ -117,6 +123,10 @@ export class UsersComponent implements OnInit {
     this.createUserDialog.open();
   }
 
+  openEditUserDialog(user: SecureUser) {
+    this.editUserDialog.open(user);
+  }
+
   getUserApplications(user: SecureUser): Application[] {
     return user?.roles?.flatMap(role => role?.applications || []) || [];
   }
@@ -128,6 +138,16 @@ export class UsersComponent implements OnInit {
     this.refreshUsersList();
     setTimeout(() => {
       this.isUserCreated.set(null);
+    },5000)
+  }
+
+  onUserUpdated(updateUserResponse: UpdateUserResponse): void {
+    // Refresh list, toast, etc.
+    // this.entities = await this.service.fetch();
+    this.isUserUpdated.set(updateUserResponse);
+    this.refreshUsersList();
+    setTimeout(() => {
+      this.isUserUpdated.set(null);
     },5000)
   }
 
@@ -170,4 +190,6 @@ export class UsersComponent implements OnInit {
       this.isUsersDeleted.set(null);
     },5000)
   }
+
+
 }

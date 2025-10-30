@@ -1,47 +1,31 @@
-import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  inject,
-  NO_ERRORS_SCHEMA,
-  OnInit,
-  Output,
-  signal,
-  ViewChild
-} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {Role} from '../model/role';
-import {RolesService} from '../services/roles-service.service';
-import {userNameExistsValidator} from '../validators/username-exists.validator';
-import {UsersService} from '../services/users-service.service';
-import {Router} from '@angular/router';
+import {Component, ElementRef, EventEmitter, inject, OnInit, Output, signal, ViewChild} from '@angular/core';
 import {CreateUserResponse} from '../model/create-user-response';
-import {SelectableRole} from '../model/selectable-role';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {RolesService} from '../services/roles-service.service';
+import {UsersService} from '../services/users-service.service';
+import {userNameExistsValidator} from '../validators/username-exists.validator';
+import {Role} from '../model/role';
+import {SecureUser} from '../model/secure-user';
+import {UpdateUserResponse} from '../model/update-user-response';
 
 @Component({
-  selector: 'app-create-user-dialog',
+  selector: 'app-edit-user-dialog',
   imports: [
     ReactiveFormsModule
   ],
-  templateUrl: './create-user-dialog.component.html',
-  styleUrl: './create-user-dialog.component.css',
-  standalone: true,
+  templateUrl: './edit-user-dialog.component.html',
+  styleUrl: './edit-user-dialog.component.css'
 })
-export class CreateUserDialogComponent implements OnInit {
-  ngOnInit(): void {
-    // get all roles
-    this.loadRoles();
-  }
-
+export class EditUserDialogComponent implements OnInit {
   @ViewChild('modal', { static: true }) modalRef!: ElementRef<HTMLDialogElement>;
-  @Output() created = new EventEmitter<CreateUserResponse>();
+  @Output() updated = new EventEmitter<UpdateUserResponse>();
 
   private formBuilder = inject(FormBuilder);
   private rolesService = inject(RolesService);
   private usersService = inject(UsersService);
 
   isBusy = signal(false);
-  isCreating = signal(false);
+  isUpdating = signal(false);
   isLoadingRoles = signal(false);
   isErrorLoadingRoles = signal(false);
   errorMessageLoadingRoles = signal<string | undefined>(undefined);
@@ -51,9 +35,12 @@ export class CreateUserDialogComponent implements OnInit {
     firstName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
     lastName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
     emailAddress: ['', [Validators.required, Validators.email]],
-    confirmationExpiry: ['', [Validators.required]],
     roles: this.formBuilder.array<FormGroup>([])
   });
+
+  ngOnInit(): void {
+    this.loadRoles();
+    }
 
   get formControls() {
     return this.form.controls;
@@ -71,6 +58,7 @@ export class CreateUserDialogComponent implements OnInit {
           })))
     })
   }
+
   loadRoles() {
     this.isLoadingRoles.set(true);
     this.isBusy.set(true);
@@ -100,38 +88,54 @@ export class CreateUserDialogComponent implements OnInit {
     );
   }
 
-
-  open(): void {
+  open(user: SecureUser): void {
     this.form.reset();
     this.modalRef.nativeElement.showModal();
+    this.form.patchValue({
+      userName: user.userName,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      emailAddress: user.emailAddress,
+    });
+    for (const userInRole of user.roles) {
+      for (const roleOnForm of this.form.controls.roles.controls) {
+        if (userInRole.name === roleOnForm.value.name) {
+          roleOnForm.patchValue({isSelected: true});
+          break;
+        }
+      }
+    }
+    this.form.controls.userName.disable();
   }
 
   close(result?: string): void {
     this.modalRef.nativeElement.close(result);
   }
 
+
   async submit(): Promise<void> {
     if (this.form.invalid) return;
     this.isBusy.set(true);
-    this.isCreating.set(true);
+    this.isUpdating.set(true);
     try {
-      this.usersService.createUser({
+      this.usersService.updateUser({
+        updateRolesScope: true,
+        updateProfileScope: true,
         userName: this.formControls.userName.value,
-        addToRoles: this.formControls.roles.controls.map(m=>m.value).filter(m=>m.isSelected).map(m=>m.name),
+        roles: this.formControls.roles.controls.map(m=>m.value).filter(m=>m.isSelected).map(m=>m.name),
         emailAddress: this.formControls.emailAddress.value,
         firstName: this.formControls.firstName.value,
         lastName: this.formControls.lastName.value,
-        passwordConfirmationLinkExpiryDate: new Date(this.formControls.confirmationExpiry.value)
       }).subscribe({
         next: (response) => {
           this.isBusy.set(false);
-          this.isCreating.set(false);
-          this.created.emit(response as any);
-          this.close('created');
+          this.isUpdating.set(false);
+          this.updated.emit(response as any);
+          this.close('updated');
         },
         error: (error) => {
           this.isBusy.set(false);
-          this.isCreating.set(false);
+          this.isUpdating.set(false);
           console.error('Error creating user:', error);
         }
       })
@@ -150,4 +154,5 @@ export class CreateUserDialogComponent implements OnInit {
   protected readonly JSON = JSON;
   protected readonly String = String;
   protected readonly Object = Object;
+
 }

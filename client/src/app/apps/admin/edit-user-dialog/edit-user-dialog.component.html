@@ -1,0 +1,131 @@
+<dialog #modal class="modal">
+  <div class="modal-box w-11/12 max-w-5xl">
+    <h3 class="font-bold text-lg">Edit User</h3>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4 mt-4">
+
+      <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4">
+
+        <legend class="fieldset-legend">Profile</legend>
+
+        <label class="label">Username</label>
+        <input formControlName="userName" type="text" class="input w-full" placeholder="Username" readonly />
+
+        <label class="label">Email address</label>
+        <input formControlName="emailAddress"   type="email" email class="input w-full" placeholder="Email address" [disabled]="isBusy()" />
+        @if (form.controls.emailAddress.errors?.['required'] && formControls.emailAddress.touched) {
+          <div class="validator-error">Email address is required</div>
+        }
+        @if (!(formControls.emailAddress.errors?.['required'])
+        && formControls.emailAddress.touched)
+        {
+          <div class="validator-touched-ok">&nbsp;</div>
+        }
+        @if (!formControls.emailAddress.touched)
+        {
+          <div class="validator-untouched">&nbsp;</div>
+        }
+
+        <label class="label">First name</label>
+        <input formControlName="firstName" type="text" class="input w-full" placeholder="First name" [disabled]="isBusy()" />
+        @if (form.controls.firstName.errors?.['required'] && formControls.firstName.touched) {
+          <div class="validator-error">First name is required</div>
+        }
+        @if (!(formControls.firstName.errors?.['required'])
+        && formControls.firstName.touched)
+        {
+          <div class="validator-touched-ok">&nbsp;</div>
+        }
+        @if (!formControls.firstName.touched)
+        {
+          <div class="validator-untouched">&nbsp;</div>
+        }
+
+        <label class="label">Last name</label>
+        <input formControlName="lastName" type="text" class="input w-full" placeholder="Last name" [disabled]="isBusy()" />
+        @if (form.controls.lastName.errors?.['required'] && formControls.lastName.touched) {
+          <div class="validator-error">Last name is required</div>
+        }
+        @if (!(formControls.lastName.errors?.['required'])
+        && formControls.lastName.touched)
+        {
+          <div class="validator-touched-ok">&nbsp;</div>
+        }
+        @if (!formControls.lastName.touched)
+        {
+          <div class="validator-untouched">&nbsp;</div>
+        }
+
+
+      </fieldset>
+
+      <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4">
+
+        <legend class="fieldset-legend">Roles</legend>
+
+
+        @if (isLoadingRoles())
+        {
+          <div class="flex w-52 flex-col gap-4">
+            <div class="skeleton h-4 w-full"></div>
+            <div class="skeleton h-4 w-full"></div>
+            <div class="skeleton h-4 w-full"></div>
+            <div class="skeleton h-4 w-full"></div>
+          </div>
+        }
+        @else {
+          @if (isErrorLoadingRoles())
+          {
+            <div role="alert" class="flex items-center gap-3 mr-auto ml-auto alert alert-error">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>Retrieving Roles failed: {{ errorMessageLoadingRoles() }}</span>
+            </div>
+          }
+          @else
+          {
+            <ul class="list bg-base-100 rounded-box shadow-md" formArrayName="roles">
+              @for (role of formControls.roles.controls; track $index; let i = $index) {
+                <li class="list-row" [formGroupName]="i">
+                  <div>
+                    <label class="label">
+                      <input type="checkbox" class="checkbox" formControlName="isSelected" [disabled]="isBusy()" />
+                      {{ role.get('name')!.value}}
+                    </label>
+                    @for (application of role.get('applications')!.value; track $index; let j = $index)  {
+                      <span class="badge badge-neutral badge-sm application-badge">{{ application.name }}</span>
+                    }
+                    <div class="text-xs uppercase font-semibold opacity-60">{{ role.get('description')!.value}}</div>
+                  </div>
+                </li>
+              }
+            </ul>
+
+
+          }
+
+        }
+
+
+
+      </fieldset>
+
+      <div class="modal-action">
+        <button type="submit" class="btn btn-primary"
+                [disabled]="form.invalid || isBusy() || isErrorLoadingRoles() || isUpdating()">
+          @if (isUpdating()) {
+            <span class="loading loading-spinner loading-md"></span>
+          } @else {
+            Update
+          }
+        </button>
+        <button type="button" class="btn" (click)="close()">Cancel</button>
+      </div>
+    </form>
+
+
+  </div>
+
+
+</dialog>
