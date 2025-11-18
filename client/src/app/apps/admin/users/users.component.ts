@@ -70,8 +70,8 @@ export class UsersComponent implements OnInit {
 
   filterForm = this.formBuilder.group({
     containingText: <string | null> null,
-    hasRole:  <string | null> null,
-    hasApplication:  <string | null> null,
+    hasRole: '',
+    hasApplication: '',
   })
 
   ngOnInit(): void {

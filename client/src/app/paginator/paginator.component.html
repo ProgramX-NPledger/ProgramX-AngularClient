@@ -1,6 +1,7 @@
-@if (pagedData && totalPagesCount > 0) {
-  <div class="join" role="navigation" aria-label="Pagination">
-    <!-- Previous button -->
+
+  @if (pagedData && totalPagesCount > 0) {
+    <div class="join menu bg-base-200 xl:menu-horizontal w-full rounded-box flex flex-row" role="navigation" aria-label="Pagination">
+      <!-- Previous button -->
     <button
       class="join-item btn"
       [disabled]="currentPageNumber <= 1"
@@ -55,10 +56,12 @@
       aria-label="Go to next page">
       Next
     </button>
+      <div class="mt-2 mr-12 right-0 absolute">
+        <div class="badge badge-ghost">{{ pagedData.requestCharge }} RUs</div>
+        <div class="badge badge-ghost">{{ pagedData.timeDeltaMs }}ms</div>
+        <div class="badge badge-ghost">{{ pagedData.totalItems}} items</div>
+      </div>
   </div>
 
-  <div class="badge badge-ghost">{{ pagedData.requestCharge }} RUs</div>
-  <div class="badge badge-ghost">{{ pagedData.timeDeltaMs }}ms</div>
-  <div class="badge badge-ghost">{{ pagedData.totalItems}} items</div>
 
 }
