@@ -1,81 +1,41 @@
 
 <div id="siteHealthCheck" class="card bg-base-100 w-1/2 mx-auto p-10 mt-10 shadow-xl">
   <div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
-    <table class="table w-full">
-      <thead>
-        <tr>
-          <th>Service</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-            <td>Azure Static Web App</td>
-            <td>
-                @if(healthCheckStatus() === null) {
-                    <div class="skeleton h-2 w-32"></div>
-                } @else {
-                    <div class="inline-grid *:[grid-area:1/1]">
-                        <div class="status status-success"></div>
-                    </div> 
-                } 
-            </td>
-        </tr>
-        <tr>
-            <td>Azure Functions</td>
-            <td>
-                @if(healthCheckStatus() === null) {
-                    <div class="skeleton h-2 w-32"></div>
-                } @else if(healthCheckStatus()?.azureFunctions) {
-                    <div class="inline-grid *:[grid-area:1/1]">
-                        <div class="status status-success"></div>
-                    </div> 
-                } @else if(!healthCheckStatus()?.azureFunctions) {
-                    <div class="inline-grid *:[grid-area:1/1]">
-                        <div class="status status-error animate-ping"></div>
-                        <div class="status status-error"></div>
-                    </div> 
+    @if (healthCheckStatus()?.isTooManyRequests) {
+      <div class="alert alert-error">
+        Too many requests, please try again later.
+      </div>
+    }
+    @else {
+      <table class="table w-full">
+        <tbody>
+          @for (healthCheckItem of healthCheckStatus()?.healthCheckItems; track healthCheckItem) {
+            <tr>
+              <th>{{ healthCheckItem.friendlyName }}</th>
+              <td>
+                @if (healthCheckItem.immediateHealthCheckResponse) {
+                  <div class="inline-grid *:[grid-area:1/1]">
+                    @if (healthCheckItem.immediateHealthCheckResponse.isHealthy) {
+                      <div class="status status-success"></div>
+                    }
+                    @else {
+                      <div class="status status-error"></div>
+                    }
+                  </div>
                 }
-            </td>
-        </tr>
-        <tr>
-            <td>Azure Cosmos DB</td>
-            <td>
-                @if(healthCheckStatus() === null) {
-                    <div class="skeleton h-2 w-32"></div>
-                } @else if(healthCheckStatus()?.azureCosmosDb) {
-                    <div class="inline-grid *:[grid-area:1/1]">
-                        <div class="status status-success"></div>
-                    </div> 
-                } @else if(!healthCheckStatus()?.azureCosmosDb) {
-                    <div class="inline-grid *:[grid-area:1/1]">
-                        <div class="status status-error animate-ping"></div>
-                        <div class="status status-error"></div>
-                    </div> 
+                @else {
+                  <div class="inline-grid *:[grid-area:1/1]">
+                    <div class="status status-neutral animate-ping"></div>
+                  </div>
                 }
-            </td>
-        </tr>
-        <tr>
-            <td>Azure Storage</td>
-            <td>
-                @if(healthCheckStatus() === null) {
-                    <div class="skeleton h-2 w-32"></div>
-                } @else if(healthCheckStatus()?.azureStorage) {
-                    <div class="inline-grid *:[grid-area:1/1]">
-                        <div class="status status-success"></div>
-                    </div> 
-                } @else if(!healthCheckStatus()?.azureStorage) {
-                    <div class="inline-grid *:[grid-area:1/1]">
-                        <div class="status status-error animate-ping"></div>
-                        <div class="status status-error"></div>
-                    </div> 
-                }
-            </td>
-        </tr>
-      </tbody>
-    </table>
+              </td>
+            </tr>
+          }
+      </table>
+    }
+
   </div>
-  
-  
+
+
 
 </div>
