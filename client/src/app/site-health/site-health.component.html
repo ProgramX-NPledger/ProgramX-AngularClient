@@ -1,38 +1,50 @@
 
 <div id="siteHealthCheck" class="card bg-base-100 w-1/2 mx-auto p-10 mt-10 shadow-xl">
   <div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
-    @if (healthCheckStatus()?.isTooManyRequests) {
-      <div class="alert alert-error">
-        Too many requests, please try again later.
-      </div>
-    }
-    @else {
-      <table class="table w-full">
-        <tbody>
-          @for (healthCheckItem of healthCheckStatus()?.healthCheckItems; track healthCheckItem) {
-            <tr>
-              <th>{{ healthCheckItem.friendlyName }}</th>
-              <td>
-                @if (healthCheckItem.immediateHealthCheckResponse) {
-                  <div class="inline-grid *:[grid-area:1/1]">
-                    @if (healthCheckItem.immediateHealthCheckResponse.isHealthy) {
-                      <div class="status status-success"></div>
-                    }
-                    @else {
-                      <div class="status status-error"></div>
-                    }
-                  </div>
-                }
-                @else {
-                  <div class="inline-grid *:[grid-area:1/1]">
-                    <div class="status status-neutral animate-ping"></div>
-                  </div>
-                }
-              </td>
-            </tr>
+
+    <table class="table w-full">
+      <tbody>
+        <tr>
+          <th id="thAzureFunctions">Azure Functions</th>
+          <td headers="thAzureFunctions">
+            <div class="status status-success"></div>
+          </td>
+        </tr>
+        <tr>
+          <th id="thAzureWebApps">Azure Web Apps</th>
+          <td headers="thAzureWebApps">
+            <div class="status status-success"></div>
+          </td>
+        </tr>
+      @if (isLoading()) {
+        <tr>
+          <div class="p-8 text-center">
+            <span class="p-2 skeleton skeleton-text">Retrieving Health Check services</span>
+          </div>
+        </tr>
+        } @else {
+          @if (isError()) {
+            <div role="alert" class="alert alert-error">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>An error occurred during loading health check status. Please check the debug console for more details.</span>
+            </div>
           }
-      </table>
-    }
+          @if (isTooManyRequests()) {
+            <div role="alert" class="alert alert-error">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>Too many requests, please try again later.</span>
+            </div>
+          }
+          @if (!isError() && !isTooManyRequests()) {
+
+          }
+        }
+    </table>
+
 
   </div>
 

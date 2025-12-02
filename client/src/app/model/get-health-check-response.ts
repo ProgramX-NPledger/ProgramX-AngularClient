@@ -1,8 +1,7 @@
 import {HealthCheckItem} from './health-check-item';
+import {HealthCheckService} from './health-check-service';
 
 export interface GetHealthCheckResponse {
   timeStamp: Date,
-  healthCheckItems: HealthCheckItem[]
-  // following properties are not part of the response
-  isTooManyRequests: boolean
+  healthCheckItems: HealthCheckService[]
 }
