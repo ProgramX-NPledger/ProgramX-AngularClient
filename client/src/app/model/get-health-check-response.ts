@@ -3,5 +3,5 @@ import {HealthCheckService} from './health-check-service';
 
 export interface GetHealthCheckResponse {
   timeStamp: Date,
-  healthCheckItems: HealthCheckService[]
+  services: HealthCheckService[]
 }

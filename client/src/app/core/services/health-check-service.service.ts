@@ -12,7 +12,10 @@ export class HealthCheckService {
   private healthCheckUrl: string = `${this.baseUrl}/healthcheck${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
   private httpClient: HttpClient = inject(HttpClient)
 
-  discoverHealthCheck(): Observable<GetHealthCheckResponse> {
+  readonly healthCheckItems$: Observable<GetHealthCheckResponse> = this.discoverHealthCheck();
+
+  private discoverHealthCheck(): Observable<GetHealthCheckResponse> {
+    console.log('discoverHealthCheck');
       return this.httpClient.get<GetHealthCheckResponse>(this.healthCheckUrl);
   }
   //

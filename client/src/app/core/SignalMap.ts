@@ -7,6 +7,9 @@ export class SignalMap {
     return computed(() => this.dataMap().get(key));
   }
 
+  allItems() {
+    return computed(() => this.dataMap().values());
+  }
   addOrUpdateItem(key: string, value: any) {
     // IMPORTANT: Create new Map instance for signal reactivity
     const newMap = new Map(this.dataMap());

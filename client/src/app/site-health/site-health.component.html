@@ -22,27 +22,41 @@
             <span class="p-2 skeleton skeleton-text">Retrieving Health Check services</span>
           </div>
         </tr>
-        } @else {
-          @if (isError()) {
-            <div role="alert" class="alert alert-error">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <span>An error occurred during loading health check status. Please check the debug console for more details.</span>
-            </div>
-          }
-          @if (isTooManyRequests()) {
-            <div role="alert" class="alert alert-error">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <span>Too many requests, please try again later.</span>
-            </div>
-          }
-          @if (!isError() && !isTooManyRequests()) {
-
+      }
+      @else {
+        @if (isError()) {
+          <div role="alert" class="alert alert-error">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>An error occurred during loading health check status. Please check the debug console for more details.</span>
+          </div>
+        }
+        @if (isTooManyRequests()) {
+          <div role="alert" class="alert alert-error">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>Too many requests, please try again later.</span>
+          </div>
+        }
+        @if (!isError() && !isTooManyRequests()) {
+          @let healthCheckPipe = healthCheck$ | async;
+          <p>healthCheckPipe {{ healthCheckPipe }}</p>
+          @if (healthCheckPipe) {
+            <p>healthCheckPipe is not null</p>
+            @for (healthCheck of healthCheckPipe.services; track $index; let i = $index) {
+              <tr>
+                <th id="thHealthCheck_{{healthCheck.name}}">{{healthCheck.friendlyName}}</th>
+                <td headers="thHealthCheck_{{healthCheck.name}}">
+                  <span class="loading loading-ring loading-sm"></span>
+                </td>
+              </tr>
+            }
           }
         }
+      }
+      </tbody>
     </table>
 
 
