@@ -50,9 +50,25 @@
           <ng-container *ngIf="healthCheck$ | async as healthCheckPipe">
             @for (service of healthCheckPipe.services; track service.name) {
               <tr>
-                <th id="thHealthCheck_{{service.name}}">{{service.friendlyName}}</th>
-                <td headers="thHealthCheck_{{service.name}}">
-                  @let status = healthCheckItemResults.getItem(service.name)();
+                @let status = healthCheckItemResults.getItem(service.name)();
+                <th id="thHealthCheck_{{service.name}}">{{service.friendlyName}}
+                  <div tabindex="0" class="collapse collapse-arrow bg-base-100 border-base-300 border">
+                    <div class="collapse-title font-semibold after:start-5 after:end-auto pe-4 ps-12">Details</div>
+                    <div class="collapse-content text-sm">
+                      <table class="table w-full">
+                        <tbody>
+                          @for (result of status.subItems; track result) {
+                            <tr>
+                              <td>{{result.friendlyName}}</td>
+                              <td>{{result.message}}</td>
+                            </tr>
+                          }
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </th>
+                <td headers="thHealthCheck_{{service.name}}" class="align-text-top">
                   @if (status === undefined) {
                     <span class="loading loading-ring loading-sm"></span>
                   } @else if (status === null) {
