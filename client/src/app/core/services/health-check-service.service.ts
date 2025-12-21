@@ -87,38 +87,9 @@ export class HealthCheckService {
   //     }));
   // }
 
-  //
-  // getHealthOfService(serviceName: string): Observable<GetHealthCheckResponse> {
-  //   const url = `${this.baseUrl}/healthcheck/${serviceName}${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
-  //   return this.httpClient.get<GetHealthCheckResponse>(url).pipe(
-  //     catchError(error => {
-  //       const azureWebAppsResult = {
-  //         name: 'azure-web-apps',
-  //         friendlyName: 'Azure Web Apps',
-  //         immediateHealthCheckResponse: {
-  //           name: 'azure-web-apps',
-  //           isHealthy: false,
-  //           timeStamp: new Date()
-  //         }
-  //       };
-  //       const azureFunctionsResult = {
-  //         name: 'azure-functions',
-  //         friendlyName: 'Azure Functions',
-  //         immediateHealthCheckResponse: {
-  //           name: 'azure-functions',
-  //           isHealthy: false,
-  //           timeStamp: new Date()
-  //         }
-  //       };
-  //
-  //       const healthCheckItems = [azureWebAppsResult, azureFunctionsResult];
-  //
-  //       const result = {
-  //         timeStamp: new Date(),
-  //         healthCheckItems: healthCheckItems
-  //       } as GetHealthCheckResponse
-  //
-  //       return of(result);
-  //     }));
-  // }
+
+  getHealthOfService(serviceName: string): Observable<GetHealthCheckResponse> {
+    const url = `${this.baseUrl}/healthcheck/${serviceName}${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
+    return this.httpClient.get<GetHealthCheckResponse>(url);
+  }
 }

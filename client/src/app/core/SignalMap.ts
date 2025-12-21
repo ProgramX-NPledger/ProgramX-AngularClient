@@ -8,13 +8,14 @@ export class SignalMap {
   }
 
   allItems() {
-    return computed(() => this.dataMap().values());
+    return computed(() => Array.from(this.dataMap().values()));
   }
   addOrUpdateItem(key: string, value: any) {
     // IMPORTANT: Create new Map instance for signal reactivity
     const newMap = new Map(this.dataMap());
     newMap.set(key, value);
     this.dataMap.set(newMap);
+    console.log(this.dataMap());
   }
   removeItem(key: string) {
     const newMap = new Map(this.dataMap());

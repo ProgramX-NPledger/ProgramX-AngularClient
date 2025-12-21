@@ -16,46 +16,55 @@
             <div class="status status-success"></div>
           </td>
         </tr>
-      @if (isLoading()) {
-        <tr>
-          <div class="p-8 text-center">
-            <span class="p-2 skeleton skeleton-text">Retrieving Health Check services</span>
-          </div>
-        </tr>
-      }
-      @else {
+
         @if (isError()) {
-          <div role="alert" class="alert alert-error">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span>An error occurred during loading health check status. Please check the debug console for more details.</span>
-          </div>
+          <tr>
+            <td colspan="2">
+              <div class="m-2">
+                <div role="alert" class="alert alert-error">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span>An error occurred during loading health check status. Please check the debug console for more details.</span>
+                </div>
+              </div>
+            </td>
+          </tr>
         }
         @if (isTooManyRequests()) {
-          <div role="alert" class="alert alert-error">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span>Too many requests, please try again later.</span>
-          </div>
+          <tr>
+            <td colspan="2">
+              <div class="m-2">
+                <div role="alert" class="alert alert-error">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span>Too many requests, please try again later.</span>
+                </div>
+              </div>
+            </td>
+          </tr>
         }
+
         @if (!isError() && !isTooManyRequests()) {
-          @let healthCheckPipe = healthCheck$ | async;
-          <p>healthCheckPipe {{ healthCheckPipe }}</p>
-          @if (healthCheckPipe) {
-            <p>healthCheckPipe is not null</p>
-            @for (healthCheck of healthCheckPipe.services; track $index; let i = $index) {
+          <ng-container *ngIf="healthCheck$ | async as healthCheckPipe">
+            @for (service of healthCheckPipe.services; track service.name) {
               <tr>
-                <th id="thHealthCheck_{{healthCheck.name}}">{{healthCheck.friendlyName}}</th>
-                <td headers="thHealthCheck_{{healthCheck.name}}">
-                  <span class="loading loading-ring loading-sm"></span>
+                <th id="thHealthCheck_{{service.name}}">{{service.friendlyName}}</th>
+                <td headers="thHealthCheck_{{service.name}}">
+                  @let status = healthCheckItemResults.getItem(service.name)();
+                  @if (status === undefined) {
+                    <span class="loading loading-ring loading-sm"></span>
+                  } @else if (status === null) {
+                    <div class="status status-error"></div>
+                  } @else {
+                    <div class="status" [class.status-success]="status.isHealthy" [class.status-error]="!status.isHealthy"></div>
+                  }
                 </td>
               </tr>
             }
-          }
+          </ng-container>
         }
-      }
       </tbody>
     </table>
 
