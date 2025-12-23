@@ -1,4 +1,3 @@
-import {Role} from './role';
 import {RoleResponse} from './role-response';
 
 

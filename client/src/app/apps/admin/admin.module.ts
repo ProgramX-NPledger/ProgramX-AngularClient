@@ -23,7 +23,7 @@ const routes: Routes = [
         RouterModule.forChild(routes),
         UsersComponent,
         CreateUserDialogComponent,
-        RolesComponent,
+        RolesComponent
     ],
   providers: [],
   exports: [

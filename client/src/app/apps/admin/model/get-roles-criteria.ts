@@ -1,5 +1,5 @@
 export interface GetRolesCriteria {
-  containingText?: string | null;
-  usedInApplications?: string | null;
-  continuationToken?: string | null;
+  containingText: string | null | undefined;
+  usedInApplications: string | null | undefined;
+  continuationToken?: string;
 }

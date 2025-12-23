@@ -11,7 +11,7 @@ import {concatMap, delay, of} from 'rxjs';
     ReactiveFormsModule
   ],
   templateUrl: './delete-roles-dialog.component.html',
-  styleUrl: './delete-roles-dialog.component.css',
+  styleUrls: ['./delete-roles-dialog.component.css'],
   standalone: true,
 
 })

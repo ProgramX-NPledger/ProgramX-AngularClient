@@ -2,7 +2,7 @@ import {Component, ElementRef, EventEmitter, inject, Output, signal, ViewChild} 
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {UsersService} from '../services/users-service.service';
 import {concatMap, delay, of, range} from 'rxjs';
-import {DeletionCompleteEvent} from '../model/deletion-complete-event';
+import {UserDeletionCompleteEvent} from '../model/user-deletion-complete-event';
 
 @Component({
   selector: 'app-delete-users-dialog',
@@ -15,7 +15,7 @@ import {DeletionCompleteEvent} from '../model/deletion-complete-event';
 })
 export class DeleteUsersDialogComponent {
   @ViewChild('modal', {static: true}) modalRef!: ElementRef<HTMLDialogElement>;
-  @Output() deletionComplete = new EventEmitter<DeletionCompleteEvent>();
+  @Output() deletionComplete = new EventEmitter<UserDeletionCompleteEvent>();
 
   usersToDelete:string[] = [];
   usersSuccessfullyDeleted:string[] = [];

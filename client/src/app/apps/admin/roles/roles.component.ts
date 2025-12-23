@@ -105,6 +105,10 @@ export class RolesComponent  implements OnInit {
   }
 
 
+  getRoleApplications(role: Role): Application[] {
+    return role?.applications.flatMap(application => application || []) || [];
+  }
+
   refreshApplicationsFilter() {
     this.applications = null;
     this.applicationsService.getApplications()
@@ -125,7 +129,7 @@ export class RolesComponent  implements OnInit {
   }
 
 
-  onURoleCreated(createRoleResponse: CreateRoleResponse): void {
+  onRoleCreated(createRoleResponse: CreateRoleResponse): void {
     // Refresh list, toast, etc.
     // this.entities = await this.service.fetch();
     this.isRoleCreated.set(createRoleResponse);
@@ -167,7 +171,7 @@ export class RolesComponent  implements OnInit {
     this.deleteRolesDialog.open(this.selectedRoles());
   }
 
-  onUsersDeleted($event: RoleDeletionCompleteEvent) {
+  onRolesDeleted($event: RoleDeletionCompleteEvent) {
     this.isRolesDeleted.set($event);
     this.refreshRolesList();
     setTimeout(() => {
@@ -175,6 +179,16 @@ export class RolesComponent  implements OnInit {
     },5000)
   }
 
+
+  onRoleUpdated(updateRoleResponse: UpdateRoleResponse): void {
+    // Refresh list, toast, etc.
+    // this.entities = await this.service.fetch();
+    this.isRoleUpdated.set(updateRoleResponse);
+    this.refreshRolesList();
+    setTimeout(() => {
+      this.isRoleUpdated.set(null);
+    },5000)
+  }
 
 
 }

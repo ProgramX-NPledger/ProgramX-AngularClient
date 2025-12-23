@@ -15,7 +15,7 @@ import {UpdateRoleResponse} from '../model/update-role-response';
     ReactiveFormsModule
   ],
   templateUrl: './edit-role-dialog.component.html',
-  styleUrl: './edit-role-dialog.component.css'
+  styleUrls:  ['./edit-role-dialog.component.css']
 })
 export class EditRoleDialogComponent {
   @ViewChild('modal', { static: true }) modalRef!: ElementRef<HTMLDialogElement>;

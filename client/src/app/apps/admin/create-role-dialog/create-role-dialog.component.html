@@ -11,7 +11,7 @@
         <label class="label">Name</label>
         <input formControlName="name" type="text" class="input w-full" placeholder="Name" [disabled]="isBusy()" />
 
-        @if (form.name.errors?.['required'] && formControls.name.touched) {
+        @if (formControls.name.errors?.['required'] && formControls.name.touched) {
           <div class="validator-error">Name is required</div>
         }
         @if (formControls.name.errors?.['minlength'] && formControls.name.touched) {
@@ -20,18 +20,18 @@
         @if (formControls.name.errors?.['maxlength'] && formControls.name.touched) {
           <div class="validator-error">Name cannot be longer than 50 characters</div>
         }
-        @if (formControls.userName.errors?.['nameTaken'] && formControls.userName.touched) {
+        @if (formControls.name.errors?.['nameTaken'] && formControls.name.touched) {
           <div class="validator-error">Name is already taken</div>
         }
-        @if (!(formControls.userName.errors?.['required'] ||
-          formControls.userName.errors?.['minlength'] ||
-          formControls.userName.errors?.['maxlength'] ||
-          formControls.userName.errors?.['nameTaken'])
-        && formControls.userName.touched)
+        @if (!(formControls.name.errors?.['required'] ||
+          formControls.name.errors?.['minlength'] ||
+          formControls.name.errors?.['maxlength'] ||
+          formControls.name.errors?.['nameTaken'])
+        && formControls.name.touched)
         {
           <div class="validator-touched-ok">&nbsp;</div>
         }
-        @if (!formControls.userName.touched)
+        @if (!formControls.name.touched)
         {
           <div class="validator-untouched">&nbsp;</div>
         }

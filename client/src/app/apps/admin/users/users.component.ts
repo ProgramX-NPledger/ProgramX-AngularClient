@@ -14,7 +14,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {PagedData} from '../../../model/paged-data';
 import {catchError, EMPTY} from 'rxjs';
 import {DeleteUsersDialogComponent} from '../delete-users-dialog/delete-users-dialog.component';
-import {DeletionCompleteEvent} from '../model/deletion-complete-event';
+import {UserDeletionCompleteEvent} from '../model/user-deletion-complete-event';
 import {EditUserDialogComponent} from '../edit-user-dialog/edit-user-dialog.component';
 import {UpdateUserResponse} from '../model/update-user-response';
 
@@ -47,7 +47,7 @@ export class UsersComponent implements OnInit {
   private router = inject(Router);
 
   isUserCreated : WritableSignal<CreateUserResponse | null>= signal(null);
-  isUsersDeleted : WritableSignal<DeletionCompleteEvent | null>= signal(null);
+  isUsersDeleted : WritableSignal<UserDeletionCompleteEvent | null>= signal(null);
   isUserUpdated : WritableSignal<UpdateUserResponse | null>= signal(null);
 
   selectedUsers = signal<string[]>([]);
@@ -105,7 +105,7 @@ export class UsersComponent implements OnInit {
 
   refreshRolesFilter() {
     this.roles = null;
-    this.rolesService.getRoles()
+    this.rolesService.getRoles(null,null)
       .subscribe(roles => {
         this.roles = roles.items;
       })
@@ -183,7 +183,7 @@ export class UsersComponent implements OnInit {
     this.deleteUsersDialog.open(this.selectedUsers());
   }
 
-  onUsersDeleted($event: DeletionCompleteEvent) {
+  onUsersDeleted($event: UserDeletionCompleteEvent) {
     this.isUsersDeleted.set($event);
     this.refreshUsersList();
     setTimeout(() => {
