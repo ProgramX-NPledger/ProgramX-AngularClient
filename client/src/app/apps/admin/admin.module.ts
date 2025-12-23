@@ -4,6 +4,7 @@ import { ManagementComponent } from './management/management.component';
 import { RouterModule, Routes } from '@angular/router';
 import { UsersComponent } from "./users/users.component";
 import {CreateUserDialogComponent} from './create-user-dialog/create-user-dialog.component';
+import {RolesComponent} from "./roles/roles.component";
 
 const routes: Routes = [
   {
@@ -17,12 +18,13 @@ const routes: Routes = [
   declarations: [
     ManagementComponent
   ],
-  imports: [
-    CommonModule,
-    RouterModule.forChild(routes),
-    UsersComponent,
-    CreateUserDialogComponent,
-],
+    imports: [
+        CommonModule,
+        RouterModule.forChild(routes),
+        UsersComponent,
+        CreateUserDialogComponent,
+        RolesComponent,
+    ],
   providers: [],
   exports: [
 
