@@ -1,0 +1,37 @@
+<dialog #modal class="modal">
+  <div class="modal-box w-11/12 max-w-5xl">
+    <h3 class="font-bold text-lg">Edit Application</h3>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4 mt-4">
+
+      <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4">
+
+        <legend class="fieldset-legend">General</legend>
+
+        <label class="label">Name</label>
+        <input formControlName="name" type="text" class="input w-full" placeholder="Name" readonly />
+
+
+
+
+      </fieldset>
+
+
+      <div class="modal-action">
+        <button type="submit" class="btn btn-primary"
+                [disabled]="form.invalid || isBusy() ||  isUpdating()">
+          @if (isUpdating()) {
+            <span class="loading loading-spinner loading-md"></span>
+          } @else {
+            Update
+          }
+        </button>
+        <button type="button" class="btn" (click)="close()">Cancel</button>
+      </div>
+    </form>
+
+
+  </div>
+
+
+</dialog>

@@ -69,7 +69,6 @@ export class CreateRoleDialogComponent implements OnInit {
     return this.formBuilder.nonNullable.group({
       isSelected: false,
       name: application.name,
-      description: application.description,
     })
   }
 
@@ -117,7 +116,7 @@ export class CreateRoleDialogComponent implements OnInit {
     this.isLoadingApplications.set(true);
     this.isBusy.set(true);
     this.isErrorLoadingApplications.set(false);
-    this.applicationsService.getApplications().subscribe(
+    this.applicationsService.getApplications(null,null).subscribe(
       {
         next: applications => {
           this.isLoadingApplications.set(false);
@@ -125,12 +124,9 @@ export class CreateRoleDialogComponent implements OnInit {
           for (const application of applications.items) {
             this.form.controls.users.push(this.createApplicationFormsGroup({
               name: application.name,
-              description: application.description,
               versionNumber:application.versionNumber,
               type:application.type,
-              imageUrl: application.imageUrl,
               ordinal: application.ordinal,
-              targetUrl: application.targetUrl,
               isDefaultApplicationOnLogin: application.isDefaultApplicationOnLogin
             }));
           }

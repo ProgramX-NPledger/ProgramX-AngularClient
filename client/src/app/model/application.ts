@@ -3,8 +3,8 @@ export interface Application {
     description: string;
     imageUrl: string;
     targetUrl: string;
-    type: string; 
+    type: string;
     versionNumber: number;
-    IsDefaultApplicationOnLogin: boolean;
+    isDefaultApplicationOnLogin: boolean;
     ordinal: number;
 }

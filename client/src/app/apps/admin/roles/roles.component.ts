@@ -111,7 +111,7 @@ export class RolesComponent  implements OnInit {
 
   refreshApplicationsFilter() {
     this.applications = null;
-    this.applicationsService.getApplications()
+    this.applicationsService.getApplications(null,null)
       .subscribe(applications => {
         this.applications = applications.items;
       })

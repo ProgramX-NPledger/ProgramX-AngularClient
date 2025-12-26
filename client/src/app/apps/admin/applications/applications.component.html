@@ -1,0 +1,112 @@
+<div class="overflow-x-auto">
+  <form [formGroup]="filterForm" (ngSubmit)="refreshApplicationsList()">
+    <ul class="menu bg-base-200 xl:menu-horizontal w-full rounded-box flex flex-row">
+
+      <li class="pr-2">
+        <label class="input">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+          </svg>
+
+          <input type="text" placeholder="Containing text" formControlName="containingText" class="grow" />
+        </label>
+
+      </li>
+
+      <li  class="pr-2">
+        <select formControlName="withinRoles" class="select" (change)="refreshApplicationsList()">
+          <option disabled selected>Used in Roles</option>
+          @if (roles==null) {
+            <span class="loading loading-dots loading-xl text-primary"></span>
+          } @else {
+            @for (role of roles; track role) {
+              <option [value]="role.name">{{ role.name }}</option>
+            }
+          }
+        </select>
+      </li>
+      <li class="divider-right">
+        <a (click)="clearFilters()" class="mt-0.5 mr-2">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+          </svg>
+        </a>
+      </li>
+
+    </ul>
+  </form>
+
+  @if (errorMessage) {
+    <div class="alert alert-error">
+      <span>{{ errorMessage }}</span>
+    </div>
+  }
+  @else
+  {
+    <table class="table">
+      <!-- head -->
+      <thead>
+      <tr>
+        <th>
+
+        </th>
+        <th>Name</th>
+        <th>xxxx</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+        @if(!pagedApplications) {
+          <tr>
+            <td class="text-center">
+              <div class="skeleton h-2 w-32"></div>
+            </td>
+            <td class="text-center">
+              <div class="skeleton h-2 w-32"></div>
+            </td>
+          </tr>
+        } @else if(pagedApplications.totalItems === 0) {
+          <tr>
+            <td colspan="5" class="text-center">No roles found</td>
+          </tr>
+        } @else {
+          @for (application of pagedApplications.items; track application.name) {
+            <tr>
+              <th>
+                <label>
+                  <input type="checkbox" class="checkbox" (click)="onApplicationSelected(application.name)" [checked]="selectedApplications().includes(application.name)" />
+                </label>
+              </th>
+
+
+              <td>
+xxxx
+              </td>
+              <th>
+                <button class="btn" (click)="openEditApplicationDialog(application)">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
+                  </svg>
+                  Edit
+                </button>
+              </th>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+    <app-paginator [currentPageNumber]="1" [pagedData]="this.pagedApplications" [maxVisiblePages]="6" (pageChange)="onPageChange($event)"></app-paginator>
+  }
+
+</div>
+
+<app-edit-application-dialog (updated)="onApplicationUpdated($event)"></app-edit-application-dialog>
+
+@if (isApplicationUpdated()) {
+  <div class="toast toast-end">
+    <div class="alert alert-success">
+      <span>Role {{ isApplicationUpdated()!.name }} updated successfully</span>
+    </div>
+  </div>
+}
+
