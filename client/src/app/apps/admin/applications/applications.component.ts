@@ -1,4 +1,4 @@
-import {Component, inject, signal, ViewChild, WritableSignal} from '@angular/core';
+import {Component, inject, OnInit, signal, ViewChild, WritableSignal} from '@angular/core';
 import {CreateRoleDialogComponent} from "../create-role-dialog/create-role-dialog.component";
 import {DeleteRolesDialogComponent} from "../delete-roles-dialog/delete-roles-dialog.component";
 import {EditRoleDialogComponent} from "../edit-role-dialog/edit-role-dialog.component";
@@ -30,7 +30,7 @@ import {UpdateApplicationResponse} from '../model/update-application-response';
   styleUrl: './applications.component.css',
   standalone: true
 })
-export class ApplicationsComponent {
+export class ApplicationsComponent implements OnInit {
   @ViewChild(EditApplicationDialogComponent) editApplicationDialog!: EditApplicationDialogComponent;
 
   private rolesService = inject(RolesService);
@@ -70,6 +70,7 @@ export class ApplicationsComponent {
   }
 
   refreshApplicationsList() {
+    console.log('refreshApplicationsList');
     this.pagedApplications = undefined;
     this.applicationsService.getApplications({
       // TODO: filtering should be moved to url
@@ -106,6 +107,7 @@ export class ApplicationsComponent {
 
 
   onPageChange($event: number) {
+    console.log('onPageChange')
     if (this.pagedApplications) {
       this.router.navigate([], {
         relativeTo: this.activatedRoute,

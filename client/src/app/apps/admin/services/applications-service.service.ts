@@ -27,7 +27,7 @@ export class ApplicationsService {
 
 
   getApplications(criteria: Partial<GetApplicationsCriteria> | null, page: Paging | null): Observable<PagedData<Application>> {
-    const url = `${this.baseUrl}/role`;
+    const url = `${this.baseUrl}/application`;
 
     let params = new HttpParams();
 
