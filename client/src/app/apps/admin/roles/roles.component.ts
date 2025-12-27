@@ -6,7 +6,6 @@ import {SecureUser} from '../model/secure-user';
 import {CreateRoleResponse} from '../model/create-role-response';
 import {Role} from '../model/role';
 import {RolesService} from '../services/roles-service.service';
-import {CreateRoleDialogComponent} from '../create-role-dialog/create-role-dialog.component';
 import {DatePipe} from '@angular/common';
 import {DeleteUsersDialogComponent} from '../delete-users-dialog/delete-users-dialog.component';
 import {EditUserDialogComponent} from '../edit-user-dialog/edit-user-dialog.component';
@@ -20,15 +19,12 @@ import {PagedData} from '../../../model/paged-data';
 import {Application} from '../model/application';
 import {catchError, EMPTY} from 'rxjs';
 import {EditRoleDialogComponent} from '../edit-role-dialog/edit-role-dialog.component';
-import {DeleteRolesDialogComponent} from '../delete-roles-dialog/delete-roles-dialog.component';
 import {UpdateRoleResponse} from '../model/update-role-response';
 
 @Component({
   selector: 'app-roles',
   imports: [
-    CreateRoleDialogComponent,
     DatePipe,
-    DeleteRolesDialogComponent,
     EditRoleDialogComponent,
     PaginatorComponent,
     ReactiveFormsModule
@@ -38,20 +34,15 @@ import {UpdateRoleResponse} from '../model/update-role-response';
   standalone: true,
 })
 export class RolesComponent  implements OnInit {
-  @ViewChild(CreateRoleDialogComponent) createRoleDialog!: CreateRoleDialogComponent;
-  @ViewChild(DeleteRolesDialogComponent) deleteRolesDialog!: DeleteRolesDialogComponent;
   @ViewChild(EditRoleDialogComponent) editRoleDialog!: EditRoleDialogComponent;
 
 
   private rolesService = inject(RolesService);
-  private usersService = inject(UsersService);
   private applicationsService = inject(ApplicationsService);
   private formBuilder = inject(FormBuilder);
   private activatedRoute = inject(ActivatedRoute);
   private router = inject(Router);
 
-  isRoleCreated : WritableSignal<CreateRoleResponse | null>= signal(null);
-  isRolesDeleted : WritableSignal<RoleDeletionCompleteEvent | null>= signal(null);
   isRoleUpdated : WritableSignal<UpdateRoleResponse | null>= signal(null);
 
   selectedRoles = signal<string[]>([]);
@@ -119,25 +110,11 @@ export class RolesComponent  implements OnInit {
 
 
 
-
-  openCreateRoleDialog() {
-    this.createRoleDialog.open();
-  }
-
   openEditRoleDialog(role: Role) {
     this.editRoleDialog.open(role);
   }
 
 
-  onRoleCreated(createRoleResponse: CreateRoleResponse): void {
-    // Refresh list, toast, etc.
-    // this.entities = await this.service.fetch();
-    this.isRoleCreated.set(createRoleResponse);
-    this.refreshRolesList();
-    setTimeout(() => {
-      this.isRoleCreated.set(null);
-    },5000)
-  }
 
   onPageChange($event: number) {
     if (this.pagedRoles) {
@@ -165,18 +142,6 @@ export class RolesComponent  implements OnInit {
     this.filterForm.reset();
     this.selectedRoles.set([]);
     this.refreshRolesList();
-  }
-
-  openDeleteDialog() {
-    this.deleteRolesDialog.open(this.selectedRoles());
-  }
-
-  onRolesDeleted($event: RoleDeletionCompleteEvent) {
-    this.isRolesDeleted.set($event);
-    this.refreshRolesList();
-    setTimeout(() => {
-      this.isRolesDeleted.set(null);
-    },5000)
   }
 
 

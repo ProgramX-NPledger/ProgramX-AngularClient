@@ -1,6 +1,4 @@
 import {Component, inject, OnInit, signal, ViewChild, WritableSignal} from '@angular/core';
-import {CreateRoleDialogComponent} from "../create-role-dialog/create-role-dialog.component";
-import {DeleteRolesDialogComponent} from "../delete-roles-dialog/delete-roles-dialog.component";
 import {EditRoleDialogComponent} from "../edit-role-dialog/edit-role-dialog.component";
 import {FormBuilder, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {PaginatorComponent} from "../../../paginator/paginator.component";
