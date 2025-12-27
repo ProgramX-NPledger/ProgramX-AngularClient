@@ -1,23 +1,23 @@
-import {Component, ElementRef, EventEmitter, inject, Output, signal, ViewChild} from '@angular/core';
-import {UpdateUserResponse} from '../model/update-user-response';
+import {Component, ElementRef, EventEmitter, inject, OnInit, Output, signal, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {RolesService} from '../services/roles-service.service';
 import {UsersService} from '../services/users-service.service';
 import {userNameExistsValidator} from '../validators/username-exists.validator';
 import {Role} from '../model/role';
 import {User} from '../../../model/user';
-import {SecureUser} from '../model/secure-user';
 import {UpdateRoleResponse} from '../model/update-role-response';
+import {JsonPipe} from '@angular/common';
 
 @Component({
   selector: 'app-edit-role-dialog',
   imports: [
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    JsonPipe
   ],
   templateUrl: './edit-role-dialog.component.html',
   styleUrls:  ['./edit-role-dialog.component.css']
 })
-export class EditRoleDialogComponent {
+export class EditRoleDialogComponent implements OnInit {
   @ViewChild('modal', { static: true }) modalRef!: ElementRef<HTMLDialogElement>;
   @Output() updated = new EventEmitter<UpdateRoleResponse>();
 
@@ -45,10 +45,11 @@ export class EditRoleDialogComponent {
     return this.form.controls;
   }
 
-  createUserFormsGroup(user: User) {
+  createUserFormsGroup(user: User, isSelected: boolean = false) {
+    console.log('createUserFormsGroup',user);
     return this.formBuilder.nonNullable.group({
-      isSelected: false,
-      name: user.userName
+      isSelected: isSelected,
+      userName: user.userName
     })
   }
 
@@ -60,23 +61,35 @@ export class EditRoleDialogComponent {
     this.usersService.getUsers(null,null).subscribe(
       {
         next: users => {
-          this.isLoadingUsers.set(false);
-          this.isBusy.set(false);
-          for (const user of users.items) {
-            this.form.controls.users.push(this.createUserFormsGroup({
-              applications: [],
-              emailAddress: user.emailAddress,
-              firstName: user.firstName,
-              initials: '',
-              lastName: user.lastName,
-              profilePhotographSmall: '',
-              roles: [],
-              token: '',
-              userName:user.userName
-              // versionNumber:user.versionNumber,
-              // type:user.type
-            }));
-          }
+          // now get users in role
+          this.usersService.getUsers({
+            hasRole: this.formControls.name.value
+          },null).subscribe(
+            {
+              next: usersInRole => {
+                this.isLoadingUsers.set(false);
+                this.isBusy.set(false);
+                for (const user of users.items) {
+                  this.form.controls.users.push(this.createUserFormsGroup({
+                    applications: [],
+                    emailAddress: user.emailAddress,
+                    firstName: user.firstName,
+                    initials: user.initials,
+                    lastName: user.lastName,
+                    profilePhotographSmall: '',
+                    roles: user.roles.map(role => role.name),
+                    token: '',
+                    userName: user.userName
+                  }, usersInRole.items.some(u => u.userName === user.userName)));
+                }
+              },
+              error: error => {
+                this.isLoadingUsers.set(false);
+                this.isBusy.set(false);
+                this.isErrorLoadingUsers.set(true);
+                this.errorMessageLoadingUsers.set(error.message);
+              }
+            })
         },
         error: error => {
           this.isLoadingUsers.set(false);
@@ -124,6 +137,7 @@ export class EditRoleDialogComponent {
         // updateProfileScope: true,
         description: this.formControls.description.value,
         name: this.formControls.name.value,
+        usersInRole: this.formControls.users.controls.map(m=>m.value).filter(m=>m.isSelected).map(m=>m.userName),
         // userName: this.formControls.userName.value,
         // roles: this.formControls.roles.controls.map(m=>m.value).filter(m=>m.isSelected).map(m=>m.name),
         // emailAddress: this.formControls.emailAddress.value,

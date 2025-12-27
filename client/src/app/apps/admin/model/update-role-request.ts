@@ -4,6 +4,6 @@ import {User} from '../../../model/user';
 export interface UpdateRoleRequest {
   name?: string;
   description?: string;
-  users?: User[] | undefined;
+  usersInRole?: string[] | undefined;
 }
 

@@ -4,6 +4,7 @@ export interface SecureUser {
     id: string;
     emailAddress: string;
     userName: string;
+    initials: string;
     roles: Role[];
     type: string;
     versionNumber: number;

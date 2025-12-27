@@ -1,6 +1,6 @@
 <dialog #modal class="modal">
   <div class="modal-box w-11/12 max-w-5xl">
-    <h3 class="font-bold text-lg">Edit Role</h3>
+    <h3 class="font-bold text-lg">Assign Users</h3>
 
     <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4 mt-4">
 
@@ -12,23 +12,7 @@
         <input formControlName="name" type="text" class="input w-full" placeholder="Name" readonly />
 
         <label class="label">Description</label>
-        <textarea formControlName="description" class="input w-full" placeholder="Description" [disabled]="isBusy()"></textarea>
-        @if (form.controls.description.errors?.['required'] && formControls.description.touched) {
-          <div class="validator-error">Description is required</div>
-        }
-        @if (!(formControls.description.errors?.['required'])
-        && formControls.description.touched)
-        {
-          <div class="validator-touched-ok">&nbsp;</div>
-        }
-        @if (!formControls.description.touched)
-        {
-          <div class="validator-untouched">&nbsp;</div>
-        }
-
-
-
-
+        <textarea formControlName="description" class="input w-full" placeholder="Description"  readonly></textarea>
       </fieldset>
 
       <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4">
@@ -57,7 +41,7 @@
           }
           @else
           {
-            <ul class="list bg-base-100 rounded-box shadow-md" formArrayName="roles">
+            <ul class="list bg-base-100 rounded-box shadow-md" formArrayName="users">
               @for (user of formControls.users.controls; track $index; let i = $index) {
                 <li class="list-row" [formGroupName]="i">
                   <div>
@@ -65,10 +49,6 @@
                       <input type="checkbox" class="checkbox" formControlName="isSelected" [disabled]="isBusy()" />
                       {{ user.get('userName')!.value}}
                     </label>
-<!--                    @for (application of role.get('applications')!.value; track $index; let j = $index)  {-->
-<!--                      <span class="badge badge-neutral badge-sm application-badge">{{ application.name }}</span>-->
-<!--                    }-->
-<!--                    <div class="text-xs uppercase font-semibold opacity-60">{{ role.get('description')!.value}}</div>-->
                   </div>
                 </li>
               }
