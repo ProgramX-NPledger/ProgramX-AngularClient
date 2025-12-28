@@ -69,6 +69,7 @@ export class EditRoleDialogComponent implements OnInit {
               next: usersInRole => {
                 this.isLoadingUsers.set(false);
                 this.isBusy.set(false);
+                this.form.controls.users.clear();
                 for (const user of users.items) {
                   this.form.controls.users.push(this.createUserFormsGroup({
                     applications: [],
@@ -118,6 +119,7 @@ export class EditRoleDialogComponent implements OnInit {
     //   }
     // }
     this.form.controls.name.disable();
+    this.loadUsers();
   }
 
 
