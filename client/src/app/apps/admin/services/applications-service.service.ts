@@ -14,6 +14,7 @@ import {UpdateResponse} from '../model/update-response';
 import {GetApplicationsCriteria} from '../model/get-applications-criteria';
 import {GetApplicationResponse} from '../model/get-application-response';
 import {UpdateApplicationRequest} from '../model/update-application-request';
+import {GetApplicationsHealthResponse} from '../model/get-applications-health-response';
 
 @Injectable({
   providedIn: 'root'
@@ -57,6 +58,13 @@ export class ApplicationsService {
 
   }
 
+  getApplicationsHealth(): Observable<GetApplicationsHealthResponse> {
+    const url = `${this.baseUrl}/application/health`;
+    return this.httpClient.get<GetApplicationsHealthResponse>(url).pipe(
+      catchError(error => throwError(()=>error))
+    );
+  }
+
 
   getApplication(applicationName: string): Observable<GetApplicationResponse | null> {
     const url = `${this.baseUrl}/application/${applicationName}${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
@@ -71,7 +79,7 @@ export class ApplicationsService {
       ));
   }
 
-
+/* TODO: is this still needed? */
   updateApplication(updateApplicationRequest: UpdateApplicationRequest): Observable<UpdateResponse> {
     const url = `${this.baseUrl}/application/${updateApplicationRequest.name}${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
     return this.httpClient.put<UpdateResponse>(url, updateApplicationRequest).pipe(

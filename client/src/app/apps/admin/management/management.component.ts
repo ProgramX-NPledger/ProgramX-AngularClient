@@ -1,4 +1,6 @@
-import {Component, OnInit } from '@angular/core';
+import {Component, inject, OnInit, signal} from '@angular/core';
+import {ApplicationsService} from '../services/applications-service.service';
+import {GetApplicationsHealthResponse} from '../model/get-applications-health-response';
 
 
 @Component({
@@ -9,12 +11,28 @@ import {Component, OnInit } from '@angular/core';
 })
 export class ManagementComponent implements OnInit {
 
+  applicationsService = inject(ApplicationsService);
+
+  isBusy = signal(false);
+  applicationsHealthResponse = signal<GetApplicationsHealthResponse | null>(null);
+
   constructor() {
-    console.log('Management Component Initialized');
+
+
   }
 
   ngOnInit(): void {
-    // Initialization logic can go here
+    this.isBusy.set(true);
+    this.applicationsService.getApplicationsHealth().subscribe({
+      next: (response) => {
+        this.isBusy.set(false);
+        this.applicationsHealthResponse.set(response);
+      },
+      error: (error) => {
+        this.isBusy.set(false);
+        console.error('Error getting applications health:', error);
+      }
+    });
 
   }
 
