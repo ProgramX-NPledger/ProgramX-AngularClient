@@ -33,7 +33,7 @@
         {
           <span class="loading loading-spinner loading-xs"></span>
         } @else {
-          @if(applicationsHealthResponse()!.isHealthy)
+          @if(applicationsHealthResponse()?.isHealthy)
           {
             <div aria-label="success" class="status status-success"></div>
           } @else {
@@ -43,7 +43,7 @@
 
     </label>
       <div class="tab-content bg-base-100 border-base-300 p-6">
-        <app-applications></app-applications>
+        <app-applications [healthData]="applicationsHealthResponse()" (updated)="refreshHealthData()"></app-applications>
       </div>
   </div>
 </div>

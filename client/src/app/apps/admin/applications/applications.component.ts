@@ -1,4 +1,16 @@
-import {Component, inject, OnInit, signal, ViewChild, WritableSignal} from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  EventEmitter,
+  inject,
+  input,
+  OnInit,
+  Output,
+  signal,
+  ViewChild,
+  WritableSignal
+} from '@angular/core';
 import {EditRoleDialogComponent} from "../edit-role-dialog/edit-role-dialog.component";
 import {FormBuilder, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {PaginatorComponent} from "../../../paginator/paginator.component";
@@ -15,21 +27,27 @@ import {Application} from '../../../model/application';
 import {catchError, EMPTY} from 'rxjs';
 import {EditApplicationDialogComponent} from '../edit-application-dialog/edit-application-dialog.component';
 import {UpdateApplicationResponse} from '../model/update-application-response';
+import {GetApplicationsHealthResponse} from "../model/get-applications-health-response";
+import {JsonPipe} from '@angular/common';
 
 @Component({
   selector: 'app-applications',
-    imports: [
-        EditApplicationDialogComponent,
-        FormsModule,
-        PaginatorComponent,
-        ReactiveFormsModule
-    ],
+  imports: [
+    EditApplicationDialogComponent,
+    FormsModule,
+    PaginatorComponent,
+    ReactiveFormsModule,
+    JsonPipe
+  ],
   templateUrl: './applications.component.html',
   styleUrl: './applications.component.css',
   standalone: true
 })
 export class ApplicationsComponent implements OnInit {
   @ViewChild(EditApplicationDialogComponent) editApplicationDialog!: EditApplicationDialogComponent;
+
+  healthData = input<GetApplicationsHealthResponse | null>(null);
+  @Output() updated = new EventEmitter<void>();
 
   private rolesService = inject(RolesService);
   private applicationsService = inject(ApplicationsService);
@@ -42,7 +60,7 @@ export class ApplicationsComponent implements OnInit {
   selectedApplications = signal<string[]>([]);
   errorMessage: string | null = null;
 
-  pagedApplications: PagedData<Application> | undefined = {
+  pagedApplications = signal<PagedData<Application> | undefined>({
     items : [],
     totalItems : 0,
     pagesWithUrls : [],
@@ -51,7 +69,23 @@ export class ApplicationsComponent implements OnInit {
     continuationToken : undefined,
     isLastPage : false,
     requestCharge : 0
-  };
+  });
+
+  healthMap = computed(() => {
+    const data = this.healthData();
+    const map = new Map<string, boolean>();
+    data?.applicationHealthChecks.forEach(check => {
+      map.set(check.healthCheckName, check.isHealthy);
+    });
+    return map;
+  });
+
+  constructor() {
+    effect(() => {
+      console.log('Health data changed:', this.healthData());
+      this.refreshApplicationsList()
+    });
+  }
 
 
   roles: Role[] | null = null;
@@ -65,11 +99,12 @@ export class ApplicationsComponent implements OnInit {
   ngOnInit(): void {
     this.refreshRolesFilter();
     this.onPageChange(1);
+
   }
 
   refreshApplicationsList() {
     console.log('refreshApplicationsList');
-    this.pagedApplications = undefined;
+    this.pagedApplications.set(undefined);
     this.applicationsService.getApplications({
       // TODO: filtering should be moved to url
       containingText: this.filterForm.controls.containingText.value,
@@ -84,7 +119,7 @@ export class ApplicationsComponent implements OnInit {
         return EMPTY;
       })
     ).subscribe(pagedData => {
-      this.pagedApplications = pagedData;
+      this.pagedApplications.set(pagedData);
     });
   }
 
@@ -106,12 +141,13 @@ export class ApplicationsComponent implements OnInit {
 
   onPageChange($event: number) {
     console.log('onPageChange')
-    if (this.pagedApplications) {
+    const pagedApplications = this.pagedApplications();
+    if (pagedApplications) {
       this.router.navigate([], {
         relativeTo: this.activatedRoute,
         queryParams: {
-          offset: ($event * this.pagedApplications.itemsPerPage) - this.pagedApplications.itemsPerPage,
-          itemsPerPage: this.pagedApplications.itemsPerPage
+          offset: ($event * pagedApplications.itemsPerPage) - pagedApplications.itemsPerPage,
+          itemsPerPage: pagedApplications.itemsPerPage
         },
         queryParamsHandling: 'merge'
       }).then(r => this.refreshApplicationsList());
@@ -123,7 +159,7 @@ export class ApplicationsComponent implements OnInit {
     if (this.selectedApplications().includes($event)) {
       this.selectedApplications.set(this.selectedApplications().filter(x => x !== $event));
     } else {
-      this.selectedApplications().push($event);
+      this.selectedApplications.set([...this.selectedApplications(), $event]);
     }
 
   }
@@ -136,17 +172,11 @@ export class ApplicationsComponent implements OnInit {
   }
 
   onApplicationUpdated(updateApplicationResponse: UpdateApplicationResponse): void {
-    // Refresh list, toast, etc.
-    // this.entities = await this.service.fetch();
     this.isApplicationUpdated.set(updateApplicationResponse);
     this.refreshApplicationsList();
+    this.updated.emit();
     setTimeout(() => {
       this.isApplicationUpdated.set(null);
-    },5000)
+    }, 5000);
   }
-
-
-
-
-
 }

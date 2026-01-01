@@ -56,7 +56,8 @@
       </tr>
       </thead>
       <tbody>
-        @if(!pagedApplications) {
+        @let apps = pagedApplications();
+        @if(!apps) {
           <tr>
             <td class="text-center">
               <div class="skeleton h-2 w-32"></div>
@@ -65,12 +66,12 @@
               <div class="skeleton h-2 w-32"></div>
             </td>
           </tr>
-        } @else if(pagedApplications.totalItems === 0) {
+        } @else if(apps.totalItems === 0) {
           <tr>
             <td colspan="5" class="text-center">No Applications found</td>
           </tr>
         } @else {
-          @for (application of pagedApplications.items; track application.name) {
+          @for (application of apps.items; track application.name) {
             <tr>
               <th>
                 <label>
@@ -84,8 +85,15 @@
               </td>
               <td>
                 <div class="inline-grid *:[grid-area:1/1]">
-                  <div class="status animate-ping"></div>
-                  <div class="status"></div>
+                  @let status = healthMap().get(application.name);
+                  {{ status | json }}
+                  @if (status === true) {
+                    <div class="status status-success"></div>
+                  } @else if (status === false) {
+                    <div class="status status-error animate-ping"></div>
+                  } @else {
+                    <div class="status">?</div>
+                  }
                 </div>
               </td>
               <th>
@@ -101,7 +109,7 @@
         }
       </tbody>
     </table>
-    <app-paginator [currentPageNumber]="1" [pagedData]="this.pagedApplications" [maxVisiblePages]="6" (pageChange)="onPageChange($event)"></app-paginator>
+    <app-paginator [currentPageNumber]="1" [pagedData]="pagedApplications()" [maxVisiblePages]="6" (pageChange)="onPageChange($event)"></app-paginator>
   }
 
 </div>

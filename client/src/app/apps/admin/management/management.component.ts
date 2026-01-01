@@ -22,6 +22,10 @@ export class ManagementComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.refreshHealthData();
+  }
+
+  refreshHealthData(): void {
     this.isBusy.set(true);
     this.applicationsService.getApplicationsHealth().subscribe({
       next: (response) => {
@@ -33,7 +37,6 @@ export class ManagementComponent implements OnInit {
         console.error('Error getting applications health:', error);
       }
     });
-
   }
 
 
