@@ -6,10 +6,11 @@ import { environment } from '../../../environments/environment';
 import { MessageBusService } from '../../core/services/message-bus.service';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 import { Subject } from 'rxjs';
+import {JsonPipe} from '@angular/common';
 
 @Component({
   selector: 'app-nav',
-  imports: [RouterLink, RouterLinkActive],
+  imports: [RouterLink, RouterLinkActive, JsonPipe],
   templateUrl: './nav.component.html',
   styleUrl: './nav.component.css'
 })
@@ -35,7 +36,7 @@ export class NavComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(newUrl => {
         this.profilePhotoUrl.set(newUrl);
-      });   
+      });
   }
 
 
@@ -45,7 +46,7 @@ export class NavComponent implements OnInit, OnDestroy {
   }
 
   login() {
-    this.router.navigate(['/login']); 
+    this.router.navigate(['/login']);
   }
 
   refreshLogin() {

@@ -1,6 +1,6 @@
 <div class="navbar bg-base-100 shadow-sm">
   <div class="navbar-start">
-    
+
     <a class="btn btn-ghost text-xl">Program.X</a>
   </div>
 
@@ -9,10 +9,15 @@
     <div role="tablist" class="tabs tabs-border">
         @if(loginService.currentUser()) {
             @for (application of loginService.currentUser()?.applications; track $index) {
-                <a role="tab" class="tab" routerLink="{{ '/'+application.targetUrl }}" routerLinkActive="tab-active">{{ application.name}}</a>
+              @if (application.applicationMetaData.targetUrl) {
+                <a role="tab" class="tab" routerLink="{{ '/'+application.applicationMetaData.targetUrl }}" routerLinkActive="tab-active">{{ application.applicationMetaData.friendlyName}}</a>
+              }
+              @else {
+                <a role="tab" class="tab" [routerLink]="['/app', application.applicationMetaData.friendlyName]" routerLinkActive="tab-active">{{ application.applicationMetaData.name}} (has no targetUrl)</a>
+              }
             }
         } @else {
-         
+            <!-- not logged in -->
         }
     </div>
 
@@ -41,7 +46,7 @@
               class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
               <li>
                 <a class="justify-between" [routerLink]="['/profile' ]">
-                  Profile                  
+                  Profile
                 </a>
               </li>
               <li><a [routerLink]="['/settings']">Settings</a></li>
@@ -52,8 +57,8 @@
             <button class="btn btn-primary" (click)="login()">Login</button>
         }
 
-       
+
   </div>
- 
+
 
 </div>

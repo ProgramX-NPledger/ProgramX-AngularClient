@@ -16,23 +16,24 @@ export class LoginService {
         const url = `${this.baseUrl}/user/${this.currentUser()!.userName}${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
 
         this.httpClient.get<User>(url).subscribe(user => {
-          this.currentUser.set(user);          
+          this.currentUser.set(user);
         });
     }
   }
-  
+
   baseUrl = environment.baseUrl;
 
   login(username: string, password: string) {
     const url = `${this.baseUrl}/login${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
-    const body = { 
-      userName: username, 
-      password 
+    const body = {
+      userName: username,
+      password
     };
     return this.httpClient.post<User>(url, body)
       .pipe(
         tap(user => {
           if (user) {
+            console.log('user', user);
             this.currentUser.set(user);
           }
           else {
