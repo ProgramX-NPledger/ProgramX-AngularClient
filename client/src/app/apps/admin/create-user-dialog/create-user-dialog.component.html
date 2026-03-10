@@ -9,7 +9,7 @@
         <legend class="fieldset-legend">Profile</legend>
 
         <label class="label">Username</label>
-        <input formControlName="userName" type="text" class="input w-full" placeholder="Username" [disabled]="isBusy()" />
+        <input formControlName="userName" type="text" class="input w-full" placeholder="Username" />
 
         @if (form.controls.userName.errors?.['required'] && formControls.userName.touched) {
           <div class="validator-error">Username is required</div>
@@ -37,7 +37,7 @@
         }
 
         <label class="label">Email address</label>
-        <input formControlName="emailAddress"   type="email" email class="input w-full" placeholder="Email address" [disabled]="isBusy()" />
+        <input formControlName="emailAddress"   type="email" email class="input w-full" placeholder="Email address" />
         @if (form.controls.emailAddress.errors?.['required'] && formControls.emailAddress.touched) {
           <div class="validator-error">Email address is required</div>
         }
@@ -52,7 +52,7 @@
         }
 
         <label class="label">First name</label>
-        <input formControlName="firstName" type="text" class="input w-full" placeholder="First name" [disabled]="isBusy()" />
+        <input formControlName="firstName" type="text" class="input w-full" placeholder="First name" />
         @if (form.controls.firstName.errors?.['required'] && formControls.firstName.touched) {
           <div class="validator-error">First name is required</div>
         }
@@ -67,7 +67,7 @@
         }
 
         <label class="label">Last name</label>
-        <input formControlName="lastName" type="text" class="input w-full" placeholder="Last name" [disabled]="isBusy()" />
+        <input formControlName="lastName" type="text" class="input w-full" placeholder="Last name" />
         @if (form.controls.lastName.errors?.['required'] && formControls.lastName.touched) {
           <div class="validator-error">Last name is required</div>
         }
@@ -140,7 +140,7 @@
         <legend class="fieldset-legend">Confirmation expiry</legend>
 
         <label class="label">Confirm before end of</label>
-        <input formControlName="confirmationExpiry" type="datetime-local" class="input w-full" placeholder="Select a date and time" [disabled]="isBusy()" />
+        <input formControlName="confirmationExpiry" type="datetime-local" class="input w-full" placeholder="Select a date and time" />
         @if (!(formControls.confirmationExpiry.errors?.['required'])
         && formControls.confirmationExpiry.touched)
         {

@@ -1,5 +1,5 @@
 import {
-  Component,
+  Component, effect,
   ElementRef,
   EventEmitter,
   inject,
@@ -28,10 +28,6 @@ import {SelectableRole} from '../model/selectable-role';
   standalone: true,
 })
 export class CreateUserDialogComponent implements OnInit {
-  ngOnInit(): void {
-    // get all roles
-    this.loadRoles();
-  }
 
   @ViewChild('modal', { static: true }) modalRef!: ElementRef<HTMLDialogElement>;
   @Output() created = new EventEmitter<CreateUserResponse>();
@@ -55,6 +51,30 @@ export class CreateUserDialogComponent implements OnInit {
     roles: this.formBuilder.array<FormGroup>([])
   });
 
+  constructor(private router: Router) {
+    effect(() => {
+      if (this.isBusy()) {
+        this.form.controls.userName.disable( { emitEvent: false } );
+        this.form.controls.firstName.disable( { emitEvent: false } );
+        this.form.controls.lastName.disable( { emitEvent: false } );
+        this.form.controls.emailAddress.disable( { emitEvent: false } );
+        this.form.controls.confirmationExpiry.disable( { emitEvent: false } );
+      } else {
+        this.form.controls.userName.enable( { emitEvent: false } );
+        this.form.controls.firstName.enable( { emitEvent: false } );
+        this.form.controls.lastName.enable( { emitEvent: false } );
+        this.form.controls.emailAddress.enable( { emitEvent: false } );
+        this.form.controls.confirmationExpiry.enable( { emitEvent: false } );
+      }
+    })
+  }
+
+  ngOnInit(): void {
+    // get all roles
+    this.loadRoles();
+
+  }
+
   get formControls() {
     return this.form.controls;
   }
@@ -71,6 +91,7 @@ export class CreateUserDialogComponent implements OnInit {
           })))
     })
   }
+
   loadRoles() {
     this.isLoadingRoles.set(true);
     this.isBusy.set(true);
@@ -99,7 +120,6 @@ export class CreateUserDialogComponent implements OnInit {
       }
     );
   }
-
 
   open(): void {
     this.form.reset();
