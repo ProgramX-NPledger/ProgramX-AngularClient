@@ -2,11 +2,13 @@ import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginService } from '../core/services/login-service.service';
 import {SiteHealthComponent} from '../site-health/site-health.component';
+import {UserTileComponent} from '../user-tile/user-tile.component';
 
 @Component({
   selector: 'app-home',
   imports: [
-    SiteHealthComponent
+    SiteHealthComponent,
+    UserTileComponent
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
@@ -20,7 +22,5 @@ export class HomeComponent implements OnInit {
     console.log(this.loginService.currentUser());
   }
 
-  login() {
-    this.router.navigate(['/login']);
-  }
+
 }

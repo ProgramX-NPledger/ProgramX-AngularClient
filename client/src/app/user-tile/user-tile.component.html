@@ -1,0 +1,14 @@
+
+
+<div id="siteHealthCheck" class="card bg-base-100 w-[98%] mx-auto p-10 mt-10 shadow-xl">
+  <div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
+    @if(loggedInUser==null) {
+      <p>Welcome to Program.X. Click the button below to log in to access your applications.</p>
+      <p><button class="btn btn-primary" (click)="login()">Login</button></p>
+    } @else {
+      <p>Welcome back, <strong>{{ loggedInUser!.userName }}</strong>.</p>
+      <p>Use the header navigation at the top of the screen to access your applications.</p>
+    }
+  </div>
+</div>
+

@@ -1,16 +1,10 @@
 
 
-@if(loginService.currentUser()==null) {
-  <p>Welcome to Program.X! Please log in to access your applications.</p>
-  <p><button class="btn btn-primary" (click)="login()">Login</button></p>
-} @else {
-  <p>Welcome back, {{ loginService.currentUser()?.userName }}!</p>
-  <p>Dynamically add permitted tiles here.</p>
-}
+
 
 <div class="flex flex-row">
+  <div class="basis-1 sm:basis-1/2"><app-user-tile [loggedInUser]="loginService.currentUser()"></app-user-tile></div>
   <div class="basis-1 sm:basis-1/2"><app-site-health></app-site-health></div>
-  <div class="basis-1 sm:basis-1/2">02</div>
 </div>
 
 
