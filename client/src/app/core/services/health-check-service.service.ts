@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { catchError, Observable, of } from 'rxjs';
 import {GetHealthCheckResponse} from '../../model/get-health-check-response';
+import {GetHealthCheckServiceResponse} from '../../model/get-health-check-service-response';
 
 @Injectable({
   providedIn: 'root'
@@ -88,8 +89,8 @@ export class HealthCheckService {
   // }
 
 
-  getHealthOfService(serviceName: string): Observable<GetHealthCheckResponse> {
+  getHealthOfService(serviceName: string): Observable<GetHealthCheckServiceResponse> {
     const url = `${this.baseUrl}/healthcheck/${serviceName}${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
-    return this.httpClient.get<GetHealthCheckResponse>(url);
+    return this.httpClient.get<GetHealthCheckServiceResponse>(url);
   }
 }

@@ -4,6 +4,7 @@
 
     <table class="table w-full">
       <tbody>
+        <!-- if the user is looking at this page, this much we know to be good -->
         <tr>
           <th id="thAzureFunctions">Azure Functions</th>
           <td headers="thAzureFunctions">
@@ -57,11 +58,13 @@
                     <div class="collapse-content text-sm">
                       <table class="table w-full">
                         <tbody>
-                          @for (result of status.subItems; track result) {
-                            <tr>
-                              <td>{{result.friendlyName}}</td>
-                              <td>{{result.message}}</td>
-                            </tr>
+                          @if (status.subItems) {
+                            @for (result of status.subItems; track result.friendlyName) {
+                              <tr>
+                                <td>{{ result.friendlyName }}</td>
+                                <td>{{ result.message }}</td>
+                              </tr>
+                            }
                           }
                         </tbody>
                       </table>
@@ -69,10 +72,8 @@
                   </div>
                 </th>
                 <td headers="thHealthCheck_{{service.name}}" class="align-text-top">
-                  @if (status === undefined) {
+                  @if (!status) {
                     <span class="loading loading-ring loading-sm"></span>
-                  } @else if (status === null) {
-                    <div class="status status-error"></div>
                   } @else {
                     <div class="status" [class.status-success]="status.isHealthy" [class.status-error]="!status.isHealthy"></div>
                   }

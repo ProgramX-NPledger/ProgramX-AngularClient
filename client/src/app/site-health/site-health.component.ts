@@ -7,6 +7,7 @@ import {HealthCheckItemResponse} from '../model/health-check-item-response';
 import {SignalMap} from '../core/SignalMap';
 import {EMPTY_SUBSCRIPTION} from 'rxjs/internal/Subscription';
 import {EMPTY_OBSERVER} from 'rxjs/internal/Subscriber';
+import {GetHealthCheckServiceResponse} from '../model/get-health-check-service-response';
 
 
 @Component({
@@ -26,7 +27,10 @@ export class SiteHealthComponent  {
   isLoading = signal(false);
   isTooManyRequests = signal(false);
   isError = signal(false);
+  isLoadingMore = signal(false);
   healthCheckItemResults = new SignalMap();
+  healthCheckItemNames: string[] = [];
+  haveReceivedFromHealthChecks: string[] = [];
 
   private healthCheckService = inject(HealthCheckService);
 
@@ -36,6 +40,21 @@ export class SiteHealthComponent  {
       this.isLoading.set(false);
       this.isError.set(false);
       this.isTooManyRequests.set(false);
+      this.isLoadingMore.set(true);
+      this.healthCheckItemNames = response.services.map(service => service.name);
+      // fan out requests for individual health checks
+      of (...this.healthCheckItemNames).pipe(
+        mergeMap(
+          (healthCheckName: string) => this.healthCheckService.getHealthOfService(healthCheckName)
+        )
+      ).subscribe(getHealthCheckServiceResponse => {
+          this.haveReceivedFromHealthChecks.push(getHealthCheckServiceResponse.name);
+          if (this.haveReceivedFromHealthChecks.length === this.healthCheckItemNames.length) {
+            this.isLoadingMore.set(false);
+          }
+          this.healthCheckItemResults.addOrUpdateItem(getHealthCheckServiceResponse.name, getHealthCheckServiceResponse);
+        }
+      )
     }),
     catchError(error => {
       if (error.status === 429) {
@@ -47,20 +66,6 @@ export class SiteHealthComponent  {
       this.isLoading.set(false);
       return EMPTY;
     }),
-    tap(response => {
-      response.services.forEach(service => {
-        this.healthCheckService.getHealthOfService(service.name).pipe(
-          tap(result => {
-            this.healthCheckItemResults.addOrUpdateItem(service.name, result);
-          }),
-          catchError(error => {
-            console.error('Error whilst getting Health Check for ' + service.name, error);
-            this.healthCheckItemResults.addOrUpdateItem(service.name, null);
-            return EMPTY;
-          })
-        ).subscribe();
-      });
-    })
   );
 
   constructor() {
