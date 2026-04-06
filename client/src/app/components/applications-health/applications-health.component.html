@@ -1,23 +1,10 @@
 
-<div id="siteHealthCheck" class="card bg-base-100 w-[98%] mx-auto p-10 mt-10 shadow-xl">
+<div id="applicationsHealthCheck" class="card bg-base-100 w-[98%] mx-auto p-10 mt-10 shadow-xl">
   <div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
-  <h2 class="text-2xl font-bold">Site Health</h2>
+    <h2 class="text-2xl font-bold">Applications Health</h2>
+
     <table class="table w-full">
       <tbody>
-        <!-- if the user is looking at this page, this much we know to be good -->
-        <tr>
-          <th id="thAzureFunctions">Azure Functions</th>
-          <td headers="thAzureFunctions">
-            <div class="status status-success"></div>
-          </td>
-        </tr>
-        <tr>
-          <th id="thAzureWebApps">Azure Web Apps</th>
-          <td headers="thAzureWebApps">
-            <div class="status status-success"></div>
-          </td>
-        </tr>
-
         @if (isError()) {
           <tr>
             <td colspan="2">
@@ -32,24 +19,9 @@
             </td>
           </tr>
         }
-        @if (isTooManyRequests()) {
-          <tr>
-            <td colspan="2">
-              <div class="m-2">
-                <div role="alert" class="alert alert-error">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <span>Too many requests, please try again later.</span>
-                </div>
-              </div>
-            </td>
-          </tr>
-        }
-
-        @if (!isError() && !isTooManyRequests()) {
+        @if (!isError()) {
           <ng-container *ngIf="healthCheck$ | async as healthCheckPipe">
-            @for (service of healthCheckPipe.services; track service.name) {
+            @for (service of healthCheckPipe.healthCheckServices; track service.name) {
               <tr>
                 @let status = healthCheckItemResults.getItem(service.name)();
                 <th id="thHealthCheck_{{service.name}}">{{service.friendlyName}}

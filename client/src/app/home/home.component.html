@@ -1,9 +1,11 @@
 
-
-
-
 <div class="flex flex-row">
-  <div class="basis-1 sm:basis-1/2"><app-user-tile [loggedInUser]="loginService.currentUser()"></app-user-tile></div>
+  <div class="basis-1 sm:basis-1/2">
+    <app-user-tile [loggedInUser]="loginService.currentUser()"></app-user-tile>
+    @if (loginService.currentUser()) {
+      <app-applications-health></app-applications-health>
+    }
+  </div>
   <div class="basis-1 sm:basis-1/2"><app-site-health></app-site-health></div>
 </div>
 

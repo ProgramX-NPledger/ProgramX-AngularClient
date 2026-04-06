@@ -16,7 +16,6 @@ export class HealthCheckService {
   readonly healthCheckItems$: Observable<GetHealthCheckResponse> = this.discoverHealthCheck();
 
   private discoverHealthCheck(): Observable<GetHealthCheckResponse> {
-    console.log('discoverHealthCheck');
       return this.httpClient.get<GetHealthCheckResponse>(this.healthCheckUrl);
   }
   //
