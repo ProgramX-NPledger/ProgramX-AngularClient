@@ -43,6 +43,11 @@ export const routes: Routes = [
         canActivate: [AuthGuard], // Ensure this route is protected
     },
     {
+      path: 'scouting',
+      loadChildren: () => import('./apps/scouting/scouting.module').then(m => m.ScoutingModule),
+      canActivate: [AuthGuard], // Ensure this route is protected
+    },
+    {
         path: '**',
         component: HomeComponent,
         data: {

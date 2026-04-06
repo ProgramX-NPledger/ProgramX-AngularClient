@@ -7,6 +7,7 @@
   <div class="navbar-center hidden sm:flex">
     <!-- Apps -->
     <div role="tablist" class="tabs tabs-border">
+      <a role="tab" class="tab" routerLink="/">Dashboard</a>
         @if(loginService.currentUser()) {
             @for (application of loginService.currentUser()?.applications; track $index) {
               @if (application.applicationMetaData.targetUrl) {
