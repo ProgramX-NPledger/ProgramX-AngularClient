@@ -1,0 +1,119 @@
+<dialog #modal class="modal">
+  <div class="modal-box w-11/12 max-w-5xl">
+    <h3 class="font-bold text-lg">Add Score Ledger item</h3>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="space-y-4 mt-4">
+
+      <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4">
+        <legend class="fieldset-legend">General</legend>
+
+        <label class="label">Date</label>
+        <input formControlName="date" type="date" class="input w-full" placeholder="Date" />
+        @if (form.controls.date.errors?.['required'] && formControls.date.touched) {
+          <div class="validator-error">Date is required</div>
+        }
+        @if (!(formControls.date.errors?.['required'])
+        && formControls.date.touched)
+        {
+          <div class="validator-touched-ok">&nbsp;</div>
+        }
+        @if (!formControls.date.touched)
+        {
+          <div class="validator-untouched">&nbsp;</div>
+        }
+
+<!--        <label class="label">Scout</label>-->
+<!--        <input formControlName="userName" type="text" class="input w-full" placeholder="Username" />-->
+
+<!--        @if (form.controls.userName.errors?.['required'] && formControls.userName.touched) {-->
+<!--          <div class="validator-error">Username is required</div>-->
+<!--        }-->
+<!--        @if (form.controls.userName.errors?.['minlength'] && formControls.userName.touched) {-->
+<!--          <div class="validator-error">Username must be at least 8 characters</div>-->
+<!--        }-->
+<!--        @if (form.controls.userName.errors?.['maxlength'] && formControls.userName.touched) {-->
+<!--          <div class="validator-error">Username cannot be longer than 50 characters</div>-->
+<!--        }-->
+<!--        @if (formControls.userName.errors?.['userNameTaken'] && formControls.userName.touched) {-->
+<!--          <div class="validator-error">Username is already taken</div>-->
+<!--        }-->
+<!--        @if (!(formControls.userName.errors?.['required'] ||-->
+<!--          formControls.userName.errors?.['minlength'] ||-->
+<!--          formControls.userName.errors?.['maxlength'] ||-->
+<!--          formControls.userName.errors?.['userNameTaken'])-->
+<!--        && formControls.userName.touched)-->
+<!--        {-->
+<!--          <div class="validator-touched-ok">&nbsp;</div>-->
+<!--        }-->
+<!--        @if (!formControls.userName.touched)-->
+<!--        {-->
+<!--          <div class="validator-untouched">&nbsp;</div>-->
+<!--        }-->
+
+<!--        <label class="label">Value</label>-->
+<!--        <input formControlName="emailAddress"   type="email" email class="input w-full" placeholder="Email address" />-->
+<!--        @if (form.controls.emailAddress.errors?.['required'] && formControls.emailAddress.touched) {-->
+<!--          <div class="validator-error">Email address is required</div>-->
+<!--        }-->
+<!--        @if (!(formControls.emailAddress.errors?.['required'])-->
+<!--        && formControls.emailAddress.touched)-->
+<!--        {-->
+<!--          <div class="validator-touched-ok">&nbsp;</div>-->
+<!--        }-->
+<!--        @if (!formControls.emailAddress.touched)-->
+<!--        {-->
+<!--          <div class="validator-untouched">&nbsp;</div>-->
+<!--        }-->
+
+<!--        <label class="label">Score</label>-->
+<!--        <input formControlName="firstName" type="text" class="input w-full" placeholder="First name" />-->
+<!--        @if (form.controls.firstName.errors?.['required'] && formControls.firstName.touched) {-->
+<!--          <div class="validator-error">First name is required</div>-->
+<!--        }-->
+<!--        @if (!(formControls.firstName.errors?.['required'])-->
+<!--        && formControls.firstName.touched)-->
+<!--        {-->
+<!--          <div class="validator-touched-ok">&nbsp;</div>-->
+<!--        }-->
+<!--        @if (!formControls.firstName.touched)-->
+<!--        {-->
+<!--          <div class="validator-untouched">&nbsp;</div>-->
+<!--        }-->
+
+<!--        <label class="label">Notes</label>-->
+<!--        <input formControlName="lastName" type="text" class="input w-full" placeholder="Last name" />-->
+<!--        @if (form.controls.lastName.errors?.['required'] && formControls.lastName.touched) {-->
+<!--          <div class="validator-error">Last name is required</div>-->
+<!--        }-->
+<!--        @if (!(formControls.lastName.errors?.['required'])-->
+<!--        && formControls.lastName.touched)-->
+<!--        {-->
+<!--          <div class="validator-touched-ok">&nbsp;</div>-->
+<!--        }-->
+<!--        @if (!formControls.lastName.touched)-->
+<!--        {-->
+<!--          <div class="validator-untouched">&nbsp;</div>-->
+<!--        }-->
+
+
+      </fieldset>
+
+
+      <div class="modal-action">
+        <button type="submit" class="btn btn-primary"
+                [disabled]="form.invalid || isBusy()">
+          @if (isBusy()) {
+            <span class="loading loading-spinner loading-md"></span>
+          } @else {
+            Create
+          }
+        </button>
+        <button type="button" class="btn" (click)="close()">Cancel</button>
+      </div>
+    </form>
+
+
+  </div>
+
+
+</dialog>

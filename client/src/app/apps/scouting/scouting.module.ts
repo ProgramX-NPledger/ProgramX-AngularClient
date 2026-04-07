@@ -4,6 +4,9 @@ import { RouterModule, Routes } from '@angular/router';
 import {MainComponent} from './components/main/main.component';
 import {ActivitiesComponent} from './components/activities/activities.component';
 import {ScoresLedgerComponent} from './components/scores-ledger/scores-ledger.component';
+import {
+  CreateScoreLedgerItemDialogComponent
+} from './components/create-scoreledger-item-dialog/create-scoreledger-item-dialog.component';
 
 const routes: Routes = [
   {
@@ -21,7 +24,8 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     ActivitiesComponent,
-    ScoresLedgerComponent
+    ScoresLedgerComponent,
+    CreateScoreLedgerItemDialogComponent
   ],
   providers: [],
   exports: [
