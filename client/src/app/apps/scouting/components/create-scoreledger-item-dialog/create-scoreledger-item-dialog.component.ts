@@ -3,6 +3,7 @@ import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } f
 import {CreateScoreLedgerItemResponse} from '../../models/create-score-ledger-item-response';
 import {userNameExistsValidator} from '../../../admin/validators/username-exists.validator';
 import {Router} from '@angular/router';
+import {OsmService} from '../../services/osm-service.service';
 
 @Component({
   selector: 'app-create-scoreledger-item-dialog',
@@ -17,6 +18,9 @@ export class CreateScoreLedgerItemDialogComponent implements OnInit {
   @Output() created = new EventEmitter<CreateScoreLedgerItemResponse>();
 
   private formBuilder = inject(FormBuilder);
+  private router = inject(Router);
+  private osmService = inject(OsmService);
+
 //  private rolesService = inject(RolesService);
 
   isBusy = signal(false);
@@ -24,14 +28,15 @@ export class CreateScoreLedgerItemDialogComponent implements OnInit {
   form = this.formBuilder.nonNullable.group({
     date: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(50)],[userNameExistsValidator(300)]],
     scout: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
+    patrol: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
     value: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
     score: ['', [Validators.required, Validators.email]],
     notes: ['', [Validators.required]]
   });
 
 
-  constructor(private router: Router) {
-    effect(() => {
+  constructor() {
+    effect((onCleanup) => {
       if (this.isBusy()) {
         this.form.controls.date.disable( { emitEvent: false } );
         // this.form.controls.firstName.disable( { emitEvent: false } );
@@ -49,6 +54,7 @@ export class CreateScoreLedgerItemDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.osmService
     // TODO: get scoures from OSM
     // TODO: get values from API
 

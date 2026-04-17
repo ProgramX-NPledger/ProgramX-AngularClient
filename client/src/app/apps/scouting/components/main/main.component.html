@@ -2,24 +2,48 @@
 <div class="overflow-x-auto">
     <ul class="menu bg-base-200 xl:menu-horizontal w-full rounded-box flex flex-row">
       <li class="mr-2">
-        <a (click)="authenticateWithOsm();osmAuthenticationDialog.showModal()">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z" />
-          </svg>
-          Authenticate with OSM
-          @if (!isAuthenticatedWithOsm()) {
-            <div class="inline-grid *:[grid-area:1/1]">
-              <div class="status status-error animate-ping"></div>
-              <div class="status status-error"></div>
-            </div> You must authenticate with OSM before some features are available
-          }
-          @else {
-            <div class="inline-grid *:[grid-area:1/1]">
-              <div class="status status-success"></div>
-              <div class="status status-success"></div>
-            </div> Authenticated with OSM successfully
-          }
-        </a>
+        <label class="select">
+          <span class="label">Term</span>
+          <select class="select select-lg">
+            @for (term of allTerms; track term) {
+              @if (selectedTerm && term.osmTermId === selectedTerm.osmTermId) {
+                @if (term.isCurrent) {
+                  <option selected><strong>{{term.name}}</strong></option>
+                }
+                @else {
+                  <option selected>{{term.name}}</option>
+                }
+              }
+              @else {
+                @if (term.isCurrent) {
+                  <option><strong>{{term.name}}</strong></option>
+                }
+                @else {
+                  <option>{{term.name}}</option>
+                }
+              }
+            }
+          </select>
+        </label>
+
+<!--        <a (click)="authenticateWithOsm();">-->
+<!--          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">-->
+<!--            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z" />-->
+<!--          </svg>-->
+<!--          Authenticate with OSM-->
+<!--          @if (!isAuthenticatedWithOsm()) {-->
+<!--            <div class="inline-grid *:[grid-area:1/1]">-->
+<!--              <div class="status status-error animate-ping"></div>-->
+<!--              <div class="status status-error"></div>-->
+<!--            </div> You must authenticate with OSM before some features are available-->
+<!--          }-->
+<!--          @else {-->
+<!--            <div class="inline-grid *:[grid-area:1/1]">-->
+<!--              <div class="status status-success"></div>-->
+<!--              <div class="status status-success"></div>-->
+<!--            </div> Authenticated with OSM successfully-->
+<!--          }-->
+<!--        </a>-->
       </li>
 
     </ul>
@@ -53,18 +77,3 @@
 
   </div>
 </div>
-
-<dialog #osmAuthenticationDialog class="modal">
-  <div class="modal-box">
-    <h3 class="text-lg font-bold">Authenticate with OSM</h3>
-    <iframe src="">
-    </iframe>
-    <p class="py-4">Press ESC key or click the button below to close</p>
-    <div class="modal-action">
-      <form method="dialog">
-        <!-- if there is a button in form, it will close the modal -->
-        <button class="btn">Close</button>
-      </form>
-    </div>
-  </div>
-</dialog>
