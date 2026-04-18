@@ -22,87 +22,48 @@
           <div class="validator-untouched">&nbsp;</div>
         }
 
-        <!--
-        Scout name (from OSM)
-        Read-only: Patrol (and ID)
-        -->
 
-<!--        <label class="label">Scout</label>-->
-<!--        <input formControlName="userName" type="text" class="input w-full" placeholder="Username" />-->
+        <label class="label">Scout</label>
+        <select formControlName="member" class="select select-lg" (change)="onMemberChange($event)">
+          @for (member of scouts; track member) {
+            @if (selectedMember && member.osmScoutId === selectedMember.osmScoutId) {
+              <option [value]="member.osmScoutId" selected>{{member.fullName}}</option>
+            }
+            @else {
+              <option [value]="member.osmScoutId">{{member.fullName}}</option>
+            }
+          }
+        </select>
 
-<!--        @if (form.controls.userName.errors?.['required'] && formControls.userName.touched) {-->
-<!--          <div class="validator-error">Username is required</div>-->
-<!--        }-->
-<!--        @if (form.controls.userName.errors?.['minlength'] && formControls.userName.touched) {-->
-<!--          <div class="validator-error">Username must be at least 8 characters</div>-->
-<!--        }-->
-<!--        @if (form.controls.userName.errors?.['maxlength'] && formControls.userName.touched) {-->
-<!--          <div class="validator-error">Username cannot be longer than 50 characters</div>-->
-<!--        }-->
-<!--        @if (formControls.userName.errors?.['userNameTaken'] && formControls.userName.touched) {-->
-<!--          <div class="validator-error">Username is already taken</div>-->
-<!--        }-->
-<!--        @if (!(formControls.userName.errors?.['required'] ||-->
-<!--          formControls.userName.errors?.['minlength'] ||-->
-<!--          formControls.userName.errors?.['maxlength'] ||-->
-<!--          formControls.userName.errors?.['userNameTaken'])-->
-<!--        && formControls.userName.touched)-->
-<!--        {-->
-<!--          <div class="validator-touched-ok">&nbsp;</div>-->
-<!--        }-->
-<!--        @if (!formControls.userName.touched)-->
-<!--        {-->
-<!--          <div class="validator-untouched">&nbsp;</div>-->
-<!--        }-->
+        <label class="label">Patrol</label>
+        <input formControlName="patrol" type="text" email class="input w-full" placeholder="(select a Scout)" />
 
-<!--        <label class="label">Value</label>-->
-<!--        <input formControlName="emailAddress"   type="email" email class="input w-full" placeholder="Email address" />-->
-<!--        @if (form.controls.emailAddress.errors?.['required'] && formControls.emailAddress.touched) {-->
-<!--          <div class="validator-error">Email address is required</div>-->
-<!--        }-->
-<!--        @if (!(formControls.emailAddress.errors?.['required'])-->
-<!--        && formControls.emailAddress.touched)-->
-<!--        {-->
-<!--          <div class="validator-touched-ok">&nbsp;</div>-->
-<!--        }-->
-<!--        @if (!formControls.emailAddress.touched)-->
-<!--        {-->
-<!--          <div class="validator-untouched">&nbsp;</div>-->
-<!--        }-->
+        <label class="label">Score</label>
+        <select formControlName="scoutingScore" class="select select-lg" (change)="onScoutingScoreChange($event)">
+          @for (scoutingScore of scoutingScores; track scoutingScore) {
+            @if (selectedScoutingScore && scoutingScore.id === selectedScoutingScore.id) {
+              <option [value]="scoutingScore.id" selected>{{scoutingScore.name}}</option>
+            }
+            @else {
+              <option [value]="scoutingScore.id">{{scoutingScore.name}}</option>
+            }
+          }
+        </select>
 
-<!--        <label class="label">Score</label>-->
-<!--        <input formControlName="firstName" type="text" class="input w-full" placeholder="First name" />-->
-<!--        @if (form.controls.firstName.errors?.['required'] && formControls.firstName.touched) {-->
-<!--          <div class="validator-error">First name is required</div>-->
-<!--        }-->
-<!--        @if (!(formControls.firstName.errors?.['required'])-->
-<!--        && formControls.firstName.touched)-->
-<!--        {-->
-<!--          <div class="validator-touched-ok">&nbsp;</div>-->
-<!--        }-->
-<!--        @if (!formControls.firstName.touched)-->
-<!--        {-->
-<!--          <div class="validator-untouched">&nbsp;</div>-->
-<!--        }-->
-
-<!--        <label class="label">Notes</label>-->
-<!--        <input formControlName="lastName" type="text" class="input w-full" placeholder="Last name" />-->
-<!--        @if (form.controls.lastName.errors?.['required'] && formControls.lastName.touched) {-->
-<!--          <div class="validator-error">Last name is required</div>-->
-<!--        }-->
-<!--        @if (!(formControls.lastName.errors?.['required'])-->
-<!--        && formControls.lastName.touched)-->
-<!--        {-->
-<!--          <div class="validator-touched-ok">&nbsp;</div>-->
-<!--        }-->
-<!--        @if (!formControls.lastName.touched)-->
-<!--        {-->
-<!--          <div class="validator-untouched">&nbsp;</div>-->
-<!--        }-->
-
+        <label class="label">Score</label>
+        <input formControlName="score" type="range" min="-2" max="2"
+               class="range purple [--range-bg:purple] [--range-thumb:blue] [--range-fill:0]" />
 
       </fieldset>
 
+
+      <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4">
+        <legend class="fieldset-legend">Additional</legend>
+
+        <label class="label">Notes</label>
+        <textarea class="textarea h-24" formControlName="notes" placeholder="Notes"></textarea>
+
+      </fieldset>
 
       <div class="modal-action">
         <button type="submit" class="btn btn-primary"
@@ -116,7 +77,6 @@
         <button type="button" class="btn" (click)="close()">Cancel</button>
       </div>
     </form>
-
 
   </div>
 

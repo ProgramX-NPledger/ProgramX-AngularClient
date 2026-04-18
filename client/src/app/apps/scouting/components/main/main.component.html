@@ -4,27 +4,29 @@
       <li class="mr-2">
         <label class="select">
           <span class="label">Term</span>
-          <select class="select select-lg">
+          <select class="select select-lg" (change)="onTermChange($event)">
             @for (term of allTerms; track term) {
               @if (selectedTerm && term.osmTermId === selectedTerm.osmTermId) {
                 @if (term.isCurrent) {
-                  <option selected><strong>{{term.name}}</strong></option>
+                  <option selected [value]="term.osmTermId"><strong>{{term.name}}</strong></option>
                 }
                 @else {
-                  <option selected>{{term.name}}</option>
+                  <option selected [value]="term.osmTermId">{{term.name}}</option>
                 }
               }
               @else {
                 @if (term.isCurrent) {
-                  <option><strong>{{term.name}}</strong></option>
+                  <option [value]="term.osmTermId"><strong>{{term.name}}</strong></option>
                 }
                 @else {
-                  <option>{{term.name}}</option>
+                  <option [value]="term.osmTermId">{{term.name}}</option>
                 }
               }
             }
           </select>
         </label>
+
+
 
 <!--        <a (click)="authenticateWithOsm();">-->
 <!--          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">-->
@@ -45,7 +47,23 @@
 <!--          }-->
 <!--        </a>-->
       </li>
-
+      <li>
+        @if (this.isLoadingWithinTerm()) {
+          <div class="py-2">
+            <span class="loading loading-spinner loading-xs"></span>
+          </div>
+        }
+        @if (this.isErrorGettingMembers()) {
+          <div class="py-2">
+            <div class="badge badge-error inline">?</div> <div class="inline">Error getting Members</div>
+          </div>
+        }
+        @if (!this.isErrorGettingMembers() && !this.isLoadingWithinTerm() && selectedTerm) {
+          <div class="py-2">
+              <div class="badge inline">{{ this.getScoutMembers().length }}</div> <div class="inline">Members</div>
+          </div>
+        }
+      </li>
     </ul>
 
 </div>
@@ -61,7 +79,7 @@
       Scores Ledger
     </label>
     <div class="tab-content bg-base-100 border-base-300 p-6">
-      <app-scores-ledger></app-scores-ledger>
+      <app-scores-ledger [scouts]="this.getScoutMembers()"></app-scores-ledger>
     </div>
 
     <label class="tab">

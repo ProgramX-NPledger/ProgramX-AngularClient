@@ -73,6 +73,12 @@
     </ul>
   </form>
 
+  <ul>
+    @for (scout of scouts; track scout.osmScoutId; let i = $index) {
+      <li>Scout: {{scout.fullName}}</li>
+    }
+
+  </ul>
   @if (errorMessage) {
     <div class="alert alert-error">
       <span>{{ errorMessage }}</span>
@@ -176,7 +182,7 @@
 
 </div>
 
-<app-create-scoreledger-item-dialog (created)="onScoreLedgerItemCreated($event)"></app-create-scoreledger-item-dialog>
+<app-create-scoreledger-item-dialog [scouts]="scouts" [scoutingScores]="allScoutingScores" (created)="onScoreLedgerItemCreated($event)"></app-create-scoreledger-item-dialog>
 
 @if (isScoreLedgerItemCreated()) {
   <div class="toast toast-end">

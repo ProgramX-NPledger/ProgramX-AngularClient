@@ -5,6 +5,7 @@ import {environment} from '../../../../environments/environment';
 import {OsmKeyInitiationResponse} from '../models/osm-key-initiation-response';
 import {catchError, Observable, of, throwError} from 'rxjs';
 import {GetTermsResponse} from '../models/get-terms-response';
+import {GetMembersResponse} from '../models/get-members-response';
 
 @Injectable({
   providedIn: 'root'
@@ -18,22 +19,9 @@ export class OsmService {
     return this.httpClient.get<GetTermsResponse>(url);
   }
 
-  getMembers(): Observable<string | null> {
-    // build the url
-
-    let url = `${this.baseUrl}/scouts/osm/members${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
-
-    return this.httpClient.get(url, {
-      responseType: 'text'
-    }).pipe(
-      catchError(error =>
-        {
-          if (error.status === 404) {
-            return of(null)
-          }
-          return of({} as string);
-        }
-      ));
+  getMembers(termId: number): Observable<GetMembersResponse> {
+    let url = `${this.baseUrl}/scouts/osm/members?termId=${termId}${environment.azureFunctionsKey ? `&code=${environment.azureFunctionsKey}` : ''}`;
+    return this.httpClient.get<GetMembersResponse>(url);
   }
 
   //
