@@ -3,18 +3,20 @@ import {AsyncPipe, JsonPipe, NgIf} from '@angular/common';
 import {catchError, EMPTY, from, mergeMap, Observable, of, tap} from 'rxjs';
 import {SignalMap} from '../../core/SignalMap';
 import {GetHealthCheckResponse} from '../../model/get-health-check-response';
-import {ApplicationsHealthCheckServiceService} from '../../services/applications-health-check-service.service';
+
 import {ApplicationHealthCheckService} from '../../model/application-health-check-service';
 import {GetApplicationsForHealthCheckResponse} from '../../model/get-applications-for-health-check-response';
+import {ApplicationsHealthCheckService} from '../../core/services/applications-health-check-service.service';
 
 @Component({
-  selector: 'app-applications-health',
-  imports: [
-    AsyncPipe,
-    NgIf
-  ],
-  templateUrl: './applications-health.component.html',
-  styleUrl: './applications-health.component.css'
+    selector: 'app-applications-health',
+    imports: [
+        AsyncPipe,
+        NgIf
+    ],
+    templateUrl: './applications-health.component.html',
+    standalone: true,
+    styleUrl: './applications-health.component.css'
 })
 export class ApplicationsHealthComponent {
   isLoading = signal(false);
@@ -23,7 +25,7 @@ export class ApplicationsHealthComponent {
   healthCheckItemNames: string[] = [];
   haveReceivedFromHealthChecks: string[] = [];
 
-  private healthCheckService = inject(ApplicationsHealthCheckServiceService);
+  private healthCheckService = inject(ApplicationsHealthCheckService);
 
 
   readonly healthCheck$: Observable<GetApplicationsForHealthCheckResponse> = this.healthCheckService.healthCheckItems$.pipe(

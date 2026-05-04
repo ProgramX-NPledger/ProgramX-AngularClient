@@ -6,6 +6,7 @@ import {User} from '../model/user';
   selector: 'app-user-tile',
   imports: [],
   templateUrl: './user-tile.component.html',
+  standalone: true,
   styleUrl: './user-tile.component.css'
 })
 export class UserTileComponent {

@@ -1,15 +1,16 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {GetHealthCheckServiceResponse} from '../model/get-health-check-service-response';
-import {environment} from '../../environments/environment';
-import {GetApplicationsForHealthCheckResponse} from '../model/get-applications-for-health-check-response';
-import { catchError, Observable, of } from 'rxjs';
-import {GetHealthCheckResponse} from '../model/get-health-check-response';
+
+import { Observable  } from 'rxjs';
+import {environment} from '../../../environments/environment';
+import {GetApplicationsForHealthCheckResponse} from '../../model/get-applications-for-health-check-response';
+import {GetHealthCheckServiceResponse} from '../../model/get-health-check-service-response';
+
 
 @Injectable({
   providedIn: 'root'
 })
-export class ApplicationsHealthCheckServiceService {
+export class ApplicationsHealthCheckService {
   private baseUrl = environment.baseUrl;
   private httpClient: HttpClient = inject(HttpClient)
 

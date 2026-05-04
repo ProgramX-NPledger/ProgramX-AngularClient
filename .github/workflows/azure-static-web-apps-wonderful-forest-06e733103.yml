@@ -9,6 +9,11 @@ on:
     branches:
       - main
 
+env:
+  GIT_COMMIT_SHA: ${{ github.sha }}
+  BUILD_NUMBER: ${{ github.run_number }}
+  DEPLOYED_AT: ${{ github.event.head_commit.timestamp }}
+  
 jobs:
   build_and_deploy_job:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
@@ -32,6 +37,13 @@ jobs:
       - name: Replace secrets
         run: |
           sed -i 's|  azureFunctionsKey: null|  azureFunctionsKey: "${{ secrets.AZURE_FUNCTIONS_SECRET }}"|g' client/src/environments/environment.prod.ts
+          cat client/src/environments/environment.prod.ts
+
+      - name: Replace build information
+        run: |
+          sed -i 's|((GITHUB_COMMIT_HASH))|${{ env.GIT_COMMIT_SHA }}|g' client/src/environments/environment.prod.ts
+          sed -i 's|((BUILD_NUMBER))|${{ env.BUILD_NUMBER }}|g' client/src/environments/environment.prod.ts
+          sed -i 's|((DEPLOYED_AT))|${{ env.DEPLOYED_AT }}|g' client/src/environments/environment.prod.ts
           cat client/src/environments/environment.prod.ts
 
       - name: Build And Deploy
@@ -60,38 +72,4 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_WONDERFUL_FOREST_06E733103 }}
           action: "close"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

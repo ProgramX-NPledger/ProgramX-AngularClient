@@ -15,6 +15,9 @@ import {GetScoutingScoresResponse} from '../../models/get-scouting-scores-respon
 import {ScoutingScore} from '../../models/scouting-score';
 import {OsmService} from '../../services/osm-service.service';
 import {ScoutingService} from '../../services/scouting.service';
+import {PagedData} from '../../../../model/paged-data';
+import {SecureUser} from '../../../admin/model/secure-user';
+import {ScoutingScoreItem} from '../../models/scouting-score-item';
 
 @Component({
   selector: 'app-scores-ledger',
@@ -34,14 +37,26 @@ export class ScoresLedgerComponent implements OnInit {
   @ViewChild(CreateScoreLedgerItemDialogComponent) createScoreLedgerItemDialog!: CreateScoreLedgerItemDialogComponent;
   @Input() scouts: Member[] | undefined;
 
+  private scoutingService = inject(ScoutingService);
+
+  isScoreLedgerItemCreated : WritableSignal<CreateScoreLedgerItemResponse | null>= signal(null);
+
   private formBuilder = inject(FormBuilder);
   allScoutingScores: ScoutingScore[] = [];
   errorMessage: string | null = null;
   isLoadingScoutingScores = signal(false);
 
-  private scoutingService = inject(ScoutingService);
+  pagedScoutingScore: PagedData<ScoutingScoreItem> | undefined = {
+    items : [],
+    totalItems : 0,
+    pagesWithUrls : [],
+    itemsPerPage : 0,
+    timeDeltaMs : 0,
+    continuationToken : undefined,
+    isLastPage : false,
+    requestCharge : 0
+  };
 
-  isScoreLedgerItemCreated : WritableSignal<CreateScoreLedgerItemResponse | null>= signal(null);
 
   ngOnInit(): void {
     this.populateScoutingScores();
