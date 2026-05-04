@@ -9,15 +9,15 @@
           <th></th>
           <th>Web site</th>
           <th>API
-          @if (isLoading()) {
-            <span class="loading loading-spinner loading-xs"></span>
-          }
           </th>
         </tr>
         <tr>
           <td>GitHub commit hash</td>
           <td>{{ environment.gitHubCommitHash }}</td>
-          <td>{{ gitCommitHash }}</td>
+          <td>{{ gitCommitHash }}
+            @if (isLoading()) {
+              <span class="loading loading-spinner loading-xs"></span>
+            }</td>
         </tr>
         <tr>
           <td>Build number</td>
