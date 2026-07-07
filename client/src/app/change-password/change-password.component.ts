@@ -2,10 +2,10 @@ import { Component, inject, signal } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UsersService } from '../apps/admin/services/users-service.service';
-import { UpdateResponse } from '../apps/admin/model/update-response';
 import { LoginService } from '../core/services/login-service.service';
 import { MatchValidatorDirective } from '../directives/match-validator';
 import { JsonPipe } from '@angular/common';
+import {UpdateResponse} from '../apps/admin/models/update-response';
 
 @Component({
   selector: 'app-change-password',

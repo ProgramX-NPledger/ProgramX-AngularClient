@@ -1,8 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {GetUserResponse} from '../../admin/model/get-user-response';
 import {environment} from '../../../../environments/environment';
-import {OsmKeyInitiationResponse} from '../models/osm-key-initiation-response';
 import {catchError, Observable, of, throwError} from 'rxjs';
 import {GetTermsResponse} from '../models/get-terms-response';
 import {GetMembersResponse} from '../models/get-members-response';

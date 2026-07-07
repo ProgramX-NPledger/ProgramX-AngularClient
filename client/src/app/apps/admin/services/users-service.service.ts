@@ -2,16 +2,16 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import {catchError, Observable, of, throwError} from 'rxjs';
-import { GetUserResponse } from '../model/get-user-response';
-import { UpdateUserRequest } from '../model/update-user-request';
-import { UpdateResponse } from '../model/update-response';
-import { UpdateProfilePhotoResponse } from '../model/update-profile-photo-response';
-import {CreateUserRequest} from '../model/create-user-request';
-import {CreateUserResponse} from '../model/create-user-response';
-import {GetUsersCriteria} from '../model/get-users-criteria';
-import {SecureUser} from '../model/secure-user';
-import { Paging } from '../../../model/paging';
-import { PagedData } from '../../../model/paged-data';
+import {GetUsersCriteria} from '../models/get-users-criteria';
+import {Paging} from '../../../models/paging';
+import {PagedData} from '../../../core/models/paged-data';
+import {SecureUser} from '../models/secure-user';
+import {GetUserResponse} from '../models/get-user-response';
+import {CreateUserRequest} from '../models/create-user-request';
+import {CreateUserResponse} from '../models/create-user-response';
+import {UpdateUserRequest} from '../models/update-user-request';
+import {UpdateResponse} from '../models/update-response';
+import {UpdateProfilePhotoResponse} from '../models/update-profile-photo-response';
 
 @Injectable({
   providedIn: 'root'

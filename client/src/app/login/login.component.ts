@@ -45,14 +45,14 @@ export class LoginComponent implements OnInit  {
 
         this.messageBus.notifyProfilePhotoChanged(`${environment.azureAvatarImagesStorageAccountUrl}/${this.loginService.currentUser()?.userName}/${response.profilePhotographSmall}`);
 
-        // get the default application
-        const defaultApplication = response.applications.find(app => app.application.isDefaultApplicationOnLogin);
-        if (defaultApplication) {
-          this.router.navigate([`/${defaultApplication.applicationMetaData.targetUrl}`]);
-        } else {
-          // Navigate to a default route if no default application is set
-          this.router.navigate(['/home']);
-        }
+        // // get the default application
+        // const defaultApplication = response.applications.find(app => app.application.isDefaultApplicationOnLogin);
+        // if (defaultApplication) {
+        //   this.router.navigate([`/${defaultApplication.applicationMetaData.targetUrl}`]);
+        // } else {
+        //   // Navigate to a default route if no default application is set
+        //   this.router.navigate(['/home']);
+        // }
       },
       error: (error) => {
         this.isLoading.set(false);

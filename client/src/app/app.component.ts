@@ -1,11 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { NavComponent } from "./layout/nav/nav.component";
-import { LoginComponent } from "./login/login.component";
 import { LoginService } from './core/services/login-service.service';
-import { ManagementComponent } from './apps/admin/management/management.component';
 import { AdminModule } from './apps/admin/admin.module';
+import {NavComponent} from './shell/components/nav/nav.component';
 
 @Component({
   selector: 'app-root',
@@ -14,10 +12,10 @@ import { AdminModule } from './apps/admin/admin.module';
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit {
-  
+
   private loginService = inject(LoginService);
 
-  
+
   title = 'client';
 
 
@@ -27,11 +25,11 @@ export class AppComponent implements OnInit {
    *
    */
   constructor() {
-  
+
   }
 
   ngOnInit() {
-   
+
 
     this.setCurrentUser();
   }
@@ -42,6 +40,6 @@ export class AppComponent implements OnInit {
       const userObject = JSON.parse(user);
       this.loginService.currentUser.set(userObject);
       }
-  
+
   }
 }

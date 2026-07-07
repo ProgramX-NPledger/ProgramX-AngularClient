@@ -1,45 +1,39 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { User } from '../../model/user';
-import { tap } from 'rxjs';
+import {catchError, Observable, tap, throwError} from 'rxjs';
 import { environment } from '../../../environments/environment';
+import {LoginResponse} from '../models/login-response';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
   private httpClient: HttpClient = inject(HttpClient)
-  currentUser = signal<User | null>(null);
+  currentUser = signal<LoginResponse | null>(null);
 
-  refreshUserData() {
-    if (this.currentUser()) {
-        const url = `${this.baseUrl}/user/${this.currentUser()!.userName}${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
-
-        this.httpClient.get<User>(url).subscribe(user => {
-          this.currentUser.set(user);
-        });
-    }
-  }
 
   baseUrl = environment.baseUrl;
 
-  login(username: string, password: string) {
+  login(username: string, password: string): Observable<LoginResponse> {
     const url = `${this.baseUrl}/login${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
     const body = {
       userName: username,
       password
     };
-    return this.httpClient.post<User>(url, body)
+    return this.httpClient.post<LoginResponse>(url, body)
       .pipe(
-        tap(user => {
-          if (user) {
-            console.log('user', user);
-            this.currentUser.set(user);
+        tap(loginResponse => {
+          if (loginResponse) {
+            this.currentUser.set(loginResponse);
           }
           else {
             this.currentUser.set(null);
           }
-          localStorage.setItem('currentUser', JSON.stringify(user));
+          localStorage.setItem('currentUser', JSON.stringify(loginResponse));
+        }),
+        catchError((error) => {
+          this.currentUser.set(null);
+          return throwError(() => error);
         })
     );
 

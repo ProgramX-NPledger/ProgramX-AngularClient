@@ -2,8 +2,8 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { UsersService } from '../apps/admin/services/users-service.service';
 import { Router } from '@angular/router';
-import { UpdateResponse } from '../apps/admin/model/update-response';
 import { LoginService } from '../core/services/login-service.service';
+import {UpdateResponse} from '../apps/admin/models/update-response';
 
 @Component({
   selector: 'app-update-profile',
@@ -22,8 +22,8 @@ export class UpdateProfileComponent implements OnInit {
   profileUpdateFailedErrorMessage = signal<string | undefined>('');
 
   ngOnInit(): void {
-    if (this.loginService.currentUser()) {      
-      const userName: string = this.loginService.currentUser()!.userName; 
+    if (this.loginService.currentUser()) {
+      const userName: string = this.loginService.currentUser()!.userName;
       this.isBusy.set(true);
       this.usersService.getUser(userName).subscribe(user => {
         if (!user || !user.user) {

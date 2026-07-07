@@ -1,20 +1,15 @@
 import {inject, Injectable} from '@angular/core';
 import {catchError, Observable, of, throwError} from 'rxjs';
-import {ApplicationsResponse} from '../model/applications-response';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {environment} from '../../../../environments/environment';
-import {GetRolesCriteria} from '../model/get-roles-criteria';
-import {Paging} from '../../../model/paging';
-import {PagedData} from '../../../model/paged-data';
-import {Role} from '../model/role';
-import {Application} from '../../../model/application';
-import {GetRoleResponse} from '../model/get-role-response';
-import {UpdateRoleRequest} from '../model/update-role-request';
-import {UpdateResponse} from '../model/update-response';
-import {GetApplicationsCriteria} from '../model/get-applications-criteria';
-import {GetApplicationResponse} from '../model/get-application-response';
-import {UpdateApplicationRequest} from '../model/update-application-request';
-import {GetApplicationsHealthResponse} from '../model/get-applications-health-response';
+import {GetApplicationsCriteria} from '../models/get-applications-criteria';
+import {Paging} from '../../../models/paging';
+import {PagedData} from '../../../core/models/paged-data';
+import {Application} from '../../../core/models/application';
+import {GetApplicationsHealthResponse} from '../models/get-applications-health-response';
+import {GetApplicationResponse} from '../models/get-application-response';
+import {UpdateApplicationRequest} from '../models/update-application-request';
+import {UpdateResponse} from '../models/update-response';
 
 @Injectable({
   providedIn: 'root'

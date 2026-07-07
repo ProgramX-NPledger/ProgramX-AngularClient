@@ -2,9 +2,7 @@ import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../../environments/environment';
 import {catchError, Observable, of} from 'rxjs';
-import {GetMembersResponse} from '../models/get-members-response';
 import {GetScoutingScoresResponse} from '../models/get-scouting-scores-response';
-import {CreateUserResponse} from '../../admin/model/create-user-response';
 import {CreateScoutingScoreItemRequest} from '../models/create-scouting-score-item-request';
 import {CreateScoutingScoreItemResponse} from '../models/create-scouting-score-item-response';
 

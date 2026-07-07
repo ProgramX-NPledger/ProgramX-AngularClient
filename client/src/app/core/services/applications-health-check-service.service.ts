@@ -3,8 +3,8 @@ import { HttpClient } from '@angular/common/http';
 
 import { Observable  } from 'rxjs';
 import {environment} from '../../../environments/environment';
-import {GetApplicationsForHealthCheckResponse} from '../../model/get-applications-for-health-check-response';
-import {GetHealthCheckServiceResponse} from '../../model/get-health-check-service-response';
+import {GetApplicationsForHealthCheckResponse} from '../../models/get-applications-for-health-check-response';
+import {GetHealthCheckServiceResponse} from '../../models/get-health-check-service-response';
 
 
 @Injectable({
@@ -25,3 +25,4 @@ export class ApplicationsHealthCheckService {
     return this.httpClient.get<GetHealthCheckServiceResponse>(url);
   }
 }
+

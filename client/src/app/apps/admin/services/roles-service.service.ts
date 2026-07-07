@@ -2,15 +2,15 @@ import {inject, Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {environment} from '../../../../environments/environment';
 import {catchError, Observable, of, throwError} from 'rxjs';
-import {CreateRoleRequest} from '../model/create-role-request';
-import {CreateRoleResponse} from '../model/create-role-response';
-import {Paging} from '../../../model/paging';
-import {PagedData} from '../../../model/paged-data';
-import {Role} from '../model/role';
-import {UpdateResponse} from '../model/update-response';
-import {GetRolesCriteria} from '../model/get-roles-criteria';
-import {GetRoleResponse} from '../model/get-role-response';
-import {UpdateRoleRequest} from '../model/update-role-request';
+import {GetRolesCriteria} from '../models/get-roles-criteria';
+import {Paging} from '../../../models/paging';
+import {PagedData} from '../../../core/models/paged-data';
+import {Role} from '../models/role';
+import {GetRoleResponse} from '../models/get-role-response';
+import {CreateRoleRequest} from '../models/create-role-request';
+import {CreateRoleResponse} from '../models/create-role-response';
+import {UpdateRoleRequest} from '../models/update-role-request';
+import {UpdateResponse} from '../models/update-response';
 
 @Injectable({
   providedIn: 'root'

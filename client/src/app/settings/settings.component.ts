@@ -3,8 +3,8 @@ import { LoginService } from '../core/services/login-service.service';
 import { Router } from '@angular/router';
 import { UsersService } from '../apps/admin/services/users-service.service';
 import { FormsModule, NgForm } from '@angular/forms';
-import { UpdateResponse } from '../apps/admin/model/update-response';
 import { AppTheme, isAppTheme, ThemeService } from '../core/services/theme-service.service';
+import {UpdateResponse} from '../apps/admin/models/update-response';
 
 @Component({
   selector: 'app-settings',
@@ -17,7 +17,7 @@ export class SettingsComponent {
   router = inject(Router);
   private usersService = inject(UsersService);
   themeService = inject(ThemeService);
-  
+
   isError = signal<boolean>(false);
   isBusy = signal<boolean>(false);
   isSettingsUpdated = signal<boolean>(false);
@@ -25,8 +25,8 @@ export class SettingsComponent {
   settingsUpdateFailedErrorMessage = signal<string | undefined>('');
 
   ngOnInit(): void {
-    if (this.loginService.currentUser()) {      
-      const userName: string = this.loginService.currentUser()!.userName; 
+    if (this.loginService.currentUser()) {
+      const userName: string = this.loginService.currentUser()!.userName;
       this.isBusy.set(true);
       this.usersService.getUser(userName).subscribe(user => {
         if (!user || !user.user) {
@@ -69,7 +69,7 @@ export class SettingsComponent {
           } else {
             // handle invalid theme string (e.g., ignore or set default)
             this.themeService.setTheme('light');
-          } 
+          }
         } else {
           this.isBusy.set(false);
           this.isSettingsUpdated.set(false);

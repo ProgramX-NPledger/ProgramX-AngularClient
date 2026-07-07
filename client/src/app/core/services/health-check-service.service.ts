@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { catchError, Observable, of } from 'rxjs';
-import {GetHealthCheckResponse} from '../../model/get-health-check-response';
-import {GetHealthCheckServiceResponse} from '../../model/get-health-check-service-response';
+import {GetHealthCheckResponse} from '../../models/get-health-check-response';
+import {GetHealthCheckServiceResponse} from '../../models/get-health-check-service-response';
 
 @Injectable({
   providedIn: 'root'
@@ -93,3 +93,4 @@ export class HealthCheckService {
     return this.httpClient.get<GetHealthCheckServiceResponse>(url);
   }
 }
+

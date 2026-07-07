@@ -1,31 +1,21 @@
 import {Component, inject, signal, WritableSignal, ViewChild, Input, OnInit} from '@angular/core';
 import {FormBuilder, ReactiveFormsModule} from '@angular/forms';
-import {CreateUserDialogComponent} from '../../../admin/create-user-dialog/create-user-dialog.component';
-import {DeleteUsersDialogComponent} from '../../../admin/delete-users-dialog/delete-users-dialog.component';
-import {EditUserDialogComponent} from '../../../admin/edit-user-dialog/edit-user-dialog.component';
-import {PaginatorComponent} from '../../../../paginator/paginator.component';
 import {
   CreateScoreLedgerItemDialogComponent
 } from '../create-scoreledger-item-dialog/create-scoreledger-item-dialog.component';
-import {CreateUserResponse} from '../../../admin/model/create-user-response';
 import {CreateScoreLedgerItemResponse} from '../../models/create-score-ledger-item-response';
 import {Member} from '../../models/member';
-import {GetTermsResponse} from '../../models/get-terms-response';
 import {GetScoutingScoresResponse} from '../../models/get-scouting-scores-response';
 import {ScoutingScore} from '../../models/scouting-score';
-import {OsmService} from '../../services/osm-service.service';
 import {ScoutingService} from '../../services/scouting.service';
-import {PagedData} from '../../../../model/paged-data';
-import {SecureUser} from '../../../admin/model/secure-user';
 import {ScoutingScoreItem} from '../../models/scouting-score-item';
+import {PaginatorComponent} from '../../../../core/components/paginator/paginator.component';
+import {PagedData} from '../../../../core/models/paged-data';
 
 @Component({
   selector: 'app-scores-ledger',
   imports: [
-    CreateUserDialogComponent,
-    DeleteUsersDialogComponent,
-    EditUserDialogComponent,
-    PaginatorComponent,
+     PaginatorComponent,
     ReactiveFormsModule,
     CreateScoreLedgerItemDialogComponent
   ],

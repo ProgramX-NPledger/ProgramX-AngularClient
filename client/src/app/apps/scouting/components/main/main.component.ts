@@ -1,19 +1,10 @@
 import {Component, signal, inject, OnInit} from '@angular/core';
-import {ApplicationsComponent} from "../../../admin/applications/applications.component";
-import {RolesComponent} from "../../../admin/roles/roles.component";
-import {UsersComponent} from "../../../admin/users/users.component";
-import {ScoresLedgerComponent} from '../scores-ledger/scores-ledger.component';
-import {ActivitiesComponent} from '../activities/activities.component';
-import {UsersService} from '../../../admin/services/users-service.service';
 import {OsmService} from '../../services/osm-service.service';
 import { ActivatedRoute } from '@angular/router';
 import {Term} from '../../models/term';
 import {GetTermsResponse} from '../../models/get-terms-response';
 import {GetMembersResponse} from '../../models/get-members-response';
 import {Member} from '../../models/member';
-import {ScoutingService} from '../../services/scouting.service';
-import {GetScoutingScoresResponse} from '../../models/get-scouting-scores-response';
-import {ScoutingScore} from '../../models/scouting-score';
 
 @Component({
   selector: 'app-main',

@@ -2,11 +2,9 @@ import { Component, signal, inject } from '@angular/core';
 import {AsyncPipe, JsonPipe, NgIf} from '@angular/common';
 import {catchError, EMPTY, from, mergeMap, Observable, of, tap} from 'rxjs';
 import {SignalMap} from '../../core/SignalMap';
-import {GetHealthCheckResponse} from '../../model/get-health-check-response';
-
-import {ApplicationHealthCheckService} from '../../model/application-health-check-service';
-import {GetApplicationsForHealthCheckResponse} from '../../model/get-applications-for-health-check-response';
 import {ApplicationsHealthCheckService} from '../../core/services/applications-health-check-service.service';
+import {ApplicationHealthCheckService} from '../../models/application-health-check-service';
+import {GetApplicationsForHealthCheckResponse} from '../../models/get-applications-for-health-check-response';
 
 @Component({
     selector: 'app-applications-health',
