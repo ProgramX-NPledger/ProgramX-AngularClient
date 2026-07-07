@@ -40,19 +40,8 @@ export class LoginComponent implements OnInit  {
     this.isLoading.set(true);
     this.loginService.login(this.username, this.password).subscribe({
       next: (response) => {
-        this.isLoading.set(false);
-        this.loginError.set(false);
-
-        this.messageBus.notifyProfilePhotoChanged(`${environment.azureAvatarImagesStorageAccountUrl}/${this.loginService.currentUser()?.userName}/${response.profilePhotographSmall}`);
-
-        // // get the default application
-        // const defaultApplication = response.applications.find(app => app.application.isDefaultApplicationOnLogin);
-        // if (defaultApplication) {
-        //   this.router.navigate([`/${defaultApplication.applicationMetaData.targetUrl}`]);
-        // } else {
-        //   // Navigate to a default route if no default application is set
-        //   this.router.navigate(['/home']);
-        // }
+        // refresh the whole page to ensure the user is logged in and the screen is reflecting the new state (lazy, I know)
+        window.location.reload();
       },
       error: (error) => {
         this.isLoading.set(false);
