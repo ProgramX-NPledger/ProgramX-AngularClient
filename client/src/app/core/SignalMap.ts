@@ -15,7 +15,6 @@ export class SignalMap {
     const newMap = new Map(this.dataMap());
     newMap.set(key, value);
     this.dataMap.set(newMap);
-    console.log(this.dataMap());
   }
   removeItem(key: string) {
     const newMap = new Map(this.dataMap());

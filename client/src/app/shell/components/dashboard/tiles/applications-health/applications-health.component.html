@@ -5,6 +5,20 @@
 
     <table class="table w-full">
       <tbody>
+        @if (!isUserLoggedIn()) {
+          <tr>
+            <td colspan="2">
+              <div class="m-2">
+                <div role="alert" class="alert alert-error">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span>No User is logged in so cannot get application data.</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+        }
         @if (isError()) {
           <tr>
             <td colspan="2">
@@ -20,30 +34,35 @@
           </tr>
         }
         @if (!isError()) {
-          <ng-container *ngIf="healthCheck$ | async as healthCheckPipe">
-            @for (service of healthCheckPipe.healthCheckServices; track service.name) {
+          @if (isLoadingApplications()) {
+            <tr>
+              <td colspan="2">
+                <span class="loading loading-ring loading-sm text-secondary"></span>
+              </td>
+            </tr>
+          } @else {
+            @for (application of applications(); track application.name) {
               <tr>
-                @let status = healthCheckItemResults.getItem(service.name)();
-                <th id="thHealthCheck_{{service.name}}">{{service.friendlyName}}
+                @let status = healthCheckItemResults.getItem(application.name)();
+                <th id="thHealthCheck_{{application.name}}">
+                  {{ application.friendlyName }}
                   <div tabindex="0" class="collapse collapse-arrow bg-base-100 border-base-300 border">
                     <div class="collapse-title font-semibold after:start-5 after:end-auto pe-4 ps-12">Details</div>
                     <div class="collapse-content text-sm">
                       <table class="table w-full">
                         <tbody>
-                          @if (status.subItems) {
-                            @for (result of status.subItems; track result.friendlyName) {
-                              <tr>
-                                <td>{{ result.friendlyName }}</td>
-                                <td>{{ result.message }}</td>
-                              </tr>
-                            }
+                          @for (result of (status?.items ?? []); track result.friendlyName) {
+                            <tr>
+                              <td>{{ result.friendlyName }}</td>
+                              <td>{{ result.message }}</td>
+                            </tr>
                           }
                         </tbody>
                       </table>
                     </div>
                   </div>
                 </th>
-                <td headers="thHealthCheck_{{service.name}}" class="align-text-top">
+                <td headers="thHealthCheck_{{application.name}}" class="align-text-top">
                   @if (!status) {
                     <span class="loading loading-ring loading-sm"></span>
                   } @else {
@@ -52,7 +71,7 @@
                 </td>
               </tr>
             }
-          </ng-container>
+          }
         }
       </tbody>
     </table>

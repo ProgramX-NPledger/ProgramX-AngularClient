@@ -14,7 +14,7 @@ export class ApplicationsService {
   baseUrl = environment.baseUrl;
 
   getApplicationsForRoles(memberOfRoles: string[]): Observable<Application[]> {
-    let url = `${this.baseUrl}/application${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
+    let url = `${this.baseUrl}/applications${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
     if (memberOfRoles && memberOfRoles.length > 0) {
       if (url.includes('?')) url += '&'; else url += '?';
       url += `supportsRoles=${memberOfRoles.join(',')}`;
