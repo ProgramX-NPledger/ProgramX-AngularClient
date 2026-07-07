@@ -1,10 +1,10 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginService } from '../core/services/login-service.service';
-import {SiteHealthComponent} from '../site-health/site-health.component';
 import {ApplicationsHealthComponent} from '../dashboard-panels/applications-health/applications-health.component';
 import {CommitInformationComponent} from '../dashboard-panels/commit-information/commit-information.component';
 import {UserTileComponent} from '../shell/components/dashboard/tiles/user-tile/user-tile.component';
+import {SiteHealthComponent} from '../shell/components/dashboard/tiles/site-health/site-health.component';
 
 @Component({
   selector: 'app-home',
@@ -26,5 +26,4 @@ export class HomeComponent implements OnInit {
     // Any initialization logic can go here
     console.log(this.loginService.currentUser());
   }
-
 }

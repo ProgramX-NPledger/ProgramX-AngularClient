@@ -1,9 +1,9 @@
-import {Component, effect, inject, OnInit, Signal, signal, WritableSignal} from '@angular/core';
-import { HealthCheckService } from '../core/services/health-check-service.service';
-import {catchError, EMPTY, from, mergeMap, Observable, of, tap} from 'rxjs';
+import {Component, inject, signal,} from '@angular/core';
+import {catchError, EMPTY, mergeMap, Observable, of, tap} from 'rxjs';
 import {AsyncPipe, JsonPipe, NgIf} from '@angular/common';
-import {SignalMap} from '../core/SignalMap';
-import {GetHealthCheckResponse} from '../models/get-health-check-response';
+import {HealthCheckService} from '../../../../services/health-check-service.service';
+import {SignalMap} from '../../../../../core/SignalMap';
+import {GetHealthCheckResponse} from '../../../../models/get-health-check-response';
 
 
 @Component({

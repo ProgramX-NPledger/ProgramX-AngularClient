@@ -2,9 +2,8 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LoginService } from '../core/services/login-service.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SiteHealthComponent } from "../site-health/site-health.component";
 import { MessageBusService } from '../core/services/message-bus.service';
-import { environment } from '../../environments/environment';
+import {SiteHealthComponent} from '../shell/components/dashboard/tiles/site-health/site-health.component';
 
 
 @Component({
