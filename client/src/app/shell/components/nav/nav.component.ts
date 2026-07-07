@@ -48,10 +48,15 @@ export class NavComponent implements OnInit, OnDestroy {
   private loadApplicationNavigation() {
     this.isLoadingApplications.set(true);
     if (this.loginService.currentUser()) {
-      this.applicationsService.getApplicationsForRoles(this.loginService.currentUser()!.memberOfRoles).subscribe(applications => {
-        this.applications.set(applications);
+      try {
+        this.applicationsService.getApplicationsForRoles(this.loginService.currentUser()!.memberOfRoles).subscribe(applications => {
+          this.applications.set(applications);
+          this.isLoadingApplications.set(false);
+        });
+      } catch (error) {
         this.isLoadingApplications.set(false);
-      });
+        console.error('Error loading applications:', error);
+      }
     } else {
       this.applications.set([]);
       this.isLoadingApplications.set(false);
