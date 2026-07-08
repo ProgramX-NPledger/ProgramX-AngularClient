@@ -1,5 +1,6 @@
-import {Component, ElementRef, EventEmitter, inject, OnInit, Output, signal, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, inject, Output, signal, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {firstValueFrom} from 'rxjs';
 import {RolesService} from '../../services/roles-service.service';
 import {UsersService} from '../../services/users-service.service';
 import {userNameExistsValidator} from '../../validators/username-exists.validator';
@@ -15,7 +16,7 @@ import {UpdateUserResponse} from '../../models/update-user-response';
   templateUrl: './edit-user-dialog.component.html',
   styleUrl: './edit-user-dialog.component.css'
 })
-export class EditUserDialogComponent implements OnInit {
+export class EditUserDialogComponent {
   @ViewChild('modal', { static: true }) modalRef!: ElementRef<HTMLDialogElement>;
   @Output() updated = new EventEmitter<UpdateUserResponse>();
 
@@ -28,6 +29,7 @@ export class EditUserDialogComponent implements OnInit {
   isLoadingRoles = signal(false);
   isErrorLoadingRoles = signal(false);
   errorMessageLoadingRoles = signal<string | undefined>(undefined);
+  roleNamesDefinedInUserAndNotInRoles: string[] = [];
 
   form = this.formBuilder.nonNullable.group({
     userName: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(50)],[userNameExistsValidator(300)]],
@@ -37,10 +39,6 @@ export class EditUserDialogComponent implements OnInit {
     roles: this.formBuilder.array<FormGroup>([])
   });
 
-  ngOnInit(): void {
-    this.loadRoles();
-    }
-
   get formControls() {
     return this.form.controls;
   }
@@ -48,47 +46,40 @@ export class EditUserDialogComponent implements OnInit {
   createRoleFormsGroup(role: Role) {
     return this.formBuilder.nonNullable.group({
       isSelected: false,
-      name: role.name,
+      name: role.roleName,
       description: role.description,
-      // applications: this.formBuilder.nonNullable.array<FormGroup>(
-      //   role.applications.map(app => this.formBuilder.nonNullable.group(
-      //     {
-      //       name: app.name
-      //     })))
     })
   }
 
-  loadRoles() {
+  async loadRoles(): Promise<void> {
     this.isLoadingRoles.set(true);
     this.isBusy.set(true);
     this.isErrorLoadingRoles.set(false);
-    this.rolesService.getRoles(null,null).subscribe(
-      {
-        next: roles => {
-          this.isLoadingRoles.set(false);
-          this.isBusy.set(false);
-          for (const role of roles.items) {
-            this.form.controls.roles.push(this.createRoleFormsGroup({
-              name:role.name,
-              description:role.description,
-             // applications:role.applications,
-              versionNumber:role.versionNumber,
-              type:role.type
-            }));
-          }
-        },
-        error: error => {
-          this.isLoadingRoles.set(false);
-          this.isBusy.set(false);
-          this.isErrorLoadingRoles.set(true);
-          this.errorMessageLoadingRoles.set(error.message);
+    try {
+      try {
+        const roles = await firstValueFrom(this.rolesService.getRoles(null, null));
+        for (const role of roles.items) {
+          this.form.controls.roles.push(this.createRoleFormsGroup({
+            roleName: role.roleName,
+            description: role.description,
+            versionNumber: role.versionNumber,
+            type: role.type
+          }));
         }
+      } catch (error: any) {
+        this.isErrorLoadingRoles.set(true);
+        this.errorMessageLoadingRoles.set(error.message);
       }
-    );
+    } finally {
+      this.isLoadingRoles.set(false);
+      this.isBusy.set(false);
+    }
   }
 
-  open(user: SecureUser): void {
+  async open(user: SecureUser): Promise<void> {
     this.form.reset();
+    this.form.controls.roles.clear();
+    await this.loadRoles();
     this.modalRef.nativeElement.showModal();
     this.form.patchValue({
       userName: user.userName,
@@ -96,12 +87,18 @@ export class EditUserDialogComponent implements OnInit {
       lastName: user.lastName,
       emailAddress: user.emailAddress,
     });
-    for (const userInRole of user.roles) {
+    this.roleNamesDefinedInUserAndNotInRoles = [];
+    for (const roleName of user.roles) {
+      let roleIsDefined = false;
       for (const roleOnForm of this.form.controls.roles.controls) {
-        if (userInRole.name === roleOnForm.value.name) {
+        if (roleName === roleOnForm.value.name) {
+          roleIsDefined = true;
           roleOnForm.patchValue({isSelected: true});
           break;
         }
+      }
+      if (!roleIsDefined) {
+        this.roleNamesDefinedInUserAndNotInRoles.push(roleName);
       }
     }
     this.form.controls.userName.disable();

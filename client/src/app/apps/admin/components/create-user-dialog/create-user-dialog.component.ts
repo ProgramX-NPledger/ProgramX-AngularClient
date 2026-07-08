@@ -4,12 +4,12 @@ import {
   EventEmitter,
   inject,
   NO_ERRORS_SCHEMA,
-  OnInit,
   Output,
   signal,
   ViewChild
 } from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {firstValueFrom} from 'rxjs';
 import {Router} from '@angular/router';
 import {Role} from '../../models/role';
 import {RolesService} from '../../services/roles-service.service';
@@ -26,7 +26,7 @@ import {CreateUserResponse} from '../../models/create-user-response';
   styleUrl: './create-user-dialog.component.css',
   standalone: true,
 })
-export class CreateUserDialogComponent implements OnInit {
+export class CreateUserDialogComponent {
 
   @ViewChild('modal', { static: true }) modalRef!: ElementRef<HTMLDialogElement>;
   @Output() created = new EventEmitter<CreateUserResponse>();
@@ -68,12 +68,6 @@ export class CreateUserDialogComponent implements OnInit {
     })
   }
 
-  ngOnInit(): void {
-    // get all roles
-    this.loadRoles();
-
-  }
-
   get formControls() {
     return this.form.controls;
   }
@@ -81,7 +75,7 @@ export class CreateUserDialogComponent implements OnInit {
   createRoleFormsGroup(role: Role) {
     return this.formBuilder.nonNullable.group({
       isSelected: false,
-      name: role.name,
+      name: role.roleName,
       description: role.description,
       // applications: this.formBuilder.nonNullable.array<FormGroup>(
       //   role.applications.map(app => this.formBuilder.nonNullable.group(
@@ -91,37 +85,34 @@ export class CreateUserDialogComponent implements OnInit {
     })
   }
 
-  loadRoles() {
+  async loadRoles(): Promise<void> {
     this.isLoadingRoles.set(true);
     this.isBusy.set(true);
     this.isErrorLoadingRoles.set(false);
-    this.rolesService.getRoles(null,null).subscribe(
-      {
-        next: roles => {
-          this.isLoadingRoles.set(false);
-          this.isBusy.set(false);
-          for (const role of roles.items) {
-            this.form.controls.roles.push(this.createRoleFormsGroup({
-              name:role.name,
-              description:role.description,
-            //  applications:role.applications,
-              versionNumber:role.versionNumber,
-              type:role.type
-            }));
-          }
-        },
-        error: error => {
-          this.isLoadingRoles.set(false);
-          this.isBusy.set(false);
-          this.isErrorLoadingRoles.set(true);
-          this.errorMessageLoadingRoles.set(error.message);
-        }
+    try {
+      const roles = await firstValueFrom(this.rolesService.getRoles(null, null));
+      for (const role of roles.items) {
+        this.form.controls.roles.push(this.createRoleFormsGroup({
+          roleName: role.roleName,
+          description: role.description,
+          // applications: role.applications,
+          versionNumber: role.versionNumber,
+          type: role.type
+        }));
       }
-    );
+    } catch (error: any) {
+      this.isErrorLoadingRoles.set(true);
+      this.errorMessageLoadingRoles.set(error.message);
+    } finally {
+      this.isLoadingRoles.set(false);
+      this.isBusy.set(false);
+    }
   }
 
-  open(): void {
+  async open(): Promise<void> {
     this.form.reset();
+    this.form.controls.roles.clear();
+    await this.loadRoles();
     this.modalRef.nativeElement.showModal();
   }
 

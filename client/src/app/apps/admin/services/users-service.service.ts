@@ -23,19 +23,16 @@ export class UsersService {
   baseUrl = environment.baseUrl;
 
   getUsers(criteria: Partial<GetUsersCriteria> | null, page: Paging | null): Observable<PagedData<SecureUser>> {
-    const url = `${this.baseUrl}/user`;
+    const url = `${this.baseUrl}/users`;
     let params = new HttpParams();
 
     // Add criteria parameters
     if (criteria) {
       if (criteria.containingText) {
-        params = params.set('containingText', criteria.containingText);
+        params = params.set('containsText', criteria.containingText);
       }
       if (criteria.hasRole) {
         params = params.set('withRoles', criteria.hasRole);
-      }
-      if (criteria.hasApplication) {
-        params = params.set('hasAccessToApplications', criteria.hasApplication);
       }
     }
 

@@ -22,14 +22,14 @@ export class RolesService {
   baseUrl = environment.baseUrl;
 
   getRoles(criteria: Partial<GetRolesCriteria> | null, page: Paging | null): Observable<PagedData<Role>> {
-    const url = `${this.baseUrl}/role`;
+    const url = `${this.baseUrl}/roles`;
 
     let params = new HttpParams();
 
     // Add criteria parameters
     if (criteria) {
       if (criteria.containingText) {
-        params = params.set('containingText', criteria.containingText);
+        params = params.set('containsText', criteria.containingText);
       }
       if (criteria.usedInApplications) {
         params = params.set('usedInApplications', criteria.usedInApplications);
@@ -54,7 +54,7 @@ export class RolesService {
 
 
   getRole(roleName: string): Observable<GetRoleResponse | null> {
-    const url = `${this.baseUrl}/role/${roleName}${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
+    const url = `${this.baseUrl}/roles/${roleName}${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
     return this.httpClient.get<GetRoleResponse | null>(url).pipe(
       catchError(error =>
         {
@@ -67,7 +67,7 @@ export class RolesService {
   }
 
   createRole(createRoleRequest: CreateRoleRequest): Observable<CreateRoleResponse> {
-    const url = `${this.baseUrl}/role${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
+    const url = `${this.baseUrl}/roles${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
     return this.httpClient.post<CreateRoleResponse>(url, createRoleRequest).pipe(
       catchError(error => {
           return of({
@@ -80,7 +80,7 @@ export class RolesService {
 
 
   updateRole(updateRoleRequest: UpdateRoleRequest): Observable<UpdateResponse> {
-    const url = `${this.baseUrl}/role/${updateRoleRequest.name}${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
+    const url = `${this.baseUrl}/roles/${updateRoleRequest.name}${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
     return this.httpClient.put<UpdateResponse>(url, updateRoleRequest).pipe(
       catchError(error => {
           return of({
@@ -93,7 +93,7 @@ export class RolesService {
 
 
   deleteRole(name: string) {
-    const url = `${this.baseUrl}/role/${name}${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
+    const url = `${this.baseUrl}/roles/${name}${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
     return this.httpClient.delete(url).pipe(
       catchError(error => {
         throw new Error(error.error);

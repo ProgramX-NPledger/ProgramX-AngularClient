@@ -5,7 +5,7 @@ export interface SecureUser {
     emailAddress: string;
     userName: string;
     initials: string;
-    roles: Role[];
+    roles: string[];
     type: string;
     versionNumber: number;
     createdAt: Date;

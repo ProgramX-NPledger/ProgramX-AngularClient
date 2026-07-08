@@ -78,7 +78,7 @@ export class EditRoleDialogComponent implements OnInit {
                     initials: user.initials,
                     lastName: user.lastName,
                     profilePhotographSmall: '',
-                    roles: user.roles.map(role => role.name),
+                    roles: user.roles.map(role => role),
                     token: '',
                     userName: user.userName
                   }, usersInRole.items.some(u => u.userName === user.userName)));
@@ -107,7 +107,7 @@ export class EditRoleDialogComponent implements OnInit {
     this.form.reset();
     this.modalRef.nativeElement.showModal();
     this.form.patchValue({
-      name: role.name,
+      name: role.roleName,
       description: role.description
     });
     // for (const userInRole of user.roles) {

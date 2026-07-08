@@ -87,7 +87,6 @@ export class UsersComponent implements OnInit {
       // TODO: filtering should be moved to url
       containingText: this.filterForm.controls.containingText.value,
       hasRole: this.filterForm.controls.hasRole.value,
-      hasApplication: this.filterForm.controls.hasApplication.value,
     },{
       offset: this.activatedRoute.snapshot.queryParams['offset'] ? parseInt(this.activatedRoute.snapshot.queryParams['offset']) : 0,
       itemsPerPage: this.activatedRoute.snapshot.queryParams['itemsPerPage'] ? parseInt(this.activatedRoute.snapshot.queryParams['itemsPerPage']) : 5,
@@ -110,14 +109,6 @@ export class UsersComponent implements OnInit {
       })
   }
 
-  // refreshApplicationsFilter() {
-  //   this.applications = null;
-  //   this.applicationsService.getApplications(null,null)
-  //     .subscribe(applications => {
-  //       this.applications = applications.items;
-  //     })
-  // }
-
   openCreateUserDialog() {
     this.createUserDialog.open();
   }
@@ -125,10 +116,6 @@ export class UsersComponent implements OnInit {
   openEditUserDialog(user: SecureUser) {
     this.editUserDialog.open(user);
   }
-
-  // getUserApplications(user: SecureUser): Application[] {
-  //   return user?.roles?.flatMap(role => role?.applications || []) || [];
-  // }
 
   onUserCreated(createUserResponse: CreateUserResponse): void {
     // Refresh list, toast, etc.
