@@ -52,7 +52,6 @@ export class ApplicationsComponent {
   refreshApplicationsList() {
     this.applications = [];
     this.isPopulatingGrid.set(true);
-    console.log('hello');
     this.applicationsService.getApplications({
       // TODO: filtering should be moved to url
       containingText: this.filterForm.controls.containingText.value,
@@ -62,14 +61,12 @@ export class ApplicationsComponent {
       itemsPerPage: 99,
     }).pipe(
       catchError(error => {
-        console.error(error);
         this.isPopulatingGrid.set(false);
         this.errorMessage = error.message;
         console.error('Error fetching Applications:', error);
         return EMPTY;
       })
     ).subscribe(applications => {
-      console.log(applications);
       this.applications = applications.applications;
       this.isPopulatingGrid.set(false);
     });
