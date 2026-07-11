@@ -1,4 +1,6 @@
-import {Component, inject, OnInit, signal} from '@angular/core';
+import {AfterViewInit, Component, OnInit, signal, ViewChild} from '@angular/core';
+import {UsersComponent} from '../users/users.component';
+import {RolesComponent} from '../roles/roles.component';
 
 
 
@@ -8,20 +10,21 @@ import {Component, inject, OnInit, signal} from '@angular/core';
   styleUrl: './management.component.css',
   standalone: false
 })
-export class ManagementComponent implements OnInit {
+export class ManagementComponent implements OnInit, AfterViewInit {
+  @ViewChild(UsersComponent) usersTab!: UsersComponent;
+  @ViewChild(RolesComponent) rolesTab!: RolesComponent;
 
  // applicationsService = inject(ApplicationsService);
 
   isBusy = signal(false);
  // applicationsHealthResponse = signal<GetApplicationsHealthResponse | null>(null);
 
-  constructor() {
-
-
-  }
-
   ngOnInit(): void {
     this.refreshHealthData();
+  }
+
+  ngAfterViewInit(): void {
+    this.usersTab.refreshUsersList();
   }
 
   refreshHealthData(): void {
@@ -39,6 +42,14 @@ export class ManagementComponent implements OnInit {
   }
 
 
-
-
+  protected onTabClick(tab: string) {
+    switch (tab) {
+      case "users":
+        this.usersTab.refreshUsersList();
+        break;
+      case "roles":
+        this.rolesTab.refreshRolesList();
+        break;
+    }
+  }
 }

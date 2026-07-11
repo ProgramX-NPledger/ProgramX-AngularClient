@@ -53,7 +53,7 @@ export class UsersService {
   }
 
   getUser(userId: string): Observable<GetUserResponse | null> {
-    const url = `${this.baseUrl}/user/${userId}${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
+    const url = `${this.baseUrl}/users/${userId}${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
     return this.httpClient.get<GetUserResponse | null>(url).pipe(
       catchError(error =>
       {
@@ -66,7 +66,7 @@ export class UsersService {
   }
 
   createUser(createUserRequest: CreateUserRequest): Observable<CreateUserResponse> {
-    const url = `${this.baseUrl}/user${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
+    const url = `${this.baseUrl}/users${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
     return this.httpClient.post<CreateUserResponse>(url, createUserRequest).pipe(
       catchError(error => {
           return of({
@@ -77,73 +77,33 @@ export class UsersService {
       ))
   }
 
-  updateUser(updateUserRequest: UpdateUserRequest): Observable<UpdateResponse> {
-    const url = `${this.baseUrl}/user/${updateUserRequest.userName}${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
-    return this.httpClient.put<UpdateResponse>(url, updateUserRequest).pipe(
-      catchError(error => {
-        return of({
-          errorMessage: error.error,
-          isOk: false
-        } as UpdateResponse)
-      }
-      ))
+  updateUser(userName: string, updateUserRequest: UpdateUserRequest): Observable<UpdateResponse> {
+    const url = `${this.baseUrl}/users/${userName}${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
+    return this.httpClient.put<UpdateResponse>(url, updateUserRequest);
   }
 
   updateUserProfilePhoto(userName: string, photoFile: File): Observable<UpdateProfilePhotoResponse> {
-    const url = `${this.baseUrl}/user/${userName}/photo${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
+    const url = `${this.baseUrl}/users/${userName}/photo${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
     const formData = new FormData();
     formData.append('photo', photoFile);
-    return this.httpClient.put<UpdateProfilePhotoResponse>(url, formData).pipe(
-      catchError(error => {
-        console.error(error);
-        return of({
-          errorMessage: error.error,
-          isOk: false
-        } as UpdateProfilePhotoResponse)
-      })
-    );
+    return this.httpClient.put<UpdateProfilePhotoResponse>(url, formData);
   }
 
 
   removeUserProfilePhoto(userName: string): Observable<UpdateResponse> {
-    const url = `${this.baseUrl}/user/${userName}/photo${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
+    const url = `${this.baseUrl}/users/${userName}/photo${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
 
-    return this.httpClient.delete<UpdateResponse>(url).pipe(
-      catchError(error => {
-        console.error(error);
-        return of({
-          errorMessage: error.error,
-          isOk: false
-        } as UpdateResponse)
-      })
-    );
+    return this.httpClient.delete<UpdateResponse>(url);
   }
 
-  updateSettings(updateUserRequest: UpdateUserRequest): Observable<UpdateResponse> {
-    const url = `${this.baseUrl}/user/${updateUserRequest.userName}${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
-    return this.httpClient.put<UpdateResponse>(url, updateUserRequest).pipe(
-      catchError(error => {
-        console.error(error);
-        return of({
-          errorMessage: error.error,
-          isOk: false
-        } as UpdateResponse)
-      })
-    );
-  }
+  // updateSettings(updateUserRequest: UpdateUserRequest): Observable<UpdateResponse> {
+  //   const url = `${this.baseUrl}/users/${updateUserRequest.userName}${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
+  //   return this.httpClient.put<UpdateResponse>(url, updateUserRequest);
+  // }
 
   deleteUser(id: string) {
-    const url = `${this.baseUrl}/user/${id}${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
-    return this.httpClient.delete(url).pipe(
-      catchError(error => {
-        throw new Error(error.error);
-        console.error(error);
-        return of({
-          errorMessage: error.error,
-          isOk: false
-        })
-      })
-    )
+    const url = `${this.baseUrl}/users/${id}${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
+    return this.httpClient.delete(url);
   }
 }
 

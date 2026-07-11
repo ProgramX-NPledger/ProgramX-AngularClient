@@ -62,20 +62,20 @@ export class UpdateProfileComponent implements OnInit {
     };
 
     this.isBusy.set(true);
-    this.usersService.updateUser(updateUserRequest).subscribe({
-      next: (response: UpdateResponse) => {
-        if (response.isOk) {
-          this.isBusy.set(false);
-          this.isProfileUpdated.set(true);
-        } else {
-          this.isBusy.set(false);
-          this.isProfileUpdated.set(false);
-          this.isProfileUpdateFailed.set(true);
-          this.profileUpdateFailedErrorMessage.set(response.errorMessage);
-        }
-      },
-      error: (error: any) => { console.log(error); }
-    });
+    // this.usersService.updateUser(updateUserRequest).subscribe({
+    //   next: (response: UpdateResponse) => {
+    //     if (response.isOk) {
+    //       this.isBusy.set(false);
+    //       this.isProfileUpdated.set(true);
+    //     } else {
+    //       this.isBusy.set(false);
+    //       this.isProfileUpdated.set(false);
+    //       this.isProfileUpdateFailed.set(true);
+    //       this.profileUpdateFailedErrorMessage.set(response.errorMessage);
+    //     }
+    //   },
+    //   error: (error: any) => { console.log(error); }
+    // });
   }
 
   cancel() {

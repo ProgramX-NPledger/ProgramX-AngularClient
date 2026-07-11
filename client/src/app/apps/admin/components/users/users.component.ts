@@ -48,6 +48,7 @@ export class UsersComponent implements OnInit {
   isUserCreated : WritableSignal<CreateUserResponse | null>= signal(null);
   isUsersDeleted : WritableSignal<UserDeletionCompleteEvent | null>= signal(null);
   isUserUpdated : WritableSignal<UpdateUserResponse | null>= signal(null);
+  isPopulatingGrid : WritableSignal<boolean>= signal(false);
 
   selectedUsers = signal<string[]>([]);
   errorMessage: string | null = null;
@@ -65,23 +66,18 @@ export class UsersComponent implements OnInit {
 
   //users: SecureUser[] | null = null;
   roles: Role[] | null = null;
-  // applications: Application[] | null = null;
 
   filterForm = this.formBuilder.group({
     containingText: <string | null> null,
-    hasRole: '',
-    hasApplication: '',
+    hasRole: ''
   })
 
   ngOnInit(): void {
     this.refreshRolesFilter();
-    // this.refreshApplicationsFilter();
-
-    this.onPageChange(1);
   }
 
   refreshUsersList() {
-    //this.users=null;
+    this.isPopulatingGrid.set(true);
     this.pagedUsers = undefined;
     this.usersService.getUsers({
       // TODO: filtering should be moved to url
@@ -92,11 +88,13 @@ export class UsersComponent implements OnInit {
       itemsPerPage: this.activatedRoute.snapshot.queryParams['itemsPerPage'] ? parseInt(this.activatedRoute.snapshot.queryParams['itemsPerPage']) : 5,
     }).pipe(
       catchError(error => {
+        this.isPopulatingGrid.set(false);
         this.errorMessage = error.message;
         console.error('Error fetching users:', error);
         return EMPTY;
       })
     ).subscribe(pagedData => {
+      this.isPopulatingGrid.set(false);
       this.pagedUsers = pagedData;
     });
   }

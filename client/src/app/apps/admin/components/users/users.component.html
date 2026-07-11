@@ -24,7 +24,7 @@
         <select formControlName="hasRole" class="select" (change)="refreshUsersList()">
           <option disabled selected>Has Role</option>
           @if (roles==null) {
-            <span class="loading loading-dots loading-xl text-primary"></span>
+            <span class="loading loading-spinner text-secondary"></span>
           } @else {
             @for (role of roles; track role) {
               <option [value]="role.roleName">{{ role.roleName }}</option>
@@ -61,92 +61,103 @@
   }
   @else
   {
-    <table class="table">
-      <!-- head -->
-      <thead>
-      <tr>
-        <th>
+    @if (isPopulatingGrid()) {
+      <table class="table">
+        <tr>
+          <td><div class="skeleton h-4 w-full mt-4"></div></td>
+          <td><div class="skeleton h-4 w-full mt-4"></div></td>
+          <td><div class="skeleton h-4 w-full mt-4"></div></td>
+        </tr>
+      </table>
+    } @else {
+      <table class="table">
+        <!-- head -->
+        <thead>
+        <tr>
+          <th>
 
-        </th>
-        <th>Name</th>
-        <th>Email address</th>
-        <th>Roles</th>
-        <th></th>
-      </tr>
-      </thead>
-      <tbody>
-        @if(!pagedUsers) {
-          <tr>
-            <td class="text-center">
-              <div class="skeleton h-2 w-32"></div>
-            </td>
-            <td  class="text-center">
-              <div class="skeleton h-2 w-32"></div>
-            </td>
-            <td class="text-center">
-              <div class="skeleton h-2 w-32"></div>
-            </td>
-          </tr>
-        } @else if(pagedUsers.totalItems === 0) {
-          <tr>
-            <td colspan="5" class="text-center">No users found</td>
-          </tr>
-        } @else {
-          @for (user of pagedUsers.items; track user.id) {
+          </th>
+          <th>Name</th>
+          <th>Email address</th>
+          <th>Roles</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+          @if(!pagedUsers) {
             <tr>
-              <th>
-                <label>
-                  <input type="checkbox" class="checkbox" (click)="onUserSelected(user.userName)" [checked]="selectedUsers().includes(user.userName)" />
-                </label>
-              </th>
-              <td>
-                <div class="flex items-center gap-3">
-                  <div class="avatar">
-                    <div class="mask mask-squircle h-12 w-12">
-                      <img src="" alt="Avatar of {{ user.userName }}" />
+              <td class="text-center">
+                <div class="skeleton h-2 w-32"></div>
+              </td>
+              <td  class="text-center">
+                <div class="skeleton h-2 w-32"></div>
+              </td>
+              <td class="text-center">
+                <div class="skeleton h-2 w-32"></div>
+              </td>
+            </tr>
+          } @else if(pagedUsers.totalItems === 0) {
+            <tr>
+              <td colspan="5" class="text-center">No users found</td>
+            </tr>
+          } @else {
+            @for (user of pagedUsers.items; track user.id) {
+              <tr>
+                <th>
+                  <label>
+                    <input type="checkbox" class="checkbox" (click)="onUserSelected(user.userName)" [checked]="selectedUsers().includes(user.userName)" />
+                  </label>
+                </th>
+                <td>
+                  <div class="flex items-center gap-3">
+                    <div class="avatar">
+                      <div class="mask mask-squircle h-12 w-12">
+                        <img src="" alt="Avatar of {{ user.userName }}" />
+                      </div>
                     </div>
-                  </div>
-                  <div>
                     <div>
+                      <div>
                               <span class="font-bold">
                                 {{ user.userName }}
                               </span>
-                      @if (user.passwordLinkExpiresAt!=null)
-                      {
-                        <span class="badge badge-secondary badge-sm">Awaiting confirmation</span>
-                      }
-                    </div>
-                    <div class="text-sm opacity-50">{{user.firstName}} {{user.lastName}}</div>
+                        @if (user.passwordLinkExpiresAt!=null)
+                        {
+                          <span class="badge badge-secondary badge-sm">Awaiting confirmation</span>
+                        }
+                      </div>
+                      <div class="text-sm opacity-50">{{user.firstName}} {{user.lastName}}</div>
 
+                    </div>
                   </div>
-                </div>
-              </td>
-              <td>
-                {{ user.emailAddress }}
-                <br />
-                @if (user.lastLoginAt) {
-                  <span class="badge badge-ghost badge-sm">Last login: {{ user.lastLoginAt | date: 'medium' }}</span>
-                }
-              </td>
-              <td>
-                @for (role of user.roles; track $index) {
-                  <span class="badge badge-neutral badge-sm m-1">{{ role }}</span>
-                }
-              </td>
-              <th>
-                <button class="btn" (click)="openEditUserDialog(user)">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
-                  </svg>
-                  Edit
-                </button>
-              </th>
-            </tr>
+                </td>
+                <td>
+                  {{ user.emailAddress }}
+                  <br />
+                  @if (user.lastLoginAt) {
+                    <span class="badge badge-ghost badge-sm">Last login: {{ user.lastLoginAt | date: 'medium' }}</span>
+                  }
+                </td>
+                <td>
+                  @for (role of user.roles; track $index) {
+                    <span class="badge badge-neutral badge-sm m-1">{{ role }}</span>
+                  }
+                </td>
+                <th>
+                  <button class="btn" (click)="openEditUserDialog(user)">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
+                    </svg>
+                    Edit
+                  </button>
+                </th>
+              </tr>
+            }
           }
-        }
-      </tbody>
-    </table>
-    <app-paginator [currentPageNumber]="1" [pagedData]="this.pagedUsers" [maxVisiblePages]="6" (pageChange)="onPageChange($event)"></app-paginator>
+        </tbody>
+      </table>
+      <app-paginator [currentPageNumber]="1" [pagedData]="this.pagedUsers" [maxVisiblePages]="6" (pageChange)="onPageChange($event)"></app-paginator>
+    }
+
   }
 
 </div>

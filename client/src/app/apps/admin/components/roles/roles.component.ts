@@ -10,6 +10,7 @@ import {PaginatorComponent} from '../../../../core/components/paginator/paginato
 import {ApplicationsService} from '../../services/applications-service.service';
 import {PagedData} from '../../../../core/models/paged-data';
 import {UpdateRoleResponse} from '../../models/update-role-response';
+import {Application} from '../../../../core/models/application';
 
 @Component({
   selector: 'app-roles',
@@ -34,6 +35,7 @@ export class RolesComponent  implements OnInit {
   private router = inject(Router);
 
   isRoleUpdated : WritableSignal<UpdateRoleResponse | null>= signal(null);
+  isPopulatingGrid : WritableSignal<boolean>= signal(false);
 
   selectedRoles = signal<string[]>([]);
   errorMessage: string | null = null;
@@ -51,7 +53,7 @@ export class RolesComponent  implements OnInit {
   };
 
 
-  //applications: Application[] | null = null;
+  applications: Application[] | null = null;
 
   filterForm = this.formBuilder.group({
     containingText: <string | null> null,
@@ -60,9 +62,7 @@ export class RolesComponent  implements OnInit {
 
 
   ngOnInit(): void {
-    // this.refreshApplicationsFilter();
-
-    this.onPageChange(1);
+    this.refreshApplicationsFilter();
   }
 
   refreshRolesList() {
@@ -90,13 +90,13 @@ export class RolesComponent  implements OnInit {
   //   return role?.applications.flatMap(application => application || []) || [];
   // }
 
-  // refreshApplicationsFilter() {
-  //   this.applications = null;
-  //   this.applicationsService.getApplications(null,null)
-  //     .subscribe(applications => {
-  //       this.applications = applications.items;
-  //     })
-  // }
+  refreshApplicationsFilter() {
+    this.applications = null;
+    this.applicationsService.getApplications(null,null)
+      .subscribe(applications => {
+        this.applications = applications.applications;
+      })
+  }
 
 
 

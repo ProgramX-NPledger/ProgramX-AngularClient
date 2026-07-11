@@ -95,9 +95,7 @@ export class CreateUserDialogComponent {
         this.form.controls.roles.push(this.createRoleFormsGroup({
           roleName: role.roleName,
           description: role.description,
-          // applications: role.applications,
-          versionNumber: role.versionNumber,
-          type: role.type
+          usedInApplications: []
         }));
       }
     } catch (error: any) {

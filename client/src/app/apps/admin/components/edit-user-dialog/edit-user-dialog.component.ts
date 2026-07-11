@@ -62,8 +62,7 @@ export class EditUserDialogComponent {
           this.form.controls.roles.push(this.createRoleFormsGroup({
             roleName: role.roleName,
             description: role.description,
-            versionNumber: role.versionNumber,
-            type: role.type
+            usedInApplications: []
           }));
         }
       } catch (error: any) {
@@ -114,10 +113,7 @@ export class EditUserDialogComponent {
     this.isBusy.set(true);
     this.isUpdating.set(true);
     try {
-      this.usersService.updateUser({
-        updateRolesScope: true,
-        updateProfileScope: true,
-        userName: this.formControls.userName.value,
+      this.usersService.updateUser(this.formControls.userName.value, {
         roles: this.formControls.roles.controls.map(m=>m.value).filter(m=>m.isSelected).map(m=>m.name),
         emailAddress: this.formControls.emailAddress.value,
         firstName: this.formControls.firstName.value,

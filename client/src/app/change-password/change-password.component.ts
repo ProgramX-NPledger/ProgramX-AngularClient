@@ -42,29 +42,23 @@ export class ChangePasswordComponent {
       updatePasswordScope: true
     };
 
-    this.isBusy.set(true);
-    this.usersService.updateUser(updateUserRequest).subscribe({
-      next: (response: UpdateResponse) => {
-        if (response.isOk) {
-          this.isBusy.set(false);
-          this.isPasswordChanged.set(true);
-          this.loginService.logout();
-          this.router.navigate(['login'],
-            {
-              queryParams: {
-                changedPassword: true
-              }
-            }
-          )
-        } else {
-          this.isBusy.set(false);
-          this.isPasswordChanged.set(false);
-          this.isPasswordChangedFailed.set(true);
-          this.passwordChangedFailedErrorMessage.set(response.errorMessage);
-        }
-      },
-      error: (error: any) => { console.error(error); }
-    });
+    // this.isBusy.set(true);
+    // this.usersService.updateUser(this.loginService.currentUser()!.userName, updateUserRequest).subscribe({
+    //   next: (response: UpdateResponse) => {
+    //       this.isBusy.set(false);
+    //       this.isPasswordChanged.set(true);
+    //       this.loginService.logout();
+    //       this.router.navigate(['login'],
+    //         {
+    //           queryParams: {
+    //             changedPassword: true
+    //           }
+    //         }
+    //       )
+    //     }
+    //   },
+    //   error: (error: any) => { console.error(error); }
+    // });
   }
 
   cancel() {

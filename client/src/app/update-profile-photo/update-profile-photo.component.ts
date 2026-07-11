@@ -24,10 +24,10 @@ export class UpdateProfilePhotoComponent {
   userService = inject(UsersService);
   loginService = inject(LoginService);
   messageBus = inject(MessageBusService);
-  
+
   isBusy = signal<boolean>(false);
   isProfilePhotoRemoved = signal<boolean>(false);
-  
+
   onFileSelected(event: Event) {
       const input = event.target as HTMLInputElement;
       if (!input.files?.length) return;
@@ -52,7 +52,7 @@ export class UpdateProfilePhotoComponent {
       this.status = 'idle';
     }
 
-    
+
   updateProfilePhoto(form: NgForm) {
      if (!this.selectedFile) return;
 
@@ -61,27 +61,27 @@ export class UpdateProfilePhotoComponent {
     this.errorMessage = '';
     this.isBusy.set(true);
     this.isProfilePhotoRemoved.set(false);
-    
-    this.userService.updateUserProfilePhoto(this.loginService.currentUser()!.userName, this.selectedFile).subscribe({
-      next: event => {
-        if (event.httpEventType === HttpEventType.UploadProgress && event.totalBytesToTransfer && event.bytesTransferred) {
-          this.progress = Math.round((100 * event.bytesTransferred) / event.totalBytesToTransfer);
-        } else if (event.httpEventType === HttpEventType.Response) {
-          this.isBusy.set(false);
-          this.status = 'done';
-          this.messageBus.notifyProfilePhotoChanged(event.photoUrl);
-        }
-      },
-      error: err => {
-        this.isBusy.set(false);
-        this.status = 'error';
-        this.errorMessage = 'Upload failed.';
-        console.error(err);
-      }
-    });
+    //
+    // this.userService.updateUserProfilePhoto(this.loginService.currentUser()!.userName, this.selectedFile).subscribe({
+    //   next: event => {
+    //     if (event.httpEventType === HttpEventType.UploadProgress && event.totalBytesToTransfer && event.bytesTransferred) {
+    //       this.progress = Math.round((100 * event.bytesTransferred) / event.totalBytesToTransfer);
+    //     } else if (event.httpEventType === HttpEventType.Response) {
+    //       this.isBusy.set(false);
+    //       this.status = 'done';
+    //       this.messageBus.notifyProfilePhotoChanged(event.photoUrl);
+    //     }
+    //   },
+    //   error: err => {
+    //     this.isBusy.set(false);
+    //     this.status = 'error';
+    //     this.errorMessage = 'Upload failed.';
+    //     console.error(err);
+    //   }
+    // });
   }
 
-  
+
   removeProfilePhoto() {
     this.isBusy.set(true);
     this.userService.removeUserProfilePhoto(this.loginService.currentUser()!.userName).subscribe({

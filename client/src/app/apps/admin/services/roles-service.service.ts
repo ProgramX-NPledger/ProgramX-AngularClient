@@ -81,14 +81,7 @@ export class RolesService {
 
   updateRole(updateRoleRequest: UpdateRoleRequest): Observable<UpdateResponse> {
     const url = `${this.baseUrl}/roles/${updateRoleRequest.name}${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
-    return this.httpClient.put<UpdateResponse>(url, updateRoleRequest).pipe(
-      catchError(error => {
-          return of({
-            errorMessage: error.error,
-            isOk: false
-          } as UpdateResponse)
-        }
-      ))
+    return this.httpClient.put<UpdateResponse>(url, updateRoleRequest);
   }
 
 

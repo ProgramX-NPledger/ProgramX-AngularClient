@@ -58,26 +58,26 @@ export class ConfirmPasswordComponent implements OnInit {
     };
 
     this.isBusy.set(true);
-    this.usersService.updateUser(updateUserRequest).subscribe({
-      next: (response: UpdateResponse) => {
-        if (response.isOk) {
-          this.isBusy.set(false);
-          this.loginService.logout();
-          this.router.navigate(['login'],
-            {
-              queryParams: {
-                accountConfirmed: true
-              }
-            }
-          )
-        } else {
-          this.isBusy.set(false);
-          this.isPasswordChangedFailed.set(true);
-          this.passwordChangedFailedErrorMessage.set(response.errorMessage);
-        }
-      },
-      error: (error: any) => { console.error(error); }
-    });
+    // this.usersService.updateUser(updateUserRequest).subscribe({
+    //   next: (response: UpdateResponse) => {
+    //     if (response.isOk) {
+    //       this.isBusy.set(false);
+    //       this.loginService.logout();
+    //       this.router.navigate(['login'],
+    //         {
+    //           queryParams: {
+    //             accountConfirmed: true
+    //           }
+    //         }
+    //       )
+    //     } else {
+    //       this.isBusy.set(false);
+    //       this.isPasswordChangedFailed.set(true);
+    //       this.passwordChangedFailedErrorMessage.set(response.errorMessage);
+    //     }
+    //   },
+    //   error: (error: any) => { console.error(error); }
+    // });
   }
 
   cancel() {
