@@ -1,0 +1,6 @@
+
+export interface UpdateUserResponse {
+  isOk: boolean;
+  errorMessage?: string;
+  userName: string;
+}

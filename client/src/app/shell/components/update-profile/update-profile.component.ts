@@ -1,9 +1,9 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { UsersService } from '../apps/admin/services/users-service.service';
 import { Router } from '@angular/router';
-import { LoginService } from '../core/services/login-service.service';
-import {UpdateResponse} from '../apps/admin/models/update-response';
+import {LoginService} from '../../../core/services/login-service.service';
+import {UpdateUserResponse} from '../../models/update-user-response';
+import {UserService} from '../../services/user-service.service';
 
 @Component({
   selector: 'app-update-profile',
@@ -25,7 +25,7 @@ export class UpdateProfileComponent implements OnInit {
     if (this.loginService.currentUser()) {
       const userName: string = this.loginService.currentUser()!.userName;
       this.isBusy.set(true);
-      this.usersService.getUser(userName).subscribe(user => {
+      this.userService.getUser(userName).subscribe(user => {
         if (!user || !user.user) {
           this.isError.set(true);
           this.isBusy.set(false);
@@ -40,7 +40,7 @@ export class UpdateProfileComponent implements OnInit {
     }
   }
 
-  private usersService = inject(UsersService);
+  private userService = inject(UserService);
 
   protected userName: string = '';
   protected firstName: string = '';
@@ -58,24 +58,26 @@ export class UpdateProfileComponent implements OnInit {
       lastName: this.lastName,
       emailAddress: this.emailAddress,
       userName: this.userName,
-      updateProfileScope: true
+      roles: null
     };
 
     this.isBusy.set(true);
-    // this.usersService.updateUser(updateUserRequest).subscribe({
-    //   next: (response: UpdateResponse) => {
-    //     if (response.isOk) {
-    //       this.isBusy.set(false);
-    //       this.isProfileUpdated.set(true);
-    //     } else {
-    //       this.isBusy.set(false);
-    //       this.isProfileUpdated.set(false);
-    //       this.isProfileUpdateFailed.set(true);
-    //       this.profileUpdateFailedErrorMessage.set(response.errorMessage);
-    //     }
-    //   },
-    //   error: (error: any) => { console.log(error); }
-    // });
+    this.userService.updateUser(this.userName, updateUserRequest).subscribe(
+      {
+        next: (response: UpdateUserResponse) => {
+          this.isBusy.set(false);
+          this.isProfileUpdated.set(true);
+        },
+        error: error => {
+          console.log(error);
+          this.isBusy.set(false);
+          this.isProfileUpdated.set(false);
+          this.isProfileUpdateFailed.set(true);
+          this.profileUpdateFailedErrorMessage.set(error.message);
+        }
+      }
+    );
+
   }
 
   cancel() {

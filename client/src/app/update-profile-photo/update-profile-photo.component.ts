@@ -83,20 +83,20 @@ export class UpdateProfilePhotoComponent {
 
 
   removeProfilePhoto() {
-    this.isBusy.set(true);
-    this.userService.removeUserProfilePhoto(this.loginService.currentUser()!.userName).subscribe({
-      next: () => {
-        this.isBusy.set(false);
-        this.messageBus.notifyProfilePhotoChanged(null);
-        this.isProfilePhotoRemoved.set(true);
-      },
-      error: err => {
-        this.isBusy.set(false);
-        this.status = 'error';
-        this.errorMessage = 'Removal failed.';
-        console.error(err);
-      }
-    });
+    // this.isBusy.set(true);
+    // this.userService.removeUserProfilePhoto(this.loginService.currentUser()!.userName).subscribe({
+    //   next: () => {
+    //     this.isBusy.set(false);
+    //     this.messageBus.notifyProfilePhotoChanged(null);
+    //     this.isProfilePhotoRemoved.set(true);
+    //   },
+    //   error: err => {
+    //     this.isBusy.set(false);
+    //     this.status = 'error';
+    //     this.errorMessage = 'Removal failed.';
+    //     console.error(err);
+    //   }
+    // });
   }
 
 }

@@ -4,6 +4,6 @@ export interface UpdateUserRequest {
   firstName?: string;
   lastName?: string;
   emailAddress?: string;
-  roles?: Role[] | undefined;
+  roles?: Role[] | null;
 }
 

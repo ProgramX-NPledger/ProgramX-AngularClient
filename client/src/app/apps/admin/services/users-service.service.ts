@@ -82,24 +82,6 @@ export class UsersService {
     return this.httpClient.put<UpdateResponse>(url, updateUserRequest);
   }
 
-  updateUserProfilePhoto(userName: string, photoFile: File): Observable<UpdateProfilePhotoResponse> {
-    const url = `${this.baseUrl}/users/${userName}/photo${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
-    const formData = new FormData();
-    formData.append('photo', photoFile);
-    return this.httpClient.put<UpdateProfilePhotoResponse>(url, formData);
-  }
-
-
-  removeUserProfilePhoto(userName: string): Observable<UpdateResponse> {
-    const url = `${this.baseUrl}/users/${userName}/photo${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
-
-    return this.httpClient.delete<UpdateResponse>(url);
-  }
-
-  // updateSettings(updateUserRequest: UpdateUserRequest): Observable<UpdateResponse> {
-  //   const url = `${this.baseUrl}/users/${updateUserRequest.userName}${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
-  //   return this.httpClient.put<UpdateResponse>(url, updateUserRequest);
-  // }
 
   deleteUser(id: string) {
     const url = `${this.baseUrl}/users/${id}${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
