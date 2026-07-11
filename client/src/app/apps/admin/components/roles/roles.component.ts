@@ -27,7 +27,6 @@ import {Application} from '../../../../core/models/application';
 export class RolesComponent  implements OnInit {
   @ViewChild(EditRoleDialogComponent) editRoleDialog!: EditRoleDialogComponent;
 
-
   private rolesService = inject(RolesService);
   private applicationsService = inject(ApplicationsService);
   private formBuilder = inject(FormBuilder);
@@ -51,7 +50,6 @@ export class RolesComponent  implements OnInit {
     isLastPage : false,
     requestCharge : 0
   };
-
 
   applications: Application[] | null = null;
 

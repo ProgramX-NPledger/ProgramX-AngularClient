@@ -1,6 +1,7 @@
 import {AfterViewInit, Component, OnInit, signal, ViewChild} from '@angular/core';
 import {UsersComponent} from '../users/users.component';
 import {RolesComponent} from '../roles/roles.component';
+import {ApplicationsComponent} from '../applications/applications.component';
 
 
 
@@ -13,8 +14,9 @@ import {RolesComponent} from '../roles/roles.component';
 export class ManagementComponent implements OnInit, AfterViewInit {
   @ViewChild(UsersComponent) usersTab!: UsersComponent;
   @ViewChild(RolesComponent) rolesTab!: RolesComponent;
+  @ViewChild(ApplicationsComponent) applicationsTab!: ApplicationsComponent;
 
- // applicationsService = inject(ApplicationsService);
+  // applicationsService = inject(ApplicationsService);
 
   isBusy = signal(false);
  // applicationsHealthResponse = signal<GetApplicationsHealthResponse | null>(null);
@@ -49,6 +51,9 @@ export class ManagementComponent implements OnInit, AfterViewInit {
         break;
       case "roles":
         this.rolesTab.refreshRolesList();
+        break;
+      case "applications":
+        this.applicationsTab.refreshApplicationsList();
         break;
     }
   }

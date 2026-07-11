@@ -1,0 +1,106 @@
+<div class="overflow-x-auto">
+  <form [formGroup]="filterForm" (ngSubmit)="refreshApplicationsList()">
+    <ul class="menu bg-base-200 xl:menu-horizontal w-full rounded-box flex flex-row">
+      <li class="pr-2">
+        <label class="input">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+          </svg>
+
+          <input type="text" placeholder="Containing text" formControlName="containingText" class="grow" />
+        </label>
+
+      </li>
+      <li class="pr-2">
+        <select formControlName="supportsRoles" class="select" (change)="refreshApplicationsList()">
+          <option disabled selected>Has Role</option>
+          @if (roles==null) {
+            <span class="loading loading-spinner text-secondary"></span>
+          } @else {
+            @for (role of roles; track role) {
+              <option [value]="role.roleName">{{ role.roleName }}</option>
+            }
+          }
+        </select>
+      </li>
+      <li class="divider-right">
+        <a (click)="clearFilters()" class="mt-0.5 mr-2">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+          </svg>
+        </a>
+      </li>
+
+    </ul>
+  </form>
+
+  @if (errorMessage) {
+    <div class="alert alert-error">
+      <span>{{ errorMessage }}</span>
+    </div>
+  }
+  @else
+  {
+    @if (isPopulatingGrid()) {
+      <table class="table">
+        <tr>
+          <td><div class="skeleton h-4 w-full mt-4"></div></td>
+          <td><div class="skeleton h-4 w-full mt-4"></div></td>
+          <td><div class="skeleton h-4 w-full mt-4"></div></td>
+        </tr>
+      </table>
+    } @else {
+      <table class="table">
+        <!-- head -->
+        <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email address</th>
+          <th>Roles</th>
+        </tr>
+        </thead>
+        <tbody>
+          @if(!applications) {
+            <tr>
+              <td class="text-center">
+                <div class="skeleton h-2 w-32"></div>
+              </td>
+              <td  class="text-center">
+                <div class="skeleton h-2 w-32"></div>
+              </td>
+              <td class="text-center">
+                <div class="skeleton h-2 w-32"></div>
+              </td>
+            </tr>
+          } @else if(applications.length === 0) {
+            <tr>
+              <td colspan="5" class="text-center">No Applications found</td>
+            </tr>
+          } @else {
+            @for (application of applications; track application.name) {
+              <tr>
+                <td>
+                  <div class="flex items-center gap-3">
+                    <span class="font-bold">
+                      {{ application.friendlyName }}
+                    </span>
+                  </div>
+                </td>
+                <td>
+                  {{ application.description }}
+                </td>
+                <td>
+                  @for (role of application.requiresRoleNames; track $index) {
+                    <span class="badge badge-neutral badge-sm m-1">{{ role }}</span>
+                  }
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    }
+
+  }
+
+</div>

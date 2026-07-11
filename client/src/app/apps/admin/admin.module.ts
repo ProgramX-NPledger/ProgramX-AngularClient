@@ -5,6 +5,7 @@ import {UsersComponent} from './components/users/users.component';
 import {CreateUserDialogComponent} from './components/create-user-dialog/create-user-dialog.component';
 import {RouterModule, Routes} from '@angular/router';
 import {RolesComponent} from './components/roles/roles.component';
+import {ApplicationsComponent} from './components/applications/applications.component';
 
 const routes: Routes = [
   {
@@ -23,7 +24,9 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     UsersComponent,
     CreateUserDialogComponent,
-    RolesComponent],
+    RolesComponent,
+    ApplicationsComponent
+  ],
   providers: [],
   exports: [
 
