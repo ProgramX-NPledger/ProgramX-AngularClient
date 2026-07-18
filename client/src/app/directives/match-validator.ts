@@ -1,5 +1,5 @@
 // TypeScript
-import { Directive, Input } from '@angular/core';
+import { Directive, Input, OnChanges } from '@angular/core';
 import { AbstractControl, NG_VALIDATORS, ValidationErrors, Validator } from '@angular/forms';
 
 @Directive({
@@ -13,16 +13,24 @@ import { AbstractControl, NG_VALIDATORS, ValidationErrors, Validator } from '@an
   ],
   standalone: true,
 })
-export class MatchValidatorDirective implements Validator {
-  @Input('matchValidator') matchTo?: string; // value to match (passed from template)
+export class MatchValidatorDirective implements Validator, OnChanges {
+  @Input('matchValidator') matchTo?: string;
+
+  private onChange?: () => void;
+
+  ngOnChanges(): void {
+    this.onChange?.();
+  }
 
   validate(control: AbstractControl): ValidationErrors | null {
     if (control == null || control.value == null) return null;
     const value = control.value;
     const other = this.matchTo;
-    if (other == null || other === '') return null; // nothing to compare yet
+    if (other == null || other === '') return null;
     return value === other ? null : { match: true };
   }
 
-  registerOnValidatorChange?(fn: () => void): void {}
+  registerOnValidatorChange(fn: () => void): void {
+    this.onChange = fn;
+  }
 }

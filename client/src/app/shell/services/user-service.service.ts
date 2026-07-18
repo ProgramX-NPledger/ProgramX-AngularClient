@@ -5,6 +5,8 @@ import {catchError, Observable, of} from 'rxjs';
 import {UpdateUserRequest} from '../models/update-user-request';
 import {UpdateUserResponse} from '../models/update-user-response';
 import {GetUserResponse} from '../../apps/admin/models/get-user-response';
+import {UpdateUserPasswordRequest} from '../models/update-user-password-request';
+import {UpdateUserPasswordResponse} from '../models/update-user-password-response';
 
 
 @Injectable({
@@ -22,6 +24,11 @@ export class UserService {
   updateUser(userName: string, updateUserRequest: UpdateUserRequest): Observable<UpdateUserResponse> {
     const url = `${this.baseUrl}/users/${userName}${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
     return this.httpClient.put<UpdateUserResponse>(url, updateUserRequest);
+  }
+
+  updateUserPassword(userName: string, updateUserPasswordRequest: UpdateUserPasswordRequest): Observable<UpdateUserPasswordResponse> {
+    const url = `${this.baseUrl}/users/${userName}/password${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
+    return this.httpClient.put<UpdateUserPasswordResponse>(url, updateUserPasswordRequest);
   }
 
   /**
