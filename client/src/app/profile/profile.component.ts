@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { UpdateProfilePhotoComponent } from "../update-profile-photo/update-profile-photo.component";
 import {UpdateProfileComponent} from '../shell/components/update-profile/update-profile.component';
 import {ChangePasswordComponent} from '../shell/components/change-password/change-password.component';
+import {UpdateProfilePhotoComponent} from '../shell/components/update-profile-photo/update-profile-photo.component';
 
 @Component({
   selector: 'app-profile',
