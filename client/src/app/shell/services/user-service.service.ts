@@ -7,6 +7,7 @@ import {UpdateUserResponse} from '../models/update-user-response';
 import {GetUserResponse} from '../../apps/admin/models/get-user-response';
 import {UpdateUserPasswordRequest} from '../models/update-user-password-request';
 import {UpdateUserPasswordResponse} from '../models/update-user-password-response';
+import {UpdateProfilePhotoResponse} from '../models/update-profile-photo-response';
 
 
 @Injectable({
@@ -49,13 +50,13 @@ export class UserService {
       ));
   }
 
-  // updateUserProfilePhoto(userName: string, photoFile: File): Observable<UpdateProfilePhotoResponse> {
-  //   const url = `${this.baseUrl}/users/${userName}/photo${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
-  //   const formData = new FormData();
-  //   formData.append('photo', photoFile);
-  //   return this.httpClient.put<UpdateProfilePhotoResponse>(url, formData);
-  // }
-  //
+  updateUserProfilePhoto(userName: string, photoFile: File): Observable<UpdateProfilePhotoResponse> {
+    const url = `${this.baseUrl}/users/${userName}/photo${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
+    const formData = new FormData();
+    formData.append('photo', photoFile);
+    return this.httpClient.put<UpdateProfilePhotoResponse>(url, formData);
+  }
+
   //
   // removeUserProfilePhoto(userName: string): Observable<UpdateResponse> {
   //   const url = `${this.baseUrl}/users/${userName}/photo${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;

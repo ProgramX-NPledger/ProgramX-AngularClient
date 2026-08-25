@@ -11,7 +11,6 @@ import {CreateUserRequest} from '../models/create-user-request';
 import {CreateUserResponse} from '../models/create-user-response';
 import {UpdateUserRequest} from '../models/update-user-request';
 import {UpdateResponse} from '../models/update-response';
-import {UpdateProfilePhotoResponse} from '../models/update-profile-photo-response';
 
 @Injectable({
   providedIn: 'root'
