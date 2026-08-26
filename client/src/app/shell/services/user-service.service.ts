@@ -8,6 +8,7 @@ import {GetUserResponse} from '../../apps/admin/models/get-user-response';
 import {UpdateUserPasswordRequest} from '../models/update-user-password-request';
 import {UpdateUserPasswordResponse} from '../models/update-user-password-response';
 import {UpdateProfilePhotoResponse} from '../models/update-profile-photo-response';
+import {UpdateResponse} from '../../core/models/update-response';
 
 
 @Injectable({
@@ -57,12 +58,12 @@ export class UserService {
     return this.httpClient.put<UpdateProfilePhotoResponse>(url, formData);
   }
 
-  //
-  // removeUserProfilePhoto(userName: string): Observable<UpdateResponse> {
-  //   const url = `${this.baseUrl}/users/${userName}/photo${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
-  //
-  //   return this.httpClient.delete<UpdateResponse>(url);
-  // }
+
+  removeUserProfilePhoto(userName: string): Observable<UpdateResponse> {
+    const url = `${this.baseUrl}/users/${userName}/photo${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
+
+    return this.httpClient.delete<UpdateResponse>(url);
+  }
 
   // updateSettings(updateUserRequest: UpdateUserRequest): Observable<UpdateResponse> {
   //   const url = `${this.baseUrl}/users/${updateUserRequest.userName}${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;

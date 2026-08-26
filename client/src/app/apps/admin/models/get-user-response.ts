@@ -1,6 +1,6 @@
-import { UserResponse } from "./user-response";
+import {User} from './user';
+
 
 export interface GetUserResponse {
-    user: UserResponse;
+    user: User;
 }
-    

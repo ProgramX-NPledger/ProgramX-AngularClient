@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { UsersService } from '../apps/admin/services/users-service.service';
 import { FormsModule, NgForm } from '@angular/forms';
 import { AppTheme, isAppTheme, ThemeService } from '../core/services/theme-service.service';
-import {UpdateResponse} from '../apps/admin/models/update-response';
 
 @Component({
   selector: 'app-settings',
@@ -21,7 +20,7 @@ export class SettingsComponent {
   isError = signal<boolean>(false);
   isBusy = signal<boolean>(false);
   isSettingsUpdated = signal<boolean>(false);
-  isSettingsUpdateFailed = signal<boolean>(false);
+  isSettingsUpdateFailed  = signal<boolean>(false);
   settingsUpdateFailedErrorMessage = signal<string | undefined>('');
 
   ngOnInit(): void {

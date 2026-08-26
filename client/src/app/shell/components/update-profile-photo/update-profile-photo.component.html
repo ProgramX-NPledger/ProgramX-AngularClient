@@ -5,6 +5,17 @@
             <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-full border p-4">
                 <legend class="fieldset-legend">Profile image</legend>
 
+              @if (this.user() && this.user()!.profilePhotographOriginal) {
+                <div class="avatar">
+                  <div class="rounded-xl">
+                    <img alt="Profile photo" src="{{ environment.baseUrl}}/files/{{ this.user()!.profilePhotographOriginal}}?width=200&maximumWidth=200" />
+                  </div>
+                </div>
+              }
+              @else {
+                <p>no image</p>
+              }
+
                 @if (isProfilePhotoRemoved()) {
                     <div role="alert" class="alert alert-success">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">

@@ -3,9 +3,7 @@ export interface User {
   emailAddress: string;
   roles: string[];
   token: string;
-  // applications: FullyQualifiedApplication[];
   firstName: string;
   lastName: string;
   initials: string;
-  profilePhotographSmall: string;
 }

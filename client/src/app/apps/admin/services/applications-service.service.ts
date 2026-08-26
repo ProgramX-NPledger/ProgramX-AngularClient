@@ -7,7 +7,6 @@ import {Paging} from '../../../models/paging';
 import {GetApplicationsHealthResponse} from '../models/get-applications-health-response';
 import {GetApplicationResponse} from '../models/get-application-response';
 import {UpdateApplicationRequest} from '../models/update-application-request';
-import {UpdateResponse} from '../models/update-response';
 import {GetApplicationsResponse} from '../../../core/models/get-applications-response';
 
 @Injectable({

@@ -10,7 +10,7 @@ import {GetRoleResponse} from '../models/get-role-response';
 import {CreateRoleRequest} from '../models/create-role-request';
 import {CreateRoleResponse} from '../models/create-role-response';
 import {UpdateRoleRequest} from '../models/update-role-request';
-import {UpdateResponse} from '../models/update-response';
+import {UpdateResponse} from '../../../core/models/update-response';
 
 @Injectable({
   providedIn: 'root'

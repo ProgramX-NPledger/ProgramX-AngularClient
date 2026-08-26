@@ -1,9 +1,11 @@
-import { Component, inject, output, signal } from '@angular/core';
+import {Component, inject, OnInit, output, signal} from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import {LoginService} from '../../../core/services/login-service.service';
 import {MessageBusService} from '../../../core/services/message-bus.service';
 import {HttpEventType} from '@angular/common/http';
 import {UserService} from '../../services/user-service.service';
+import {User} from '../../../apps/admin/models/user';
+import {environment} from '../../../../environments/environment';
 
 @Component({
   selector: 'app-update-profile-photo',
@@ -12,7 +14,7 @@ import {UserService} from '../../services/user-service.service';
   styleUrl: './update-profile-photo.component.css'
 })
 
-export class UpdateProfilePhotoComponent {
+export class UpdateProfilePhotoComponent implements OnInit {
   selectedFile: File | null = null;
   progress: number = 0;
   status: 'idle' | 'uploading' | 'done' | 'error' = 'idle';
@@ -27,6 +29,25 @@ export class UpdateProfilePhotoComponent {
 
   isBusy = signal<boolean>(false);
   isProfilePhotoRemoved = signal<boolean>(false);
+  user = signal<User | null>(null);
+
+  ngOnInit(): void {
+    this.isBusy.set(true);
+    this.userService.getUser(this.loginService.currentUser()?.userName ?? '').subscribe({
+      next: (getUserResponse) => {
+        this.isBusy.set(false);
+        if (getUserResponse) {
+          this.isProfilePhotoRemoved.set(!getUserResponse.user?.profilePhotographOriginal);
+          this.user.set(getUserResponse.user);
+        }
+      },
+      error: (err) => {
+        this.isBusy.set(false);
+        console.error('Failed to load user data', err);
+      }
+    });
+  }
+
 
   onFileSelected(event: Event) {
       const input = event.target as HTMLInputElement;
@@ -84,20 +105,21 @@ export class UpdateProfilePhotoComponent {
 
 
   removeProfilePhoto() {
-    // this.isBusy.set(true);
-    // this.userService.removeUserProfilePhoto(this.loginService.currentUser()!.userName).subscribe({
-    //   next: () => {
-    //     this.isBusy.set(false);
-    //     this.messageBus.notifyProfilePhotoChanged(null);
-    //     this.isProfilePhotoRemoved.set(true);
-    //   },
-    //   error: err => {
-    //     this.isBusy.set(false);
-    //     this.status = 'error';
-    //     this.errorMessage = 'Removal failed.';
-    //     console.error(err);
-    //   }
-    // });
+    this.isBusy.set(true);
+    this.userService.removeUserProfilePhoto(this.loginService.currentUser()!.userName).subscribe({
+      next: () => {
+        this.isBusy.set(false);
+        this.messageBus.notifyProfilePhotoChanged(null);
+        this.isProfilePhotoRemoved.set(true);
+      },
+      error: err => {
+        this.isBusy.set(false);
+        this.status = 'error';
+        this.errorMessage = 'Removal failed.';
+        console.error(err);
+      }
+    });
   }
 
+  protected readonly environment = environment;
 }

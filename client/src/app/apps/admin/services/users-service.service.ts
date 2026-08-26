@@ -10,7 +10,7 @@ import {GetUserResponse} from '../models/get-user-response';
 import {CreateUserRequest} from '../models/create-user-request';
 import {CreateUserResponse} from '../models/create-user-response';
 import {UpdateUserRequest} from '../models/update-user-request';
-import {UpdateResponse} from '../models/update-response';
+import {UpdateResponse} from '../../../core/models/update-response';
 
 @Injectable({
   providedIn: 'root'

@@ -77,7 +77,6 @@ export class EditRoleDialogComponent implements OnInit {
                     firstName: user.firstName,
                     initials: user.initials,
                     lastName: user.lastName,
-                    profilePhotographSmall: '',
                     roles: user.roles.map(role => role),
                     token: '',
                     userName: user.userName

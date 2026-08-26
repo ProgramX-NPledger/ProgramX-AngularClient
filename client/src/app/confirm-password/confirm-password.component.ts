@@ -4,7 +4,6 @@ import {FormsModule, NgForm} from '@angular/forms';
 import {UsersService} from '../apps/admin/services/users-service.service';
 import {LoginService} from '../core/services/login-service.service';
 import {MatchValidatorDirective} from '../directives/match-validator';
-import {UpdateResponse} from '../apps/admin/models/update-response';
 
 @Component({
   selector: 'app-confirm-password',

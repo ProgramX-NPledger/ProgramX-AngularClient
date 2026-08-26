@@ -1,10 +1,10 @@
-export interface UserResponse {
-    id: string;
+export interface User {
     userName: string;
+    roles: string[];
     firstName: string;
     lastName: string;
     emailAddress: string;
-    profilePhotographSmall?: string;
+    profilePhotographOriginal?: string;
     theme: string;
     createdAt: Date;
     updatedAt: Date;
