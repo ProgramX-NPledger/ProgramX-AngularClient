@@ -2,10 +2,10 @@ import { Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { AuthGuard } from './core/guards/auth.guard';
 import { LoginComponent } from './login/login.component';
-import { SettingsComponent } from './settings/settings.component';
 import {ConfirmPasswordComponent} from './confirm-password/confirm-password.component';
 import {UpdateProfileComponent} from './shell/components/update-profile/update-profile.component';
 import {ProfileComponent} from './shell/components/profile/profile.component';
+import {SettingsComponent} from './shell/components/settings/settings.component';
 
 export const routes: Routes = [
     {

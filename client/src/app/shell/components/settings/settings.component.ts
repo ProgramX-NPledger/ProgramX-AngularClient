@@ -1,9 +1,10 @@
 import { Component, inject, signal } from '@angular/core';
-import { LoginService } from '../core/services/login-service.service';
 import { Router } from '@angular/router';
-import { UsersService } from '../apps/admin/services/users-service.service';
 import { FormsModule, NgForm } from '@angular/forms';
-import { AppTheme, isAppTheme, ThemeService } from '../core/services/theme-service.service';
+import {LoginService} from '../../../core/services/login-service.service';
+import {AppTheme, isAppTheme, ThemeService} from '../../../core/services/theme-service.service';
+import {UserService} from '../../services/user-service.service';
+import {UpdateResponse} from '../../../core/models/update-response';
 
 @Component({
   selector: 'app-settings',
@@ -14,8 +15,9 @@ import { AppTheme, isAppTheme, ThemeService } from '../core/services/theme-servi
 export class SettingsComponent {
   loginService = inject(LoginService);
   router = inject(Router);
-  private usersService = inject(UsersService);
+  private userService = inject(UserService);
   themeService = inject(ThemeService);
+
 
   isError = signal<boolean>(false);
   isBusy = signal<boolean>(false);
@@ -27,7 +29,7 @@ export class SettingsComponent {
     if (this.loginService.currentUser()) {
       const userName: string = this.loginService.currentUser()!.userName;
       this.isBusy.set(true);
-      this.usersService.getUser(userName).subscribe(user => {
+      this.userService.getUser(userName).subscribe(user => {
         if (!user || !user.user) {
           this.isError.set(true);
           this.isBusy.set(false);
@@ -52,32 +54,24 @@ export class SettingsComponent {
     const UpdateSettingsRequest = {
       theme: this.theme
     };
-    //
-    // this.isBusy.set(true);
-    // this.usersService.updateSettings({
-    //   userName: this.loginService.currentUser()!.userName,
-    //   updateSettingsScope: true,
-    //   theme: this.theme
-    // }).subscribe({
-    //   next: (response: UpdateResponse) => {
-    //     if (response.isOk) {
-    //       this.isBusy.set(false);
-    //       this.isSettingsUpdated.set(true);
-    //       if (isAppTheme(this.theme)) {
-    //         this.themeService.setTheme(this.theme); // OK, AppTheme
-    //       } else {
-    //         // handle invalid theme string (e.g., ignore or set default)
-    //         this.themeService.setTheme('light');
-    //       }
-    //     } else {
-    //       this.isBusy.set(false);
-    //       this.isSettingsUpdated.set(false);
-    //       this.isSettingsUpdateFailed.set(true);
-    //       this.settingsUpdateFailedErrorMessage.set(response.errorMessage);
-    //     }
-    //   },
-    //   error: (error: any) => { console.log(error); }
-    // });
+
+    this.isBusy.set(true);
+    this.userService.updateSettings(this.loginService.currentUser()!.userName,
+      {
+      theme: this.theme
+    }).subscribe({
+      next: (response: UpdateResponse) => {
+        this.isBusy.set(false);
+        this.isSettingsUpdated.set(true);
+        if (isAppTheme(this.theme)) {
+          this.themeService.setTheme(this.theme); // OK, AppTheme
+        } else {
+          // handle invalid theme string (e.g., ignore or set default)
+          this.themeService.setTheme('light');
+        }
+      },
+      error: (error: any) => { console.log(error); }
+    });
   }
 
   cancel() {
