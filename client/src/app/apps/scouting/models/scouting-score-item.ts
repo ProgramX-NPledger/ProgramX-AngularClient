@@ -7,6 +7,7 @@ export interface ScoutingScoreItem {
   score: number;
   patrolName: string;
   schemaVersionNumber: number;
+  memberName: string | null;
   createdAt: Date;
   updatedAt: Date | null;
 }

@@ -12,6 +12,8 @@ import {ScoutingScoreItem} from '../../models/scouting-score-item';
 import {PaginatorComponent} from '../../../../core/components/paginator/paginator.component';
 import {PagedData} from '../../../../core/models/paged-data';
 import {Term} from '../../models/term';
+import {ActivatedRoute, Router} from '@angular/router';
+import {catchError, EMPTY} from 'rxjs';
 
 @Component({
   selector: 'app-scores-ledger',
@@ -30,6 +32,8 @@ export class ScoresLedgerComponent implements OnInit {
   currentTerm = input<Term | null>(null);
 
   private scoutingService = inject(ScoutingService);
+  private activatedRoute = inject(ActivatedRoute);
+  private router = inject(Router);
 
   isScoreLedgerItemCreated : WritableSignal<CreateScoreLedgerItemResponse | null>= signal(null);
 
@@ -37,8 +41,9 @@ export class ScoresLedgerComponent implements OnInit {
   allScoutingScores: ScoutingScore[] = [];
   errorMessage: string | null = null;
   isLoadingScoutingScores = signal(false);
+  isPopulatingGrid : WritableSignal<boolean>= signal(false);
 
-  pagedScoutingScore: PagedData<ScoutingScoreItem> | undefined = {
+  pagedScoutingScores: PagedData<ScoutingScoreItem> | undefined = {
     items : [],
     totalItems : 0,
     pagesWithUrls : [],
@@ -69,7 +74,7 @@ export class ScoresLedgerComponent implements OnInit {
 
   ngOnInit(): void {
     this.populateScoutingScores();
-    console.log(this.currentTerm);
+    this.refreshScoresLedger();
   }
 
 
@@ -90,8 +95,28 @@ export class ScoresLedgerComponent implements OnInit {
 
 
   refreshScoresLedger() {
-    //this.users=null;
-    // this.pagedUsers = undefined;
+    this.allScoutingScores = [];
+    this.pagedScoutingScores = undefined;
+    this.isPopulatingGrid.set(true);
+    this.scoutingService.getScoutingScoreLedgerItems({
+      fromDate: this.filterForm.controls.fromDate.value,
+      toDate: this.filterForm.controls.toDate.value,
+      osmScoutId: this.filterForm.controls.member.value,
+      scoreId: this.filterForm.controls.score.value,
+    },{
+        offset: this.activatedRoute.snapshot.queryParams['offset'] ? parseInt(this.activatedRoute.snapshot.queryParams['offset']) : 0,
+        itemsPerPage: this.activatedRoute.snapshot.queryParams['itemsPerPage'] ? parseInt(this.activatedRoute.snapshot.queryParams['itemsPerPage']) : 5,
+      }).pipe(
+        catchError(error => {
+          this.isPopulatingGrid.set(false);
+          this.errorMessage = error.message;
+          console.error('Error fetching Scouting Scores Ledger:', error);
+          return EMPTY;
+        })
+      ).subscribe(pagedData => {
+        this.isPopulatingGrid.set(false);
+        this.pagedScoutingScores = pagedData;
+      });
     // this.usersService.getUsers({
     //   // TODO: filtering should be moved to url
     //   containingText: this.filterForm.controls.containingText.value,
@@ -133,6 +158,20 @@ export class ScoresLedgerComponent implements OnInit {
     this.filterForm.reset();
     // this.selectedUsers.set([]);
     this.refreshScoresLedger();
+  }
+
+
+  onPageChange($event: number) {
+    if (this.pagedScoutingScores) {
+      this.router.navigate([], {
+        relativeTo: this.activatedRoute,
+        queryParams: {
+          offset: ($event * this.pagedScoutingScores.itemsPerPage) - this.pagedScoutingScores.itemsPerPage,
+          itemsPerPage: this.pagedScoutingScores.itemsPerPage
+        },
+        queryParamsHandling: 'merge'
+      }).then(r => this.refreshScoresLedger());
+    }
   }
 
 }

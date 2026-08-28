@@ -23,30 +23,30 @@
           <input formControlName="toDate" type="date" class="input w-full" placeholder="Date" />
         </label>
       </li>
-      <li class="pr-2">
-        <select formControlName="member" class="select" (change)="refreshScoresLedger()">
-          <option disabled selected>Member</option>
-          @if (scouts==null) {
-            <span class="loading loading-dots loading-xl text-primary"></span>
-          } @else {
-            @for (scout of scouts; track scout) {
-              <option [value]="scout.osmScoutId">{{ scout.fullName }}</option>
-            }
-          }
-        </select>
-      </li>
-      <li  class="pr-2">
-        <select formControlName="score" class="select" (change)="refreshScoresLedger()">
-          <option disabled selected>Score</option>
-          @if (allScoutingScores==null) {
-            <span class="loading loading-dots loading-xl text-primary"></span>
-          } @else {
-            @for (score of allScoutingScores; track score) {
-              <option [value]="score.name">{{ score.name }}</option>
-            }
-          }
-        </select>
-      </li>
+<!--      <li class="pr-2">-->
+<!--        <select formControlName="member" class="select" (change)="refreshScoresLedger()">-->
+<!--          <option disabled selected>Member</option>-->
+<!--          @if (scouts==null) {-->
+<!--            <span class="loading loading-dots loading-xl text-primary"></span>-->
+<!--          } @else {-->
+<!--            @for (scout of scouts; track scout) {-->
+<!--              <option [value]="scout.osmScoutId">{{ scout.fullName }}</option>-->
+<!--            }-->
+<!--          }-->
+<!--        </select>-->
+<!--      </li>-->
+<!--      <li  class="pr-2">-->
+<!--        <select formControlName="score" class="select" (change)="refreshScoresLedger()">-->
+<!--          <option disabled selected>Score</option>-->
+<!--          @if (allScoutingScores==null) {-->
+<!--            <span class="loading loading-dots loading-xl text-primary"></span>-->
+<!--          } @else {-->
+<!--            @for (score of allScoutingScores; track score) {-->
+<!--              <option [value]="score.name">{{ score.name }}</option>-->
+<!--            }-->
+<!--          }-->
+<!--        </select>-->
+<!--      </li>-->
       <li class="divider-right">
         <a (click)="clearFilters()" class="mt-0.5 mr-2">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
@@ -93,12 +93,11 @@
         <th>Date</th>
         <th>Scout</th>
         <th>Score</th>
-        <th>Score name</th>
         <th></th>
       </tr>
       </thead>
       <tbody>
-        @if(!pagedScoutingScore) {
+        @if(!pagedScoutingScores) {
           <tr>
             <td></td>
             <td class="text-center">
@@ -110,16 +109,13 @@
             <td  class="text-center">
               <div class="skeleton h-2 w-32"></div>
             </td>
-            <td class="text-center">
-              <div class="skeleton h-2 w-32"></div>
-            </td>
           </tr>
-        } @else if(pagedScoutingScore.totalItems === 0) {
+        } @else if(pagedScoutingScores.totalItems === 0) {
           <tr>
             <td colspan="5" class="text-center">No scores found</td>
           </tr>
         } @else {
-          @for (scoutingScore of pagedScoutingScore.items; track scoutingScore.id) {
+          @for (scoutingScore of pagedScoutingScores.items; track scoutingScore.id) {
             <tr>
               <th>
                 <label>
@@ -134,15 +130,15 @@
                         {{ scoutingScore.date }}
                       </span>
                     </div>
-<!--                    <div class="text-sm opacity-50">{{scoutingScore.osmScoutId}}</div>-->
                   </div>
                 </div>
               </td>
               <td>
-                {{ scoutingScore.score }}
+                {{scoutingScore.memberName}}
               </td>
               <td>
                 {{ scoutingScore.scoreName }}
+                <div class="text-sm opacity-50">{{scoutingScore.score}}</div>
               </td>
               <th>
 <!--                <button class="btn" (click)="openEditScoutingScoreDialog(user)">-->
@@ -157,7 +153,7 @@
         }
       </tbody>
     </table>
-<!--    <app-paginator [currentPageNumber]="1" [pagedData]="this.pagedScoutingScores" [maxVisiblePages]="6" (pageChange)="onPageChange($event)"></app-paginator>-->
+    <app-paginator [currentPageNumber]="1" [pagedData]="this.pagedScoutingScores" [maxVisiblePages]="6" (pageChange)="onPageChange($event)"></app-paginator>
   }
 
 </div>
