@@ -37,9 +37,9 @@ export class ScoutingService {
       // if (criteria.scoreId) {
       //   params = params.set('scoreName', criteria.scoreId);
       // }
-      // if (criteria.osmScoutId) {
-      //   params = params.set('osmScoutid', criteria.osmScoutId);
-      // }
+      if (criteria.osmScoutId) {
+        params = params.set('osmMemberIds', criteria.osmScoutId);
+      }
     }
 
     // Add paging parameters

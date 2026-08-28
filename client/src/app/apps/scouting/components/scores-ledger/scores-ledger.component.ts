@@ -58,7 +58,8 @@ export class ScoresLedgerComponent implements OnInit {
     fromDate: [null as string | null],
     toDate: [null as string | null],
     member: [ null ],
-    score: [ null ]
+    score: [ null ],
+    patrol: [ null ]
   })
 
   constructor() {
