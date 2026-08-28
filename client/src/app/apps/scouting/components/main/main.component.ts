@@ -15,8 +15,6 @@ import {Member} from '../../models/member';
 
 export class MainComponent implements OnInit {
 
-  isAuthenticatedWithOsm = signal(false);
-
   allTerms: Term[] = [];
   selectedTerm: Term | null = null;
   allMembers: Member[] = [];
@@ -89,32 +87,5 @@ export class MainComponent implements OnInit {
     if (!this.allMembers) return [];
     return this.allMembers.filter(member => member.patrolName != 'Leaders');
   }
-  //
-  // authenticateWithOsm() {
-  //   this.osmService.getOsmKeyInitiation().subscribe(osmKeyInitiationResponse => {
-  //     if (osmKeyInitiationResponse) {
-  //       const popup = window.open(osmKeyInitiationResponse, 'osmLogin', 'width=600,height=700');
-  //       if (!popup) {
-  //         console.error('Popup blocked');
-  //         return;
-  //       }
-  //
-  //       const handleMessage = (event: MessageEvent) => {
-  //         // Make sure this matches your backend/frontend origin
-  //         if (event.origin !== window.location.origin) {
-  //           return;
-  //         }
-  //
-  //         console.log('Login result from popup:', event.data);
-  //
-  //         window.removeEventListener('message', handleMessage);
-  //         popup.close();
-  //
-  //         // Use the returned data here
-  //         // this.someSignal.set(event.data);
-  //       };
-  //       window.addEventListener('message', handleMessage);
-  //     }
-  //   })
-  // }
+
 }

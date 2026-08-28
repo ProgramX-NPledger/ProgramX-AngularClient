@@ -112,15 +112,10 @@ export class CreateScoreLedgerItemDialogComponent implements OnInit {
     const select = $event.target as HTMLSelectElement;
     const selectedValue = select.value;
     if (this.scoutingScores) {
-      const matchingScoutingScore = this.scoutingScores.find(scoutingScore => scoutingScore.id === selectedValue);
-      if (matchingScoutingScore) {
-        this.selectedScoutingScore = matchingScoutingScore;
-        if (matchingScoutingScore.score) {
-          this.form.controls.score.setValue(matchingScoutingScore.score.toString());
-        } else {
-          this.form.controls.score.reset();
-        }
-        this.form.controls.score.disable();
+      const matchingScore = this.scoutingScores.find(score => score.id === selectedValue);
+      if (matchingScore) {
+        this.selectedScoutingScore = matchingScore;
+        this.form.controls.score.setValue(matchingScore.score.toString());
       }
     }
   }
@@ -158,7 +153,6 @@ export class CreateScoreLedgerItemDialogComponent implements OnInit {
     } finally {
       this.isBusy.set(false);
     }
-
   }
 
   open(): void {

@@ -1,5 +1,5 @@
-import {Component, inject, signal, WritableSignal, ViewChild, Input, OnInit} from '@angular/core';
-import {FormBuilder, ReactiveFormsModule} from '@angular/forms';
+import {Component, inject, signal, WritableSignal, ViewChild, Input, OnInit, input, effect} from '@angular/core';
+import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {
   CreateScoreLedgerItemDialogComponent
 } from '../create-scoreledger-item-dialog/create-scoreledger-item-dialog.component';
@@ -11,6 +11,7 @@ import {ScoutingService} from '../../services/scouting.service';
 import {ScoutingScoreItem} from '../../models/scouting-score-item';
 import {PaginatorComponent} from '../../../../core/components/paginator/paginator.component';
 import {PagedData} from '../../../../core/models/paged-data';
+import {Term} from '../../models/term';
 
 @Component({
   selector: 'app-scores-ledger',
@@ -26,6 +27,7 @@ import {PagedData} from '../../../../core/models/paged-data';
 export class ScoresLedgerComponent implements OnInit {
   @ViewChild(CreateScoreLedgerItemDialogComponent) createScoreLedgerItemDialog!: CreateScoreLedgerItemDialogComponent;
   @Input() scouts: Member[] | undefined;
+  currentTerm = input<Term | null>(null);
 
   private scoutingService = inject(ScoutingService);
 
@@ -47,15 +49,29 @@ export class ScoresLedgerComponent implements OnInit {
     requestCharge : 0
   };
 
+  filterForm = this.formBuilder.group({
+    fromDate: [null as string | null],
+    toDate: [null as string | null],
+    member: [ null ],
+    score: [ null ]
+  })
+
+  constructor() {
+    effect(() => {
+      const term = this.currentTerm();
+      this.filterForm.patchValue({
+        fromDate: term?.startDate?.toString() ?? null,
+        toDate: term?.endDate?.toString() ?? null
+      });
+      this.populateScoutingScores();
+    });
+  }
 
   ngOnInit(): void {
     this.populateScoutingScores();
+    console.log(this.currentTerm);
   }
 
-  filterForm = this.formBuilder.group({
-    containingText: <string | null> null,
-
-  })
 
   populateScoutingScores() {
     this.isLoadingScoutingScores.set(true);
@@ -104,11 +120,19 @@ export class ScoresLedgerComponent implements OnInit {
 
   onScoreLedgerItemCreated(createScoreLedgerItemResponse: CreateScoreLedgerItemResponse): void {
     // Refresh list, toast, etc.
+    console.log('onScoreLedgerItemCreated', createScoreLedgerItemResponse);
+
     this.isScoreLedgerItemCreated.set(createScoreLedgerItemResponse);
     this.refreshScoresLedger();
     setTimeout(() => {
       this.isScoreLedgerItemCreated.set(null);
     },5000)
+  }
+
+  clearFilters() {
+    this.filterForm.reset();
+    // this.selectedUsers.set([]);
+    this.refreshScoresLedger();
   }
 
 }

@@ -22,23 +22,5 @@ export class OsmService {
     return this.httpClient.get<GetMembersResponse>(url);
   }
 
-  //
-  // getOsmKeyInitiation(): Observable<string | null> {
-  //   // build the url
-  //
-  //   let url = `${this.baseUrl}/scouts/osm/initiatekeyexchange${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
-  //
-  //   return this.httpClient.get(url, {
-  //     responseType: 'text'
-  //   }).pipe(
-  //     catchError(error =>
-  //       {
-  //         if (error.status === 404) {
-  //           return of(null)
-  //         }
-  //         return of({} as string);
-  //       }
-  //     ));
-  // }
 
 }

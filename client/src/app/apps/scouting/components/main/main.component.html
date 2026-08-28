@@ -79,7 +79,7 @@
       Scores Ledger
     </label>
     <div class="tab-content bg-base-100 border-base-300 p-6">
-      <app-scores-ledger [scouts]="this.getScoutMembers()"></app-scores-ledger>
+      <app-scores-ledger [scouts]="this.getScoutMembers()" [currentTerm]="selectedTerm"></app-scores-ledger>
     </div>
 
     <label class="tab">
