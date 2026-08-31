@@ -9,6 +9,8 @@ import {Paging} from '../../../models/paging';
 import {GetScoutingScoresCriteria} from '../models/get-scouting-scores-criteria';
 import {PagedData} from '../../../core/models/paged-data';
 import {ScoutingScoreItem} from '../models/scouting-score-item';
+import {GetScoresDefinedStatusResponse} from '../models/get-scores-defined-status-response';
+import {CreateMissingScoresResponse} from '../models/create-missing-scores-response';
 
 @Injectable({
   providedIn: 'root'
@@ -71,5 +73,19 @@ export class ScoutingService {
           } as unknown as CreateScoutingScoreItemResponse)
         }
       ))
+  }
+
+  verifyAllScoresDefined(): Observable<GetScoresDefinedStatusResponse> {
+    const url = `${this.baseUrl}/scouts/scoresledger/scores/status${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
+    return this.httpClient.get<GetScoresDefinedStatusResponse>(url).pipe(
+      catchError(error => throwError(()=>error))
+    );
+  }
+
+  fixAllScoresDefined(): Observable<CreateMissingScoresResponse> {
+    const url = `${this.baseUrl}/scouts/scoresledger/scores/create-missing${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}` : ''}`;
+    return this.httpClient.post<CreateMissingScoresResponse>(url, {}).pipe(
+      catchError(error => throwError(()=>error))
+    );
   }
 }

@@ -5,6 +5,8 @@ import {Term} from '../../models/term';
 import {GetTermsResponse} from '../../models/get-terms-response';
 import {GetMembersResponse} from '../../models/get-members-response';
 import {Member} from '../../models/member';
+import {ScoutingService} from '../../services/scouting.service';
+import {GetScoresDefinedStatusResponse} from '../../models/get-scores-defined-status-response';
 
 @Component({
   selector: 'app-main',
@@ -22,8 +24,14 @@ export class MainComponent implements OnInit {
   isLoadingWithinTerm = signal(false);
   isLoadingAllTerms = signal(false);
   isErrorGettingMembers = signal(false);
+  isCheckingAllScoresDefined = signal(false);
+  hasAllScoresDefined = signal(true);
+  isErrorCheckingAllScoresDefined = signal(false);
+  missingScores: string[] = [];
+  isFixingAllScoresDefined = signal(false);
 
   private osmService = inject(OsmService);
+  private scoutingService = inject(ScoutingService);
 
   constructor(private route: ActivatedRoute) {
 
@@ -31,6 +39,7 @@ export class MainComponent implements OnInit {
 
   ngOnInit(): void {
     this.populateTerms();
+    this.verifyAllScoresDefined();
   }
 
 
@@ -87,5 +96,60 @@ export class MainComponent implements OnInit {
     if (!this.allMembers) return [];
     return this.allMembers.filter(member => member.patrolName != 'Leaders');
   }
+
+  verifyAllScoresDefined() {
+    this.isCheckingAllScoresDefined.set(true);
+    this.scoutingService.verifyAllScoresDefined().subscribe(
+      {
+        next: (response: GetScoresDefinedStatusResponse) => {
+          this.isCheckingAllScoresDefined.set(false);
+          if (response.hasAllScoresDefined) {
+            this.hasAllScoresDefined.set(true);
+          } else {
+            this.hasAllScoresDefined.set(false)
+            this.missingScores = response.missingScores.map(score => score.name);
+          }
+        },
+        error: (error) => {
+          this.isCheckingAllScoresDefined.set(false);
+          this.isErrorCheckingAllScoresDefined.set(true);
+          console.error('Error verifying scores defined:', error);
+        }
+      }
+    )
+  }
+
+
+  showFixAllScoresDefinedDialog() {
+    const fixScoreDefinitionsDialog = document.getElementById('fixScoreDefinitionsDialog') as HTMLDialogElement;
+    fixScoreDefinitionsDialog.showModal();
+  }
+
+  hideFixAllScoresDefinedDialog() {
+    const fixScoreDefinitionsDialog = document.getElementById('fixScoreDefinitionsDialog') as HTMLDialogElement;
+    fixScoreDefinitionsDialog.close();
+  }
+
+  fixAllScoresDefined() {
+    this.isFixingAllScoresDefined.set(true);
+
+    this.scoutingService.fixAllScoresDefined().subscribe({
+      next: response => {
+        this.isFixingAllScoresDefined.set(false);
+        this.hasAllScoresDefined.set(true);
+        this.hideFixAllScoresDefinedDialog();
+        this.verifyAllScoresDefined();
+      },
+      error: (error) => {
+        this.isFixingAllScoresDefined.set(false);
+        this.hasAllScoresDefined.set(true);
+        this.hideFixAllScoresDefinedDialog();
+        this.verifyAllScoresDefined();
+        console.error('Error fixing scores defined:', error);
+      }
+    })
+
+  }
+
 
 }
