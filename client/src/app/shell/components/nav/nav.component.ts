@@ -49,7 +49,7 @@ export class NavComponent implements OnInit, OnDestroy {
     this.isLoadingApplications.set(true);
     if (this.loginService.currentUser()) {
       try {
-        this.applicationsService.getApplicationsForRoles(this.loginService.currentUser()!.memberOfRoles).subscribe(applications => {
+        this.applicationsService.getApplicationsForLoggedInRoles().subscribe(applications => {
           this.applications.set(applications);
           this.isLoadingApplications.set(false);
         });

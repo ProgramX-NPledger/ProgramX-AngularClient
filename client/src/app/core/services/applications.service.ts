@@ -30,4 +30,16 @@ export class ApplicationsService {
       );
   }
 
+  getApplicationsForLoggedInRoles(): Observable<Application[]> {
+    let url = `${this.baseUrl}/applications${environment.azureFunctionsKey ? `?code=${environment.azureFunctionsKey}&limitToAuthorisedRoles=true` : '?limitToAuthorisedRoles=true'}`;
+    return this.httpClient.get<GetApplicationsResponse>(url)
+      .pipe(
+        map(getApplicationsResponse => {
+          return getApplicationsResponse.applications;
+        }),
+        catchError((error) => {
+          return throwError(() => error);
+        })
+      );
+  }
 }
